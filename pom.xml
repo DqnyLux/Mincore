@@ -7,12 +7,11 @@
     <groupId>org.dqnylux</groupId>
     <artifactId>Mincore</artifactId>
     <version>1.0</version>
+    <description>algoxd</description>
     <packaging>jar</packaging>
 
-    <name>Mincore</name>
-
     <properties>
-        <java.version>25</java.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -26,21 +25,12 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!-- MAVEN-SHADE-PLUGIN ELIMINADO: No queremos incrustar nada, todo se descargará. -->
         </plugins>
         <resources>
             <resource>
@@ -51,17 +41,80 @@
     </build>
 
     <repositories>
-        <repository>
-            <id>papermc-repo</id>
-            <url>https://repo.papermc.io/repository/maven-public/</url>
-        </repository>
+        <repository><id>papermc-repo</id><url>https://repo.papermc.io/repository/maven-public/</url></repository>
+        <repository><id>okaeri-releases</id><url>https://repo.okaeri.cloud/releases</url></repository>
+        <repository><id>xenondevs</id><url>https://repo.xenondevs.xyz/releases</url></repository>
+        <repository><id>codemc-releases</id><url>https://repo.codemc.io/repository/maven-releases/</url></repository>
+        <repository><id>jitpack.io</id><url>https://jitpack.io</url></repository>
+        <repository><id>placeholderapi</id><url>https://repo.helpch.at/releases/</url></repository>
     </repositories>
 
+    <!-- TODAS LAS DEPENDENCIAS EN PROVIDED (Solo sirven para que el IDE no marque errores) -->
     <dependencies>
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>[26.2.build,)</version>
+            <version>1.21.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.okaeri</groupId>
+            <artifactId>okaeri-configs-yaml-snakeyaml</artifactId>
+            <version>6.1.0-beta.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>7.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>7.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.cryptomorin</groupId>
+            <artifactId>XSeries</artifactId>
+            <version>13.7.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.retrooper</groupId>
+            <artifactId>packetevents-spigot</artifactId>
+            <version>2.13.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.xenondevs.invui</groupId>
+            <artifactId>invui</artifactId>
+            <version>2.1.0</version>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.revxrsal</groupId>
+            <artifactId>lamp.common</artifactId>
+            <version>4.0.0-rc.17</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.revxrsal</groupId>
+            <artifactId>lamp.paper</artifactId>
+            <version>4.0.0-beta.19</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.revxrsal</groupId>
+            <artifactId>lamp.bukkit</artifactId>
+            <version>4.0.0-beta.19</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.12.3</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

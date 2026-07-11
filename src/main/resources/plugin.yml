@@ -1,9 +1,0 @@
-name: Mincore
-description: $description
-version: '${version}'
-
-main: org.dqnylux.mincore.Mincore
-api-version: '26.2'
-load: POSTWORLD
-
-authors: [ DqnyLux a]

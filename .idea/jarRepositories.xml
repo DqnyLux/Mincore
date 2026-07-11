@@ -2,9 +2,44 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
+      <option name="id" value="placeholderapi" />
+      <option name="name" value="placeholderapi" />
+      <option name="url" value="https://repo.helpch.at/releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="okaeri-releases" />
+      <option name="name" value="okaeri-releases" />
+      <option name="url" value="https://repo.okaeri.cloud/releases" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Central Repository" />
       <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="xenondevs" />
+      <option name="name" value="xenondevs" />
+      <option name="url" value="https://repo.xenondevs.xyz/releases" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jitpack.io" />
+      <option name="name" value="jitpack.io" />
+      <option name="url" value="https://jitpack.io" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="codemc-releases" />
+      <option name="name" value="codemc-releases" />
+      <option name="url" value="https://repo.codemc.io/repository/maven-releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="AlessioDP" />
+      <option name="name" value="AlessioDP" />
+      <option name="url" value="https://repo.alessiodp.com/releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="alessiodp-repo" />
+      <option name="name" value="alessiodp-repo" />
+      <option name="url" value="https://repo.alessiodp.com/releases/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="papermc-repo" />

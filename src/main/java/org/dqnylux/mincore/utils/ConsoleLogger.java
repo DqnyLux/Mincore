@@ -14,38 +14,89 @@ public class ConsoleLogger {
 
     public static void init(Mincore plugin) {
         MessagesConfig config = plugin.getConfigManager().getMessagesConfig();
-        prefix = ColorUtils.format(config.prefix);
-        errorPrefix = ColorUtils.format(config.prefix + config.console.errorPrefix);
+        prefix = TextUtils.format(config.prefix);
+        errorPrefix = TextUtils.format(config.prefix + config.console.errorPrefix);
     }
 
     public static void logEnable(Mincore plugin, long loadTime) {
         MessagesConfig config = plugin.getConfigManager().getMessagesConfig();
+
+        String author = plugin.getDescription().getAuthors().isEmpty() ? "Desconocido" : plugin.getDescription().getAuthors().get(0);
+        String desc = plugin.getDescription().getDescription() != null ? plugin.getDescription().getDescription() : "Sin descripción";
         String version = plugin.getDescription().getVersion();
 
-        for (String line : config.console.startupLogo) {
-            SENDER.sendMessage(ColorUtils.format(line));
+        String fork = Bukkit.getName();
+        String serverVersion = Bukkit.getBukkitVersion();
+        String javaVersion = System.getProperty("java.version");
+
+        String[] versions = {"1.20", "1.21", "1.26"};
+        StringBuilder supported = new StringBuilder();
+        for (String v : versions) {
+            if (serverVersion.contains(v)) {
+                supported.append("<green>").append(v).append(" <#888888>| ");
+            } else {
+                supported.append("<#888888>").append(v).append(" | ");
+            }
+        }
+        String supportedStr = supported.length() > 3 ? supported.substring(0, supported.length() - 3) : "";
+
+        String dbType = plugin.getConfigManager().getDatabaseConfig().mysql.type.toUpperCase();
+        String dbStatus;
+
+        if (!plugin.getConfigManager().getDatabaseConfig().mysql.enabled) {
+            dbStatus = "<#888888>" + dbType + " (MySQL) - Inactivo";
+        } else if (plugin.getDatabaseManager() != null && plugin.getDatabaseManager().isConnected()) {
+            dbStatus = "<white>" + dbType + " <#888888>- <green>Conectada";
+        } else {
+            dbStatus = "<white>" + dbType + " <#888888>- <red>Error de conexión";
         }
 
-        SENDER.sendMessage(prefix.append(ColorUtils.format(config.console.startupSuccess)));
+        // --- ESTADO DINÁMICO DE REDIS ---
+        String redisStatus;
+        boolean redisEnabled = plugin.getConfigManager().getDatabaseConfig().redis.enabled;
 
-        String details = config.console.startupDetails
-                .replace("%version%", version)
-                .replace("%time%", String.valueOf(loadTime));
+        if (!redisEnabled) {
+            redisStatus = "<#888888>Jedis (Redis) - Inactivo";
+        } else if (plugin.getDatabaseManager() != null && plugin.getDatabaseManager().isRedisConnected()) {
+            redisStatus = "<white>Jedis (Redis) <#888888>- <green>Conectado";
+        } else {
+            redisStatus = "<white>Jedis (Redis) <#888888>- <red>Error de conexión";
+        }
 
-        SENDER.sendMessage(prefix.append(ColorUtils.format(details)));
+        boolean hasPapi = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
+        String papiStatus = hasPapi ? "<green>Conectado" : "<red>No encontrado";
+
+        for (String line : config.console.startupLogo) {
+            SENDER.sendMessage(TextUtils.format(line));
+        }
+
+        for (String line : config.console.startupInfo) {
+            String formatted = line.replace("%author%", author)
+                    .replace("%description%", desc)
+                    .replace("%version%", version)
+                    .replace("%fork%", fork)
+                    .replace("%server_version%", serverVersion)
+                    .replace("%java%", javaVersion)
+                    .replace("%supported_versions%", supportedStr)
+                    .replace("%database%", dbStatus)
+                    .replace("%redis%", redisStatus)
+                    .replace("%hook_papi%", papiStatus)
+                    .replace("%time%", String.valueOf(loadTime));
+            SENDER.sendMessage(TextUtils.format(formatted));
+        }
     }
 
     public static void logDisable(Mincore plugin) {
         if (plugin.getConfigManager() == null) return;
         MessagesConfig config = plugin.getConfigManager().getMessagesConfig();
-        SENDER.sendMessage(prefix.append(ColorUtils.format(config.console.shutdownMessage)));
+        SENDER.sendMessage(prefix.append(TextUtils.format(config.console.shutdownMessage)));
     }
 
     public static void info(String message) {
-        SENDER.sendMessage(prefix.append(ColorUtils.format(message)));
+        SENDER.sendMessage(prefix.append(TextUtils.format(message)));
     }
 
     public static void error(String message) {
-        SENDER.sendMessage(errorPrefix.append(ColorUtils.format(message)));
+        SENDER.sendMessage(errorPrefix.append(TextUtils.format(message)));
     }
 }

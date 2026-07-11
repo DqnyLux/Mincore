@@ -1,0 +1,15 @@
+name: Mincore
+version: '${project.version}'
+main: org.dqnylux.mincore.Mincore
+loader: org.dqnylux.mincore.MincoreLoader
+
+api-version: '1.21'
+authors: [DqnyLux]
+
+description: ${project.description}
+
+dependencies:
+  server:
+    PlaceholderAPI:
+      load: BEFORE
+      required: false

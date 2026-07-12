@@ -40,15 +40,16 @@ public class ConsoleLogger {
         }
         String supportedStr = supported.length() > 3 ? supported.substring(0, supported.length() - 3) : "";
 
-        String dbType = plugin.getConfigManager().getDatabaseConfig().mysql.type.toUpperCase();
+        org.dqnylux.mincore.managers.DatabaseManager.StorageType storageType =
+                plugin.getDatabaseManager() != null ? plugin.getDatabaseManager().getStorageType() : null;
         String dbStatus;
 
-        if (!plugin.getConfigManager().getDatabaseConfig().mysql.enabled) {
-            dbStatus = "<#888888>" + dbType + " (MySQL) - Inactivo";
-        } else if (plugin.getDatabaseManager() != null && plugin.getDatabaseManager().isConnected()) {
-            dbStatus = "<white>" + dbType + " <#888888>- <green>Conectada";
+        if (storageType == null) {
+            dbStatus = "<#888888>Desconocido - Sin inicializar";
+        } else if (plugin.getDatabaseManager().isConnected()) {
+            dbStatus = "<white>" + storageType + " <#888888>- <green>Conectada";
         } else {
-            dbStatus = "<white>" + dbType + " <#888888>- <red>Error de conexión";
+            dbStatus = "<white>" + storageType + " <#888888>- <red>Error de conexión";
         }
 
         // --- ESTADO DINÁMICO DE REDIS ---

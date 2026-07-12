@@ -8,8 +8,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -160,21 +158,4 @@ public class TextUtils {
         }
     }
 
-    public static void sendProlongedActionBar(Plugin plugin, Player player, Component message, int seconds) {
-        player.sendActionBar(message);
-        if (seconds <= 2) return;
-
-        new BukkitRunnable() {
-            int ticksPassed = 0;
-            @Override
-            public void run() {
-                ticksPassed += 35;
-                if (ticksPassed >= (seconds * 20) || !player.isOnline()) {
-                    this.cancel();
-                    return;
-                }
-                player.sendActionBar(message);
-            }
-        }.runTaskTimerAsynchronously(plugin, 35L, 35L);
-    }
 }

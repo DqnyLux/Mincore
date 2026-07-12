@@ -47,6 +47,16 @@
         <repository><id>codemc-releases</id><url>https://repo.codemc.io/repository/maven-releases/</url></repository>
         <repository><id>jitpack.io</id><url>https://jitpack.io</url></repository>
         <repository><id>placeholderapi</id><url>https://repo.helpch.at/releases/</url></repository>
+        <repository>
+            <id>opencollab-snapshots</id>
+            <url>https://repo.opencollab.dev/maven-snapshots/</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>opencollab-releases</id>
+            <url>https://repo.opencollab.dev/maven-releases/</url>
+        </repository>
     </repositories>
 
     <!-- TODAS LAS DEPENDENCIAS EN PROVIDED (Solo sirven para que el IDE no marque errores) -->
@@ -88,10 +98,13 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <!-- invui-core 1.49 en vez de la línea invui 2.x: la 2.x (incluida 2.2.0,
+                 la última) está compilada con bytecode de Java 25, incompatible con
+                 el JDK 21/22 usado para construir este proyecto. La 1.49 es Java 11. -->
             <groupId>xyz.xenondevs.invui</groupId>
-            <artifactId>invui</artifactId>
-            <version>2.1.0</version>
-            <scope>import</scope>
+            <artifactId>invui-core</artifactId>
+            <version>1.49</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.github.revxrsal</groupId>
@@ -101,20 +114,41 @@
         </dependency>
         <dependency>
             <groupId>io.github.revxrsal</groupId>
-            <artifactId>lamp.paper</artifactId>
-            <version>4.0.0-beta.19</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.revxrsal</groupId>
             <artifactId>lamp.bukkit</artifactId>
-            <version>4.0.0-beta.19</version>
+            <version>4.0.0-rc.17</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.12.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.53.2.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- Igual que LuckPerms/PAPI/PacketEvents: Geyser y Floodgate son plugins
+                 completos que el propio servidor instala por separado - solo necesitamos
+                 el stub de compilación, nunca se añaden al MincoreLoader (sección 20). -->
+            <groupId>org.geysermc.floodgate</groupId>
+            <artifactId>api</artifactId>
+            <version>2.2.5-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.geysermc.geyser</groupId>
+            <artifactId>api</artifactId>
+            <version>2.11.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.5</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

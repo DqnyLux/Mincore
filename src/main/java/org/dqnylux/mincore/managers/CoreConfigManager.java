@@ -4,7 +4,12 @@ import eu.okaeri.configs.ConfigManager;
 import eu.okaeri.configs.yaml.snakeyaml.YamlSnakeYamlConfigurer;
 import org.bukkit.Bukkit;
 import org.dqnylux.mincore.Mincore;
+import org.dqnylux.mincore.config.AnnouncementsConfig;
+import org.dqnylux.mincore.config.BotsConfig;
+import org.dqnylux.mincore.config.ChatFormatConfig;
 import org.dqnylux.mincore.config.DatabaseConfig;
+import org.dqnylux.mincore.config.FiltersConfig;
+import org.dqnylux.mincore.config.MainConfig;
 import org.dqnylux.mincore.config.MessagesConfig;
 import org.dqnylux.mincore.config.MincoreConfig;
 import org.dqnylux.mincore.utils.TextUtils;
@@ -16,6 +21,11 @@ public class CoreConfigManager {
     private final Mincore plugin;
     private MessagesConfig messagesConfig;
     private DatabaseConfig databaseConfig;
+    private MainConfig mainConfig;
+    private FiltersConfig filtersConfig;
+    private ChatFormatConfig chatFormatConfig;
+    private BotsConfig botsConfig;
+    private AnnouncementsConfig announcementsConfig;
 
     public CoreConfigManager(Mincore plugin) {
         this.plugin = plugin;
@@ -24,6 +34,11 @@ public class CoreConfigManager {
     public void loadConfigs() {
         this.messagesConfig = loadConfig(MessagesConfig.class, "messages.yml", 1);
         this.databaseConfig = loadConfig(DatabaseConfig.class, "database.yml", 1);
+        this.mainConfig = loadConfig(MainConfig.class, "config.yml", 1);
+        this.filtersConfig = loadConfig(FiltersConfig.class, "filters.yml", 1);
+        this.chatFormatConfig = loadConfig(ChatFormatConfig.class, "chatformat.yml", 1);
+        this.botsConfig = loadConfig(BotsConfig.class, "bots.yml", 1);
+        this.announcementsConfig = loadConfig(AnnouncementsConfig.class, "announcements.yml", 1);
     }
 
     private <T extends MincoreConfig> T loadConfig(Class<T> clazz, String fileName, int targetVersion) {
@@ -78,5 +93,25 @@ public class CoreConfigManager {
 
     public DatabaseConfig getDatabaseConfig() {
         return databaseConfig;
+    }
+
+    public MainConfig getMainConfig() {
+        return mainConfig;
+    }
+
+    public FiltersConfig getFiltersConfig() {
+        return filtersConfig;
+    }
+
+    public ChatFormatConfig getChatFormatConfig() {
+        return chatFormatConfig;
+    }
+
+    public BotsConfig getBotsConfig() {
+        return botsConfig;
+    }
+
+    public AnnouncementsConfig getAnnouncementsConfig() {
+        return announcementsConfig;
     }
 }

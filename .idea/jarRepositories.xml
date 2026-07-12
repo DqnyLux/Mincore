@@ -2,11 +2,6 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
-      <option name="id" value="placeholderapi" />
-      <option name="name" value="placeholderapi" />
-      <option name="url" value="https://repo.helpch.at/releases/" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="okaeri-releases" />
       <option name="name" value="okaeri-releases" />
       <option name="url" value="https://repo.okaeri.cloud/releases" />
@@ -17,14 +12,39 @@
       <option name="url" value="https://repo.maven.apache.org/maven2" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="xenondevs" />
-      <option name="name" value="xenondevs" />
-      <option name="url" value="https://repo.xenondevs.xyz/releases" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="jitpack.io" />
       <option name="name" value="jitpack.io" />
       <option name="url" value="https://jitpack.io" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="papermc-repo" />
+      <option name="name" value="papermc-repo" />
+      <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="opencollab-snapshots" />
+      <option name="name" value="opencollab-snapshots" />
+      <option name="url" value="https://repo.opencollab.dev/maven-snapshots/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Maven Central repository" />
+      <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="opencollab-releases" />
+      <option name="name" value="opencollab-releases" />
+      <option name="url" value="https://repo.opencollab.dev/maven-releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="placeholderapi" />
+      <option name="name" value="placeholderapi" />
+      <option name="url" value="https://repo.helpch.at/releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="xenondevs" />
+      <option name="name" value="xenondevs" />
+      <option name="url" value="https://repo.xenondevs.xyz/releases" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="codemc-releases" />
@@ -40,16 +60,6 @@
       <option name="id" value="alessiodp-repo" />
       <option name="name" value="alessiodp-repo" />
       <option name="url" value="https://repo.alessiodp.com/releases/" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="papermc-repo" />
-      <option name="name" value="papermc-repo" />
-      <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="central" />
-      <option name="name" value="Maven Central repository" />
-      <option name="url" value="https://repo1.maven.org/maven2" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="jboss.community" />

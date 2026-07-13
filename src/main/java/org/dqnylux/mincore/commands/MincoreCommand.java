@@ -43,9 +43,19 @@ public class MincoreCommand {
 
         long start = System.currentTimeMillis();
         plugin.getConfigManager().loadConfigs();
+        plugin.getCosmeticConfigManager().loadConfigs();
         plugin.getChatFilterManager().reload();
         plugin.getAnnouncementManager().start();
         plugin.getDynamicCommandManager().reload();
+
+        // Si hay red compartida (MySQL/MariaDB), este servidor sube lo que
+        // acaba de recargar localmente para que el resto de la red lo
+        // reciba solo (Redis instantáneo si está activo, o el poll
+        // periódico como respaldo) - sección 18: "un cambio en un servidor
+        // se refleja en toda la red sin editar el YAML a mano en cada máquina".
+        plugin.getConfigSyncManager().pushAll();
+        plugin.getCosmeticSyncManager().pushToDatabase();
+
         long time = System.currentTimeMillis() - start;
 
         String msg = plugin.getConfigManager().getMessagesConfig().prefix +

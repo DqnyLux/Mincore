@@ -37,6 +37,8 @@ public class MessagesConfig extends MincoreConfig {
 
         public String cosmeticsButtonName = "<#55FFFF>Cosméticos";
         public String cosmeticsButtonLore = "<#888888>Abre el menú de categorías.";
+        public String profileHeadName = "<#55FFFF><b>%player%";
+        public String profileHeadCoinsLore = "<#888888>Monedas: <gold>%coins%";
         public String toggleGlobalChatName = "<#FF66B2>Chat global";
         public String toggleMessagesName = "<#FF66B2>Mensajes privados";
         public String toggleOn = "<green>Activado <#888888>- clic para desactivar";

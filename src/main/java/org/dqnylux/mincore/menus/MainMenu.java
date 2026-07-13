@@ -4,6 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.dqnylux.mincore.Mincore;
 import org.dqnylux.mincore.config.MessagesConfig;
 import org.dqnylux.mincore.model.PlayerData;
@@ -33,13 +35,14 @@ public class MainMenu {
 
         Gui gui = Gui.normal()
                 .setStructure(
-                        "# # # # # # # # #",
+                        "# # # # H # # # #",
                         "# . C . G . M . #",
                         "# # # # # # # # #"
                 )
                 .addIngredient('#', new SimpleItem(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)))
+                .addIngredient('H', profileHead(plugin))
                 .addIngredient('C', cosmeticsButton(plugin))
-                .addIngredient('G', toggleItem(plugin, Material.PLAYER_HEAD,
+                .addIngredient('G', toggleItem(plugin, Material.WRITTEN_BOOK,
                         m -> m.menus.toggleGlobalChatName, PlayerData::isGlobalChat,
                         (data, value) -> data.setGlobalChat(value)))
                 .addIngredient('M', toggleItem(plugin, Material.WRITABLE_BOOK,
@@ -54,6 +57,41 @@ public class MainMenu {
                 .build();
 
         window.open();
+    }
+
+    /** Cabeza decorativa con la skin real del jugador (chat/lore no puede renderizar texturas). */
+    private static AbstractItem profileHead(Mincore plugin) {
+        return new AbstractItem() {
+            @Override
+            public ItemProvider getItemProvider() {
+                return new ItemBuilder(Material.PLAYER_HEAD);
+            }
+
+            @Override
+            public ItemProvider getItemProvider(Player viewer) {
+                MessagesConfig messages = plugin.getConfigManager().getMessagesConfig();
+
+                ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
+                SkullMeta meta = (SkullMeta) skull.getItemMeta();
+                if (meta != null) {
+                    meta.setOwningPlayer(viewer);
+                    skull.setItemMeta(meta);
+                }
+
+                PlayerData data = plugin.getPlayerManager().get(viewer.getUniqueId());
+                double coins = data == null ? 0 : data.getCoins();
+
+                return new ItemBuilder(skull)
+                        .setDisplayName(new AdventureComponentWrapper(TextUtils.format(
+                                messages.menus.profileHeadName.replace("%player%", viewer.getName()))))
+                        .addLoreLines(TextUtils.formatLegacy(
+                                messages.menus.profileHeadCoinsLore.replace("%coins%", String.valueOf(coins))));
+            }
+
+            @Override
+            public void handleClick(@NotNull ClickType clickType, @NotNull Player clicker, @NotNull InventoryClickEvent event) {
+            }
+        };
     }
 
     private static AbstractItem cosmeticsButton(Mincore plugin) {

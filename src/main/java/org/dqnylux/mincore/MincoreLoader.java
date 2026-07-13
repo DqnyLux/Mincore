@@ -34,6 +34,7 @@ public class MincoreLoader implements PluginLoader {
         resolver.addRepository(repo("central-mirror", CENTRAL_MIRROR, releasesOnly));
         resolver.addRepository(repo("okaeri", "https://repo.okaeri.cloud/releases/", releasesOnly));
         resolver.addRepository(repo("xenondevs", "https://repo.xenondevs.xyz/releases/", releasesOnly));
+        resolver.addRepository(repo("codemc", "https://repo.codemc.io/repository/maven-releases/", releasesOnly));
 
         resolver.addDependency(new Dependency(new DefaultArtifact("eu.okaeri:okaeri-configs-core:6.1.0-beta.4"), null));
         resolver.addDependency(new Dependency(new DefaultArtifact("eu.okaeri:okaeri-configs-yaml-snakeyaml:6.1.0-beta.4"), null));
@@ -44,6 +45,10 @@ public class MincoreLoader implements PluginLoader {
         resolver.addDependency(new Dependency(new DefaultArtifact("io.github.revxrsal:lamp.common:4.0.0-rc.17"), null));
         resolver.addDependency(new Dependency(new DefaultArtifact("io.github.revxrsal:lamp.bukkit:4.0.0-rc.17"), null));
         resolver.addDependency(new Dependency(new DefaultArtifact("org.xerial:sqlite-jdbc:3.53.2.0"), null));
+        // PacketEvents como librería (no como plugin aparte): el classloader de
+        // Paper es por-plugin, así que esta copia no choca con otros plugins
+        // aunque también lo usen. Mincore lo inicializa él mismo en onLoad().
+        resolver.addDependency(new Dependency(new DefaultArtifact("com.github.retrooper:packetevents-spigot:2.13.0"), null));
 
         classpathBuilder.addLibrary(resolver);
     }

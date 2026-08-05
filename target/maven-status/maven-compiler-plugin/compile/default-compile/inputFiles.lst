@@ -221,9 +221,11 @@ C:\Users\DqnyLuxxx\IdeaProjects\Mincore\src\main\java\org\dqnylux\mincore\pozomi
 C:\Users\DqnyLuxxx\IdeaProjects\Mincore\src\main\java\org\dqnylux\mincore\pozomillonario\config\PozoConfig.java
 C:\Users\DqnyLuxxx\IdeaProjects\Mincore\src\main\java\org\dqnylux\mincore\pozomillonario\config\PozoCraftingConfig.java
 C:\Users\DqnyLuxxx\IdeaProjects\Mincore\src\main\java\org\dqnylux\mincore\pozomillonario\effects\PozoMachineEffects.java
+C:\Users\DqnyLuxxx\IdeaProjects\Mincore\src\main\java\org\dqnylux\mincore\pozomillonario\listeners\PozoChatInputListener.java
 C:\Users\DqnyLuxxx\IdeaProjects\Mincore\src\main\java\org\dqnylux\mincore\pozomillonario\listeners\PozoMachineInteractListener.java
 C:\Users\DqnyLuxxx\IdeaProjects\Mincore\src\main\java\org\dqnylux\mincore\pozomillonario\managers\PozoAnimationRegistry.java
 C:\Users\DqnyLuxxx\IdeaProjects\Mincore\src\main\java\org\dqnylux\mincore\pozomillonario\managers\PozoCatalogManager.java
+C:\Users\DqnyLuxxx\IdeaProjects\Mincore\src\main\java\org\dqnylux\mincore\pozomillonario\managers\PozoChatInputManager.java
 C:\Users\DqnyLuxxx\IdeaProjects\Mincore\src\main\java\org\dqnylux\mincore\pozomillonario\managers\PozoCraftingManager.java
 C:\Users\DqnyLuxxx\IdeaProjects\Mincore\src\main\java\org\dqnylux\mincore\pozomillonario\managers\PozoDataManager.java
 C:\Users\DqnyLuxxx\IdeaProjects\Mincore\src\main\java\org\dqnylux\mincore\pozomillonario\managers\PozoLootHistoryManager.java

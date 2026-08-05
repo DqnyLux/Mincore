@@ -126,6 +126,7 @@ org\dqnylux\mincore\utils\WorldValidator.class
 org\dqnylux\mincore\managers\cosmetics\effects\RisingCloudEffect.class
 org\dqnylux\mincore\config\ChatFormatConfig$TitleSection.class
 org\dqnylux\mincore\pozomillonario\commands\PozoTargetSuggestionProvider.class
+org\dqnylux\mincore\pozomillonario\listeners\PozoChatInputListener.class
 org\dqnylux\mincore\utils\TextUtils.class
 org\dqnylux\mincore\managers\cosmetics\effects\PolygonElytraEffect.class
 org\dqnylux\mincore\config\AnnouncementsConfig$Settings.class
@@ -358,6 +359,7 @@ org\dqnylux\mincore\managers\DynamicCommandManager.class
 org\dqnylux\mincore\pozomillonario\effects\PozoMachineEffects$Vortex.class
 org\dqnylux\mincore\config\ReportsConfig$Messages.class
 org\dqnylux\mincore\reports\model\ReportStatus.class
+org\dqnylux\mincore\pozomillonario\managers\PozoChatInputManager.class
 org\dqnylux\mincore\pozomillonario\model\PozoPlayerData.class
 org\dqnylux\mincore\managers\cosmetics\EffectUtils.class
 org\dqnylux\mincore\listeners\AdvancementBlockListener.class

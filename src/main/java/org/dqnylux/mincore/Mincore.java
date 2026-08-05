@@ -41,9 +41,11 @@ import org.dqnylux.mincore.managers.cosmetics.WingManager;
 import org.dqnylux.mincore.managers.staff.StaffModeManager;
 import org.dqnylux.mincore.managers.staff.StaffNetworkManager;
 import org.dqnylux.mincore.managers.staff.VanishManager;
+import org.dqnylux.mincore.pozomillonario.listeners.PozoChatInputListener;
 import org.dqnylux.mincore.pozomillonario.listeners.PozoMachineInteractListener;
 import org.dqnylux.mincore.pozomillonario.managers.PozoAnimationRegistry;
 import org.dqnylux.mincore.pozomillonario.managers.PozoCatalogManager;
+import org.dqnylux.mincore.pozomillonario.managers.PozoChatInputManager;
 import org.dqnylux.mincore.pozomillonario.managers.PozoCraftingManager;
 import org.dqnylux.mincore.pozomillonario.managers.PozoDataManager;
 import org.dqnylux.mincore.pozomillonario.managers.PozoLootHistoryManager;
@@ -102,6 +104,7 @@ public final class Mincore extends JavaPlugin {
     private PozoCraftingManager pozoCraftingManager;
     private PozoMachineManager pozoMachineManager;
     private PozoAnimationRegistry pozoAnimationRegistry;
+    private PozoChatInputManager pozoChatInputManager;
 
     @Override
     public void onLoad() {
@@ -189,7 +192,9 @@ public final class Mincore extends JavaPlugin {
         this.pozoMachineManager = new PozoMachineManager(this);
         this.pozoMachineManager.loadMachines();
         this.pozoAnimationRegistry = new PozoAnimationRegistry(this);
+        this.pozoChatInputManager = new PozoChatInputManager(this);
         Bukkit.getPluginManager().registerEvents(new PozoMachineInteractListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new PozoChatInputListener(this), this);
 
         this.effectRegistry = new EffectRegistry();
         this.trailManager = new TrailManager();
@@ -495,5 +500,9 @@ public final class Mincore extends JavaPlugin {
 
     public PozoAnimationRegistry getPozoAnimationRegistry() {
         return pozoAnimationRegistry;
+    }
+
+    public PozoChatInputManager getPozoChatInputManager() {
+        return pozoChatInputManager;
     }
 }

@@ -35,7 +35,10 @@ public class ChatListener implements Listener {
         this.formatHandler = formatHandler;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    // ignoreCancelled: el chat de congelados (FreezeListener) y el canal de
+    // staff (StaffListener) cancelan el evento ANTES - este pipeline no debe
+    // formatear/broadcastear un mensaje que ya fue desviado a otro canal.
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
         String message = PlainTextComponentSerializer.plainText().serialize(event.message());
@@ -44,7 +47,7 @@ public class ChatListener implements Listener {
         if (INJECTION_GUARD.matcher(message).find()) {
             event.setCancelled(true);
             String alert = messages.prefix + messages.chat.injectionBlocked
-                    .replace("%player%", player.getName())
+                    .replace("%player%", plugin.getDisguiseManager().displayName(player))
                     .replace("%message%", message);
             Bukkit.broadcast(TextUtils.formatSafeChat(alert));
             return;
@@ -70,10 +73,19 @@ public class ChatListener implements Listener {
 
         event.renderer((source, sourceDisplayName, msg, viewer) -> finalMessage);
         event.viewers().removeIf(audience -> isOptedOutOfGlobalChat(audience, player));
+
+        // El mensaje ya se va a mostrar al instante (sin retenerlo) - la
+        // revisión por IA corre aparte y, si confirma que es tóxico, lo borra
+        // de la pantalla de todos unos cientos de ms después (ver comentario
+        // de clase de ChatFilterManager).
+        filterManager.reviewAsync(player, message, event.signedMessage());
     }
 
     private boolean isOptedOutOfGlobalChat(Audience audience, Player sender) {
         if (!(audience instanceof Player viewer) || viewer.equals(sender)) return false;
+        // Un staff con un freeze enfocado no ve el chat global mientras dura
+        // - queda concentrado en esa conversación (ver FreezeManager).
+        if (plugin.getFreezeManager().getFocusedTarget(viewer.getUniqueId()) != null) return true;
         PlayerData viewerData = plugin.getPlayerManager().get(viewer.getUniqueId());
         return viewerData != null && !viewerData.isGlobalChat();
     }
@@ -82,6 +94,8 @@ public class ChatListener implements Listener {
         MessagesConfig messages = plugin.getConfigManager().getMessagesConfig();
         String body = switch (reason) {
             case SPAM -> messages.chat.filterSpam;
+            case FLOOD -> messages.chat.filterFlood;
+            case TOO_LONG -> messages.chat.filterTooLong;
             case REPETITION -> messages.chat.filterRepetition;
             case BAD_WORD -> messages.chat.filterBadWord;
             case ADS -> messages.chat.filterAds;

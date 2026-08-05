@@ -3,8 +3,8 @@ package org.dqnylux.mincore.managers;
 import org.bukkit.Location;
 
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * En memoria, sin persistencia en BD (igual que el prompt original - un
@@ -16,12 +16,15 @@ public class DeathTrackingManager {
     }
 
     private final Map<Integer, Death> active = new ConcurrentHashMap<>();
-    private final Random random = new Random();
 
     public int register(Location location, int expirationMinutes) {
+        // ThreadLocalRandom, no un Random compartido - register() puede
+        // llamarse desde varios hilos de región de Folia a la vez (jugadores
+        // muriendo en regiones distintas en el mismo tick), y Random no es
+        // seguro bajo esa concurrencia.
         int id;
         do {
-            id = 1000 + random.nextInt(9000);
+            id = 1000 + ThreadLocalRandom.current().nextInt(9000);
         } while (active.containsKey(id));
 
         active.put(id, new Death(id, location.clone(), System.currentTimeMillis() + expirationMinutes * 60_000L));

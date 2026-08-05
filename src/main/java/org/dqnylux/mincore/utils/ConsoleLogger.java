@@ -33,7 +33,7 @@ public class ConsoleLogger {
         StringBuilder supported = new StringBuilder();
         for (String v : versions) {
             if (serverVersion.contains(v)) {
-                supported.append("<green>").append(v).append(" <#888888>| ");
+                supported.append("<#5CE65C>").append(v).append(" <#888888>| ");
             } else {
                 supported.append("<#888888>").append(v).append(" | ");
             }
@@ -47,9 +47,9 @@ public class ConsoleLogger {
         if (storageType == null) {
             dbStatus = "<#888888>Desconocido - Sin inicializar";
         } else if (plugin.getDatabaseManager().isConnected()) {
-            dbStatus = "<white>" + storageType + " <#888888>- <green>Conectada";
+            dbStatus = "<#FFFFFF>" + storageType + " <#888888>- <#5CE65C>Conectada";
         } else {
-            dbStatus = "<white>" + storageType + " <#888888>- <red>Error de conexión";
+            dbStatus = "<#FFFFFF>" + storageType + " <#888888>- <#FF4C4C>Error de conexión";
         }
 
         // --- ESTADO DINÁMICO DE REDIS ---
@@ -59,13 +59,13 @@ public class ConsoleLogger {
         if (!redisEnabled) {
             redisStatus = "<#888888>Jedis (Redis) - Inactivo";
         } else if (plugin.getDatabaseManager() != null && plugin.getDatabaseManager().isRedisConnected()) {
-            redisStatus = "<white>Jedis (Redis) <#888888>- <green>Conectado";
+            redisStatus = "<#FFFFFF>Jedis (Redis) <#888888>- <#5CE65C>Conectado";
         } else {
-            redisStatus = "<white>Jedis (Redis) <#888888>- <red>Error de conexión";
+            redisStatus = "<#FFFFFF>Jedis (Redis) <#888888>- <#FF4C4C>Error de conexión";
         }
 
         boolean hasPapi = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
-        String papiStatus = hasPapi ? "<green>Conectado" : "<red>No encontrado";
+        String papiStatus = hasPapi ? "<#5CE65C>Conectado" : "<#FF4C4C>No encontrado";
 
         for (String line : config.console.startupLogo) {
             SENDER.sendMessage(TextUtils.format(line));

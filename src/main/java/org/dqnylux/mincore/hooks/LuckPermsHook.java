@@ -5,6 +5,7 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.PrefixNode;
 import net.luckperms.api.node.types.SuffixNode;
+import org.dqnylux.mincore.utils.TextUtils;
 
 import java.util.UUID;
 
@@ -43,9 +44,10 @@ public final class LuckPermsHook {
 
     public static void setCustomPrefix(UUID uuid, String prefix, int priority) {
         if (api == null) return;
+        String legacyPrefix = TextUtils.toLegacyAmpersand(prefix);
         api.getUserManager().loadUser(uuid).thenAccept(user -> {
             user.data().clear(NodeType.PREFIX.predicate(node -> node.getPriority() == priority));
-            user.data().add(PrefixNode.builder(prefix, priority).build());
+            user.data().add(PrefixNode.builder(legacyPrefix, priority).build());
             api.getUserManager().saveUser(user);
         });
     }
@@ -58,11 +60,43 @@ public final class LuckPermsHook {
         });
     }
 
-    public static void setCustomSuffix(UUID uuid, String suffix, int priority) {
+    /** Variante SIN conversión MiniMessage->legacy - para prefijos que ya vienen en formato legacy desde el propio LuckPerms (ej. el prefijo de un grupo, para el disguise). */
+    public static void setRawPrefix(UUID uuid, String legacyPrefix, int priority) {
         if (api == null) return;
         api.getUserManager().loadUser(uuid).thenAccept(user -> {
+            user.data().clear(NodeType.PREFIX.predicate(node -> node.getPriority() == priority));
+            user.data().add(PrefixNode.builder(legacyPrefix, priority).build());
+            api.getUserManager().saveUser(user);
+        });
+    }
+
+    public static boolean groupExists(String name) {
+        return api != null && api.getGroupManager().getGroup(name) != null;
+    }
+
+    public static java.util.Collection<String> getGroupNames() {
+        if (api == null) return java.util.List.of();
+        java.util.List<String> names = new java.util.ArrayList<>();
+        for (net.luckperms.api.model.group.Group group : api.getGroupManager().getLoadedGroups()) {
+            names.add(group.getName());
+        }
+        return names;
+    }
+
+    /** Prefijo (legacy, como lo guarda LP) del grupo - null si el grupo no existe o no tiene prefijo. */
+    public static String getGroupPrefix(String name) {
+        if (api == null) return null;
+        net.luckperms.api.model.group.Group group = api.getGroupManager().getGroup(name);
+        if (group == null) return null;
+        return group.getCachedData().getMetaData(net.luckperms.api.query.QueryOptions.nonContextual()).getPrefix();
+    }
+
+    public static void setCustomSuffix(UUID uuid, String suffix, int priority) {
+        if (api == null) return;
+        String legacySuffix = TextUtils.toLegacyAmpersand(suffix);
+        api.getUserManager().loadUser(uuid).thenAccept(user -> {
             user.data().clear(NodeType.SUFFIX.predicate(node -> node.getPriority() == priority));
-            user.data().add(SuffixNode.builder(suffix, priority).build());
+            user.data().add(SuffixNode.builder(legacySuffix, priority).build());
             api.getUserManager().saveUser(user);
         });
     }

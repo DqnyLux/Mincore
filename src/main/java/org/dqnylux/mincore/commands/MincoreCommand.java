@@ -6,7 +6,9 @@ import org.dqnylux.mincore.managers.EconomyAdminHandler;
 import org.dqnylux.mincore.menus.MainMenu;
 import org.dqnylux.mincore.utils.TextUtils;
 import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.SuggestWith;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
+import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 @SuppressWarnings("unused")
 public class MincoreCommand {
@@ -31,13 +33,15 @@ public class MincoreCommand {
         return true;
     }
 
-    @Command("mincore")
+    @Command("coreec")
+    @CommandPermission("coreec.admin")
     public void defaultCommand(CommandSender sender) {
         if (!checkPermission(sender)) return;
         help(sender);
     }
 
-    @Command("mincore reload")
+    @Command("coreec reload")
+    @CommandPermission("coreec.admin")
     public void reload(CommandSender sender) {
         if (!checkPermission(sender)) return;
 
@@ -65,7 +69,25 @@ public class MincoreCommand {
         sender.sendMessage(TextUtils.format(msg));
     }
 
-    @Command("mincore help")
+    @Command("coreec reload catalog")
+    @CommandPermission("coreec.admin")
+    public void reloadCatalog(CommandSender sender) {
+        if (!checkPermission(sender)) return;
+
+        long start = System.currentTimeMillis();
+        plugin.getCosmeticConfigManager().reloadFromResources();
+        plugin.getConfigSyncManager().pushAll();
+        plugin.getCosmeticSyncManager().pushToDatabase();
+        long time = System.currentTimeMillis() - start;
+
+        String msg = plugin.getConfigManager().getMessagesConfig().prefix +
+                plugin.getConfigManager().getMessagesConfig().commands.resetCatalogSuccess
+                        .replace("%ms%", String.valueOf(time));
+        sender.sendMessage(TextUtils.format(msg));
+    }
+
+    @Command("coreec help")
+    @CommandPermission("coreec.admin")
     public void help(CommandSender sender) {
         if (!checkPermission(sender)) return;
 
@@ -74,7 +96,8 @@ public class MincoreCommand {
         }
     }
 
-    @Command("mincore menu")
+    @Command("coreec menu")
+    @CommandPermission("coreec.admin")
     public void openMenu(BukkitCommandActor actor) {
         if (!checkPermission(actor.sender())) return;
 
@@ -87,22 +110,25 @@ public class MincoreCommand {
         MainMenu.open(actor.requirePlayer(), plugin);
     }
 
-    @Command("mincore eco give")
-    public void ecoGive(CommandSender sender, String player, double amount) {
+    @Command("coreec eco give")
+    @CommandPermission("coreec.admin")
+    public void ecoGive(CommandSender sender, @SuggestWith(OnlinePlayerSuggestionProvider.class) String player, double amount) {
         if (!checkPermission(sender)) return;
         EconomyAdminHandler.Result result = plugin.getEconomyAdminHandler().give(player, amount);
         replyEco(sender, result, player, amount, plugin.getConfigManager().getMessagesConfig().commands.ecoGiveSuccess);
     }
 
-    @Command("mincore eco take")
-    public void ecoTake(CommandSender sender, String player, double amount) {
+    @Command("coreec eco take")
+    @CommandPermission("coreec.admin")
+    public void ecoTake(CommandSender sender, @SuggestWith(OnlinePlayerSuggestionProvider.class) String player, double amount) {
         if (!checkPermission(sender)) return;
         EconomyAdminHandler.Result result = plugin.getEconomyAdminHandler().take(player, amount);
         replyEco(sender, result, player, amount, plugin.getConfigManager().getMessagesConfig().commands.ecoTakeSuccess);
     }
 
-    @Command("mincore eco set")
-    public void ecoSet(CommandSender sender, String player, double amount) {
+    @Command("coreec eco set")
+    @CommandPermission("coreec.admin")
+    public void ecoSet(CommandSender sender, @SuggestWith(OnlinePlayerSuggestionProvider.class) String player, double amount) {
         if (!checkPermission(sender)) return;
         EconomyAdminHandler.Result result = plugin.getEconomyAdminHandler().set(player, amount);
         replyEco(sender, result, player, amount, plugin.getConfigManager().getMessagesConfig().commands.ecoSetSuccess);
@@ -118,7 +144,8 @@ public class MincoreCommand {
         sender.sendMessage(TextUtils.format(messages.prefix + body));
     }
 
-    @Command("mincore sync push")
+    @Command("coreec sync push")
+    @CommandPermission("coreec.admin")
     public void syncPush(CommandSender sender) {
         if (!checkPermission(sender)) return;
         plugin.getCosmeticSyncManager().pushToDatabase();
@@ -127,7 +154,8 @@ public class MincoreCommand {
         sender.sendMessage(TextUtils.format(messages.prefix + messages.commands.syncPush));
     }
 
-    @Command("mincore sync pull")
+    @Command("coreec sync pull")
+    @CommandPermission("coreec.admin")
     public void syncPull(CommandSender sender) {
         if (!checkPermission(sender)) return;
         plugin.getCosmeticSyncManager().pullFromDatabase();
@@ -136,7 +164,37 @@ public class MincoreCommand {
         sender.sendMessage(TextUtils.format(messages.prefix + messages.commands.syncPull));
     }
 
-    @Command("mincore clearchat")
+    @Command("coreec commandblocker reload")
+    @CommandPermission("coreec.admin")
+    public void commandBlockerReload(CommandSender sender) {
+        if (!checkPermission(sender)) return;
+
+        long start = System.currentTimeMillis();
+        plugin.getConfigManager().reloadCommandBlockerConfig();
+        long time = System.currentTimeMillis() - start;
+
+        String msg = plugin.getConfigManager().getMessagesConfig().prefix +
+                plugin.getConfigManager().getMessagesConfig().commands.commandBlockerReloadSuccess
+                        .replace("%ms%", String.valueOf(time));
+        sender.sendMessage(TextUtils.format(msg));
+    }
+
+    @Command("coreec ai refreshwords")
+    @CommandPermission("coreec.admin")
+    public void aiRefreshWords(CommandSender sender) {
+        if (!checkPermission(sender)) return;
+        plugin.getChatFilterManager().generateReviewWordsAsync(sender);
+    }
+
+    @Command("coreec ai refreshbadwords")
+    @CommandPermission("coreec.admin")
+    public void aiRefreshBadWords(CommandSender sender) {
+        if (!checkPermission(sender)) return;
+        plugin.getChatFilterManager().generateBadWordsAsync(sender);
+    }
+
+    @Command("coreec clearchat")
+    @CommandPermission("coreec.admin.clearchat")
     public void clearChat(CommandSender sender) {
         if (!checkPermission(sender, plugin.getConfigManager().getMainConfig().permissions.clearchat)) return;
 

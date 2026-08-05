@@ -12,17 +12,19 @@ import org.dqnylux.mincore.model.PlayerData;
  * en memoria aparte, para reusar el mismo patrón de caché/persistencia de
  * PlayerManager y quedar listo para compartirse en red en la Fase 7.
  *
- * No se implementa el "toast" nativo vía Advancement efímero que describe el
- * prompt original: esa API está marcada @Deprecated/unsafe en Paper y choca
- * con el objetivo de multiversión de la sección 15. Se reemplaza por un
- * actionbar + sonido, con la misma función de aviso visible.
+ * El toast nativo (Advancement efímero, igual que MentionToastManager) sí
+ * está implementado - ya se probó que la API funciona en esta build de Paper
+ * al conectar el toast de menciones, así que aplica el mismo mecanismo acá.
  */
 public class ChatPunishmentHandler {
 
     private final Mincore plugin;
+    private final InfractionToastManager toastManager;
 
     public ChatPunishmentHandler(Mincore plugin) {
         this.plugin = plugin;
+        this.toastManager = new InfractionToastManager(plugin);
+        this.toastManager.init();
     }
 
     public void handleInfraction(Player player) {
@@ -38,6 +40,9 @@ public class ChatPunishmentHandler {
                 .replace("%current%", String.valueOf(data.getChatWarnings()))
                 .replace("%max%", String.valueOf(config.maxWarnings));
         player.sendActionBar(org.dqnylux.mincore.utils.TextUtils.format(actionbar));
+        if (config.toast) {
+            toastManager.showToast(player);
+        }
 
         if (data.getChatWarnings() >= config.maxWarnings) {
             data.setChatWarnings(0);

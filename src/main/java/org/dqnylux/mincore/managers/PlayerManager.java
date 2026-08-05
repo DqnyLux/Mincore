@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -36,7 +37,7 @@ public class PlayerManager {
         return CompletableFuture.supplyAsync(() -> {
             DataSource dataSource = plugin.getDatabaseManager().getHikariDataSource();
             if (dataSource == null) {
-                PlayerData fallback = new PlayerData(uuid, name, 0.0, true, 0, true);
+                PlayerData fallback = new PlayerData(uuid, name, 0.0, true, 0, true, true);
                 cache.put(uuid, fallback);
                 return fallback;
             }
@@ -46,24 +47,26 @@ public class PlayerManager {
 
                 PlayerData data;
                 try (PreparedStatement select = connection.prepareStatement(
-                        "SELECT name, coins, global_chat, chat_warnings, messages_enabled FROM mincore_players WHERE uuid = ?")) {
+                        "SELECT name, coins, global_chat, chat_warnings, messages_enabled, mentions_enabled FROM mincore_players WHERE uuid = ?")) {
                     select.setString(1, uuid.toString());
                     try (ResultSet rs = select.executeQuery()) {
                         data = rs.next()
                                 ? new PlayerData(uuid, rs.getString("name"), rs.getDouble("coins"),
-                                        rs.getBoolean("global_chat"), rs.getInt("chat_warnings"), rs.getBoolean("messages_enabled"))
-                                : new PlayerData(uuid, name, 0.0, true, 0, true);
+                                        rs.getBoolean("global_chat"), rs.getInt("chat_warnings"),
+                                        rs.getBoolean("messages_enabled"), rs.getBoolean("mentions_enabled"))
+                                : new PlayerData(uuid, name, 0.0, true, 0, true, true);
                     }
                 }
 
                 loadActiveCosmetics(connection, data);
                 loadUnlockedCosmetics(connection, data);
+                loadActiveFormats(connection, data);
 
                 cache.put(uuid, data);
                 return data;
             } catch (SQLException e) {
-                Bukkit.getLogger().severe("[Mincore] Error cargando jugador " + name + ": " + e.getMessage());
-                PlayerData fallback = new PlayerData(uuid, name, 0.0, true, 0, true);
+                Bukkit.getLogger().severe("[CoreEC] Error cargando jugador " + name + ": " + e.getMessage());
+                PlayerData fallback = new PlayerData(uuid, name, 0.0, true, 0, true, true);
                 cache.put(uuid, fallback);
                 return fallback;
             }
@@ -107,6 +110,18 @@ public class PlayerManager {
         }
     }
 
+    private void loadActiveFormats(Connection connection, PlayerData data) throws SQLException {
+        try (PreparedStatement select = connection.prepareStatement(
+                "SELECT scope, format_id FROM mincore_active_formats WHERE uuid = ?")) {
+            select.setString(1, data.getUuid().toString());
+            try (ResultSet rs = select.executeQuery()) {
+                while (rs.next()) {
+                    data.toggleFormat(rs.getString("scope"), rs.getString("format_id"));
+                }
+            }
+        }
+    }
+
     public CompletableFuture<Void> savePlayerAsync(PlayerData data) {
         return CompletableFuture.runAsync(() -> savePlayerSync(data));
     }
@@ -117,20 +132,22 @@ public class PlayerManager {
 
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE mincore_players SET name = ?, coins = ?, global_chat = ?, chat_warnings = ?, messages_enabled = ? WHERE uuid = ?")) {
+                    "UPDATE mincore_players SET name = ?, coins = ?, global_chat = ?, chat_warnings = ?, messages_enabled = ?, mentions_enabled = ? WHERE uuid = ?")) {
                 statement.setString(1, data.getName());
                 statement.setDouble(2, data.getCoins());
                 statement.setBoolean(3, data.isGlobalChat());
                 statement.setInt(4, data.getChatWarnings());
                 statement.setBoolean(5, data.isMessagesEnabled());
-                statement.setString(6, data.getUuid().toString());
+                statement.setBoolean(6, data.isMentionsEnabled());
+                statement.setString(7, data.getUuid().toString());
                 statement.executeUpdate();
             }
 
             syncActiveCosmetics(connection, data);
             syncUnlockedCosmetics(connection, data);
+            syncActiveFormats(connection, data);
         } catch (SQLException e) {
-            Bukkit.getLogger().severe("[Mincore] Error guardando jugador " + data.getName() + ": " + e.getMessage());
+            Bukkit.getLogger().severe("[CoreEC] Error guardando jugador " + data.getName() + ": " + e.getMessage());
         }
     }
 
@@ -171,6 +188,33 @@ public class PlayerManager {
                 insert.setString(1, data.getUuid().toString());
                 insert.setString(2, itemId);
                 insert.setString(3, category);
+                insert.addBatch();
+            }
+            insert.executeBatch();
+        }
+    }
+
+    private void syncActiveFormats(Connection connection, PlayerData data) throws SQLException {
+        try (PreparedStatement delete = connection.prepareStatement("DELETE FROM mincore_active_formats WHERE uuid = ?")) {
+            delete.setString(1, data.getUuid().toString());
+            delete.executeUpdate();
+        }
+
+        List<Map.Entry<String, String>> rows = new java.util.ArrayList<>();
+        for (String formatId : data.getActiveFormats(PlayerData.FORMAT_SCOPE_CHAT)) {
+            rows.add(Map.entry(PlayerData.FORMAT_SCOPE_CHAT, formatId));
+        }
+        for (String formatId : data.getActiveFormats(PlayerData.FORMAT_SCOPE_NAME)) {
+            rows.add(Map.entry(PlayerData.FORMAT_SCOPE_NAME, formatId));
+        }
+        if (rows.isEmpty()) return;
+
+        try (PreparedStatement insert = connection.prepareStatement(
+                "INSERT INTO mincore_active_formats (uuid, scope, format_id) VALUES (?, ?, ?)")) {
+            for (Map.Entry<String, String> row : rows) {
+                insert.setString(1, data.getUuid().toString());
+                insert.setString(2, row.getKey());
+                insert.setString(3, row.getValue());
                 insert.addBatch();
             }
             insert.executeBatch();

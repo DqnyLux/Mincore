@@ -1,7 +1,12 @@
 package org.dqnylux.mincore.config;
 
 import eu.okaeri.configs.annotation.Comment;
+import eu.okaeri.configs.annotation.Include;
 
+import java.util.Arrays;
+import java.util.List;
+
+@Include(MincoreConfig.class)
 public class DatabaseConfig extends MincoreConfig {
 
     @Comment({
@@ -11,6 +16,29 @@ public class DatabaseConfig extends MincoreConfig {
             "======================================================="
     })
     public MySQL mysql = new MySQL();
+
+    @Comment({
+            "",
+            "=======================================================",
+            " SINCRONIZACIÓN DE CONFIGURACIÓN EN RED",
+            " Solo aplica si mysql.enabled=true (type MySQL/MariaDB) - qué",
+            " archivos se comparten entre todos los servidores conectados a",
+            " la misma base de datos. Por defecto solo cosméticos/menús; se",
+            " puede agregar cualquier otro archivo (ej. \"messages.yml\").",
+            "======================================================="
+    })
+    public Sync sync = new Sync();
+
+    public static class Sync extends MincoreConfig {
+        public List<String> syncedFiles = Arrays.asList(
+                "cosmetics/namecolors.yml", "cosmetics/chatcolors.yml", "cosmetics/prefixes.yml",
+                "cosmetics/icons.yml", "cosmetics/glows.yml", "cosmetics/join_messages.yml",
+                "cosmetics/join_effects.yml", "cosmetics/projectile_effects.yml", "cosmetics/kill_effects.yml",
+                "cosmetics/death_effects.yml", "cosmetics/elytra_effects.yml", "cosmetics/trails.yml",
+                "cosmetics/wings.yml", "cosmetics/kill_messages.yml", "cosmetics/death_messages.yml",
+                "menus/main_menu.yml", "menus/categories_menu.yml", "menus/cosmetics_menu.yml"
+        );
+    }
 
     @Comment({
             "",
@@ -43,7 +71,7 @@ public class DatabaseConfig extends MincoreConfig {
         public int port = 3306;
 
         @Comment("Nombre de la base de datos a usar")
-        public String database = "mincore_db";
+        public String database = "coreec_db";
 
         @Comment("Usuario de la base de datos")
         public String username = "root";

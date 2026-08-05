@@ -1,12 +1,14 @@
 package org.dqnylux.mincore.tasks;
 
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.dqnylux.mincore.Mincore;
 import org.dqnylux.mincore.config.WingsConfig;
 import org.dqnylux.mincore.config.models.CosmeticItem;
 import org.dqnylux.mincore.config.models.WingCosmetic;
 import org.dqnylux.mincore.model.PlayerData;
+import org.dqnylux.mincore.utils.WorldValidator;
 
 import java.util.Map;
 import java.util.UUID;
@@ -23,6 +25,21 @@ public class ActiveCosmeticsTask {
 
     private final Mincore plugin;
     private final Map<UUID, ScheduledTask> tasks = new ConcurrentHashMap<>();
+
+    /** Rastrea la transición aire->suelo por jugador - necesario para que el estilo RINGS de trails solo explote justo al aterrizar, igual que v1. */
+    private final Map<UUID, Boolean> wasOnGround = new ConcurrentHashMap<>();
+
+    /**
+     * Última posición conocida por jugador, para saber si "se está moviendo"
+     * de verdad. Player#getVelocity() NO sirve para esto - Bukkit solo la
+     * actualiza con retroceso/explosiones/física real, no con el caminar
+     * normal (eso lo maneja el cliente vía paquetes de posición) - por eso
+     * ORBIT/SPARKS/PUDDLE/WAVES/STEPS (que dependían de esa velocidad)
+     * parecían "solo funcionar al saltar": saltar es de los pocos momentos en
+     * los que el servidor sí trae una velocidad real. Comparar la posición
+     * contra el tick anterior sí detecta caminar/correr/sneak correctamente.
+     */
+    private final Map<UUID, Location> lastLocation = new ConcurrentHashMap<>();
 
     public ActiveCosmeticsTask(Mincore plugin) {
         this.plugin = plugin;
@@ -42,29 +59,46 @@ public class ActiveCosmeticsTask {
     public void stop(UUID uuid) {
         ScheduledTask task = tasks.remove(uuid);
         if (task != null) task.cancel();
+        wasOnGround.remove(uuid);
+        lastLocation.remove(uuid);
     }
 
     public void stopAll() {
         tasks.values().forEach(ScheduledTask::cancel);
         tasks.clear();
+        wasOnGround.clear();
+        lastLocation.clear();
     }
 
     private void tick(Player player) {
         if (!player.isOnline()) return;
+        if (!WorldValidator.isAllowed(plugin, player.getWorld())) return;
+        if (org.dqnylux.mincore.managers.cosmetics.CosmeticVisibility.isHiddenFromOthers(plugin, player)) return;
         PlayerData data = plugin.getPlayerManager().get(player.getUniqueId());
         if (data == null) return;
+
+        UUID uuid = player.getUniqueId();
+        boolean onGround = player.isOnGround();
+        boolean hasLanded = onGround && !wasOnGround.getOrDefault(uuid, true);
+        wasOnGround.put(uuid, onGround);
+
+        Location current = player.getLocation();
+        Location previous = lastLocation.put(uuid, current.clone());
+        boolean moving = previous != null
+                && previous.getWorld().equals(current.getWorld())
+                && previous.distanceSquared(current) > 0.0009;
 
         String trailId = data.getActiveCosmetic("trails");
         if (trailId != null) {
             CosmeticItem item = plugin.getCosmeticConfigManager().getItem("trails", trailId);
-            if (item != null) plugin.getTrailManager().drawTrail(player, item);
+            if (item != null) plugin.getTrailManager().drawTrail(player, item, hasLanded, moving);
         }
 
         String wingsId = data.getActiveCosmetic("wings");
         if (wingsId != null) {
             WingsConfig wingsConfig = plugin.getCosmeticConfigManager().getWings();
             WingCosmetic wingItem = wingsConfig.items.get(wingsId);
-            if (wingItem != null) plugin.getWingManager().render(player, wingItem);
+            if (wingItem != null) plugin.getWingManager().render(player, wingItem, moving);
         }
     }
 }

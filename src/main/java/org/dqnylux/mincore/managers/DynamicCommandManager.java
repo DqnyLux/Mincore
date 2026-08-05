@@ -35,7 +35,7 @@ public class DynamicCommandManager {
             var method = Bukkit.getServer().getClass().getMethod("getCommandMap");
             return (CommandMap) method.invoke(Bukkit.getServer());
         } catch (ReflectiveOperationException e) {
-            Bukkit.getLogger().severe("[Mincore] No se pudo acceder al CommandMap para los comandos dinámicos: " + e.getMessage());
+            Bukkit.getLogger().severe("[CoreEC] No se pudo acceder al CommandMap para los comandos dinámicos: " + e.getMessage());
             return null;
         }
     }
@@ -55,7 +55,7 @@ public class DynamicCommandManager {
                     : List.of();
 
             DynamicCommand command = new DynamicCommand(primary, extraAliases, config.response);
-            commandMap.register("mincore", command);
+            commandMap.register("coreec", command);
             registered.add(command);
         }
     }

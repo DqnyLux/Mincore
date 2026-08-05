@@ -1,12 +1,14 @@
 package org.dqnylux.mincore.config;
 
 import eu.okaeri.configs.annotation.Comment;
+import eu.okaeri.configs.annotation.Include;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Include(MincoreConfig.class)
 public class AnnouncementsConfig extends MincoreConfig {
 
     public Settings settings = new Settings();
@@ -29,6 +31,14 @@ public class AnnouncementsConfig extends MincoreConfig {
 
     public static class AnnouncementEntry extends MincoreConfig {
         public boolean enabled = true;
+
+        @Comment({
+                "Soporta MiniMessage completo, incluyendo hover y click:",
+                "<hover:show_text:'<#AAAAAA>Texto al pasar el mouse'>texto</hover>",
+                "<click:open_url:'https://ejemplo.com'>texto</click>",
+                "<click:run_command:'/comando'>texto</click>",
+                "<click:suggest_command:'/comando '>texto</click>"
+        })
         public List<String> lines = new ArrayList<>();
 
         @Comment("Nombre de sonido (ej. ENTITY_EXPERIENCE_ORB_PICKUP). Vacío para no reproducir ninguno.")
@@ -49,7 +59,10 @@ public class AnnouncementsConfig extends MincoreConfig {
         Map<String, AnnouncementEntry> map = new LinkedHashMap<>();
 
         AnnouncementEntry welcome = new AnnouncementEntry();
-        welcome.lines = new ArrayList<>(List.of("<#55FFFF>¡Bienvenido a Mincore! <white>Únete a nuestro Discord: <#5865F2>%%discord%%"));
+        welcome.lines = new ArrayList<>(List.of(
+                "<#55FFFF>¡Bienvenido a CoreEC! <#FFFFFF>Únete a nuestro Discord: "
+                        + "<hover:show_text:'<#AAAAAA>Clic para abrir el enlace'><click:open_url:'https://%%discord%%'><#5865F2>%%discord%%</click></hover>"
+        ));
         welcome.sound = "ENTITY_EXPERIENCE_ORB_PICKUP";
         map.put("bienvenida", welcome);
 

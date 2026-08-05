@@ -1,130 +1,133 @@
 package org.dqnylux.mincore.menus;
 
-import org.bukkit.Material;
+import dev.triumphteam.gui.builder.item.PaperItemBuilder;
+import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.GuiItem;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.dqnylux.mincore.Mincore;
+import org.dqnylux.mincore.config.CategoriesMenuConfig;
 import org.dqnylux.mincore.config.MessagesConfig;
-import org.dqnylux.mincore.config.StandardCosmeticConfig;
+import org.dqnylux.mincore.config.models.CategoryButton;
+import org.dqnylux.mincore.config.models.CosmeticItem;
+import org.dqnylux.mincore.config.models.MenuItem;
 import org.dqnylux.mincore.model.PlayerData;
+import org.dqnylux.mincore.utils.MenuStructure;
 import org.dqnylux.mincore.utils.TextUtils;
-import org.jetbrains.annotations.NotNull;
-import xyz.xenondevs.invui.gui.Gui;
-import xyz.xenondevs.invui.item.Item;
-import xyz.xenondevs.invui.item.ItemProvider;
-import xyz.xenondevs.invui.item.builder.ItemBuilder;
-import xyz.xenondevs.invui.item.impl.AbstractItem;
-import xyz.xenondevs.invui.item.impl.SimpleItem;
-import xyz.xenondevs.invui.window.Window;
-import xyz.xenondevs.inventoryaccess.component.AdventureComponentWrapper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Lista las categorías estándar con progreso desbloqueados/total y el
- * cosmético equipado. Las categorías desactivadas en config.yml
- * (modules.cosmetics.categories) se sustituyen por un panel de relleno.
+ * Lista las categorías con progreso desbloqueados/total y el cosmético
+ * equipado. El layout completo (forma, filas, slot/material/nombre/lore por
+ * categoría, botón de volver) viene de menus/categories_menu.yml
+ * (CategoriesMenuConfig), parseado como cuadrícula de símbolos
+ * (MenuStructure). Añadir, quitar o mover una categoría es un cambio de
+ * YAML, no de código (sección 17).
  */
 public class CategoryMenu {
 
-    private static final Map<String, Material> ICONS = Map.ofEntries(
-            Map.entry("namecolors", Material.NAME_TAG),
-            Map.entry("chatcolors", Material.PAPER),
-            Map.entry("prefixes", Material.BOOK),
-            Map.entry("icons", Material.NETHER_STAR),
-            Map.entry("glows", Material.GLOWSTONE_DUST),
-            Map.entry("join-messages", Material.OAK_SIGN),
-            Map.entry("join-effects", Material.FIREWORK_ROCKET),
-            Map.entry("projectile-effects", Material.ARROW),
-            Map.entry("kill-effects", Material.DIAMOND_SWORD),
-            Map.entry("death-effects", Material.SKELETON_SKULL),
-            Map.entry("elytra-effects", Material.ELYTRA),
-            Map.entry("trails", Material.BLAZE_POWDER)
-    );
-
     public static void open(Player player, Mincore plugin) {
         MessagesConfig messages = plugin.getConfigManager().getMessagesConfig();
-        Gui gui = Gui.normal()
-                .setStructure(
-                        "# # # # # # # # #",
-                        "# a b c d e f g #",
-                        "# h i j k l . . #",
-                        "# # # # # # # # #"
-                )
-                .addIngredient('#', new SimpleItem(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)))
-                .addIngredient('a', categoryItem(plugin, "namecolors"))
-                .addIngredient('b', categoryItem(plugin, "chatcolors"))
-                .addIngredient('c', categoryItem(plugin, "prefixes"))
-                .addIngredient('d', categoryItem(plugin, "icons"))
-                .addIngredient('e', categoryItem(plugin, "glows"))
-                .addIngredient('f', categoryItem(plugin, "trails"))
-                .addIngredient('g', categoryItem(plugin, "elytra-effects"))
-                .addIngredient('h', categoryItem(plugin, "join-messages"))
-                .addIngredient('i', categoryItem(plugin, "join-effects"))
-                .addIngredient('j', categoryItem(plugin, "kill-effects"))
-                .addIngredient('k', categoryItem(plugin, "death-effects"))
-                .addIngredient('l', categoryItem(plugin, "projectile-effects"))
-                .build();
+        CategoriesMenuConfig layout = plugin.getConfigManager().getCategoriesMenuConfig();
 
-        Window window = Window.single()
-                .setViewer(player)
-                .setTitle(new AdventureComponentWrapper(TextUtils.format(messages.menus.categoriesTitle)))
-                .setGui(gui)
-                .build();
+        Gui gui = Gui.gui()
+                .title(TextUtils.format(messages.menus.categoriesTitle))
+                .rows(layout.rows)
+                .disableAllInteractions()
+                .create();
 
-        window.open();
-    }
+        Map<Character, List<MenuStructure.Cell>> cells = MenuStructure.parse(layout.structure);
+        char backSymbol = symbol(layout.backSymbol);
+        char infoHeadSymbol = symbol(layout.infoHeadSymbol);
 
-    private static Item categoryItem(Mincore plugin, String category) {
-        if (!CosmeticsGui.isCategoryEnabled(plugin, category)) {
-            return new SimpleItem(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE));
+        for (Map.Entry<Character, List<MenuStructure.Cell>> entry : cells.entrySet()) {
+            char sym = entry.getKey();
+            GuiItem item;
+
+            if (sym == '#') {
+                item = background(plugin, layout.fillerMaterial);
+            } else if (sym == '.') {
+                continue;
+            } else if (sym == backSymbol) {
+                item = backButton(plugin, player, layout.backButton);
+            } else if (sym == infoHeadSymbol) {
+                item = CosmeticsGui.infoHead(plugin, player, layout.infoHead);
+            } else {
+                CategoryButton button = layout.categories.get(String.valueOf(sym));
+                if (button == null) continue;
+                item = categoryItem(plugin, player, button);
+            }
+
+            for (MenuStructure.Cell cell : entry.getValue()) {
+                gui.setItem(cell.row(), cell.col(), item);
+            }
         }
 
-        return new AbstractItem() {
-            @Override
-            public ItemProvider getItemProvider() {
-                return buildIcon(plugin, null, category);
-            }
-
-            @Override
-            public ItemProvider getItemProvider(Player viewer) {
-                return buildIcon(plugin, viewer, category);
-            }
-
-            @Override
-            public void handleClick(@NotNull ClickType clickType, @NotNull Player clicker, @NotNull InventoryClickEvent event) {
-                CosmeticsGui.open(clicker, plugin, category);
-            }
-        };
+        gui.open(player);
     }
 
-    private static ItemProvider buildIcon(Mincore plugin, Player viewer, String category) {
+    private static char symbol(String value) {
+        return value == null || value.isEmpty() ? '\0' : value.charAt(0);
+    }
+
+    private static GuiItem background(Mincore plugin, String material) {
+        return PaperItemBuilder.from(CosmeticsGui.parseMaterial(material))
+                .name(Component.empty())
+                .flags(CosmeticsGui.itemFlags(plugin))
+                .asGuiItem();
+    }
+
+    private static GuiItem backButton(Mincore plugin, Player viewer, MenuItem item) {
+        List<Component> lore = new ArrayList<>();
+        for (String line : item.lore) lore.add(TextUtils.format(line));
+
+        return PaperItemBuilder.from(CosmeticsGui.parseMaterial(item.material))
+                .name(TextUtils.format(item.displayName))
+                .lore(lore)
+                .flags(CosmeticsGui.itemFlags(plugin))
+                .asGuiItem(click -> MainMenu.open(viewer, plugin));
+    }
+
+    private static GuiItem categoryItem(Mincore plugin, Player viewer, CategoryButton button) {
+        if (!CosmeticsGui.isCategoryEnabled(plugin, button.category)) {
+            return background(plugin, button.material);
+        }
+
+        return PaperItemBuilder.from(buildIcon(plugin, viewer, button))
+                .flags(CosmeticsGui.itemFlags(plugin))
+                .asGuiItem(click -> CosmeticsGui.open(viewer, plugin, button.category));
+    }
+
+    private static ItemStack buildIcon(Mincore plugin, Player viewer, CategoryButton button) {
         MessagesConfig messages = plugin.getConfigManager().getMessagesConfig();
-        Material material = ICONS.getOrDefault(category, Material.CHEST);
-        StandardCosmeticConfig config = plugin.getCosmeticConfigManager().getCategory(category);
-        int total = config == null ? 0 : config.items.size();
+        String category = button.category;
+        Map<String, CosmeticItem> items = CosmeticsGui.itemsForCategory(plugin, category);
+        int total = items == null ? 0 : items.size();
 
-        ItemBuilder builder = new ItemBuilder(material)
-                .setDisplayName(new AdventureComponentWrapper(TextUtils.format("<white>" + category)));
+        PlayerData data = plugin.getPlayerManager().get(viewer.getUniqueId());
+        long unlocked = items == null || data == null ? 0 : items.keySet().stream()
+                .filter(id -> CosmeticsGui.isAccessible(plugin, viewer, category, id, items.get(id)))
+                .count();
+        String equippedId = data == null ? null : data.getActiveCosmetic(category);
+        CosmeticItem equippedItem = equippedId == null || items == null ? null : items.get(equippedId);
+        String equipped = equippedItem != null ? equippedItem.displayName : equippedId;
 
-        if (viewer != null) {
-            PlayerData data = plugin.getPlayerManager().get(viewer.getUniqueId());
-            long unlocked = config == null || data == null ? 0 : config.items.keySet().stream()
-                    .filter(id -> CosmeticsGui.isAccessible(plugin, viewer, category, id, config.items.get(id)))
-                    .count();
-            String equipped = data == null ? null : data.getActiveCosmetic(category);
+        List<Component> lore = new ArrayList<>();
+        for (String line : button.lore) lore.add(TextUtils.format(line));
+        lore.add(TextUtils.format(messages.menus.categoryUnlockedLore
+                .replace("%unlocked%", String.valueOf(unlocked))
+                .replace("%total%", String.valueOf(total))));
+        lore.add(TextUtils.format(equipped != null
+                ? messages.menus.categoryEquippedLore.replace("%equipped%", equipped)
+                : messages.menus.categoryNothingEquipped));
 
-            builder.addLoreLines(
-                    TextUtils.formatLegacy(messages.menus.categoryUnlockedLore
-                            .replace("%unlocked%", String.valueOf(unlocked))
-                            .replace("%total%", String.valueOf(total))),
-                    TextUtils.formatLegacy(equipped != null
-                            ? messages.menus.categoryEquippedLore.replace("%equipped%", equipped)
-                            : messages.menus.categoryNothingEquipped)
-            );
-        }
-
-        return builder;
+        return PaperItemBuilder.from(CosmeticsGui.parseMaterial(button.material))
+                .name(TextUtils.format(button.displayName))
+                .lore(lore)
+                .build();
     }
 }

@@ -5,12 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.dqnylux</groupId>
-    <artifactId>Mincore</artifactId>
+    <artifactId>CoreEC</artifactId>
     <version>1.0</version>
     <description>algoxd</description>
     <packaging>jar</packaging>
 
     <properties>
+        <!-- 21: lo que exige Paper 1.21.x de verdad (desde 1.20.5). El proyecto
+             corrió por un tiempo contra Minecraft 26.1 (que sí exigía Java 25),
+             pero el server real bajó a la línea 1.21.x - Java 21 es el mínimo
+             correcto para esa versión, no hace falta más. -->
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -23,14 +27,97 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <!-- <release> en vez de <source>/<target> por separado: le dice a
+                         javac que compile contra el conjunto de APIs REAL de Java 21
+                         (no solo la sintaxis del lenguaje) - así si el código usa sin
+                         querer algo agregado en Java 22+ (aunque el JDK que compila
+                         sea más nuevo), falla acá mismo en vez de reventar en el
+                         server real, que puede correr solo con JDK 21. Además evita
+                         el warning "location of system modules is not set". -->
+                    <release>${java.version}</release>
                     <compilerArgs>
                         <arg>-parameters</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
-            <!-- MAVEN-SHADE-PLUGIN ELIMINADO: No queremos incrustar nada, todo se descargará. -->
+            <!-- MAVEN-SHADE-PLUGIN eliminado para TODO excepto EntityLib (ver
+                 abajo): el resto de dependencias sigue sin incrustarse, todo
+                 se descarga vía MincoreLoader como siempre. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>shade</goal></goals>
+                        <configuration>
+                            <!-- SOLO EntityLib (io.github.tofaa2) se incrusta -
+                                 excepción puntual, no un cambio de política general.
+                                 Motivo: EntityLib necesita interoperar en tiempo de
+                                 tipo con la MISMA instancia de PacketEventsAPI que ya
+                                 usa el resto de Mincore (viene del plugin "packetevents"
+                                 real vía delegación entre classloaders de plugins). El
+                                 classloader de librería aislado que arma MincoreLoader
+                                 para el resto de dependencias NO tiene esa delegación
+                                 (aislamiento intencional de Paper para que un plugin
+                                 pueda bundlear su propia versión de una librería sin
+                                 chocar con otros plugins) - probado en vivo: con
+                                 EntityLib como librería aparte, o termina con su propia
+                                 copia sin inicializar de PacketEventsAPI (NPE) o no
+                                 puede resolverla en absoluto (NoClassDefFoundError),
+                                 sin punto intermedio. Incrustado en el jar de Mincore,
+                                 sus clases cargan con EL MISMO classloader que ya tiene
+                                 esa delegación funcionando (GlowManager, FreezeManager,
+                                 etc. la usan hace rato sin problema).
+                                 packetevents-spigot NO se incluye acá - EntityLib solo
+                                 necesita ver sus clases (com.github.retrooper.packetevents.*
+                                 Y io.github.retrooper.packetevents.bstats.*), ambas ya
+                                 expuestas por el plugin "packetevents" real una vez que
+                                 EntityLib comparte el classloader de Mincore. -->
+                            <artifactSet>
+                                <includes>
+                                    <include>io.github.tofaa2:*</include>
+                                    <!-- Drivers JDBC de MariaDB/MySQL - ver el comentario largo
+                                         en la <dependency> de más abajo sobre por qué van
+                                         incrustados en vez de resueltos por MincoreLoader. -->
+                                    <include>org.mariadb.jdbc:*</include>
+                                    <include>com.mysql:*</include>
+                                </includes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>me.tofaa.entitylib</pattern>
+                                    <shadedPattern>org.dqnylux.mincore.libs.entitylib</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>module-info.class</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <!-- mariadb-java-client y mysql-connector-j registran cada
+                                 uno su propio META-INF/services/java.sql.Driver - sin
+                                 esto, shade se queda con UNO solo de los dos (el otro
+                                 se pisa en silencio). No lo necesitamos en la práctica
+                                 (DatabaseManager ya fija el driver por nombre de clase
+                                 explícito, sin depender de ServiceLoader), pero fusionar
+                                 en vez de sobrescribir es el fix correcto y elimina la
+                                 ambigüedad de raíz para cualquier META-INF/services/*
+                                 futuro. -->
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -45,7 +132,17 @@
         <repository><id>okaeri-releases</id><url>https://repo.okaeri.cloud/releases</url></repository>
         <repository><id>xenondevs</id><url>https://repo.xenondevs.xyz/releases</url></repository>
         <repository><id>codemc-releases</id><url>https://repo.codemc.io/repository/maven-releases/</url></repository>
-        <repository><id>jitpack.io</id><url>https://jitpack.io</url></repository>
+        <repository>
+            <!-- Solo para TAB-API (release, no SNAPSHOT). Snapshots
+                 deshabilitados a propósito: jitpack exige token desde 2025
+                 (401), y sin esto Maven lo probaba igual para CADA
+                 dependencia -SNAPSHOT del proyecto (floodgate/geyser/
+                 entitylib, que en realidad viven en otros repos) generando
+                 warnings 401 ruidosos en cada build por nada. -->
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
         <repository><id>placeholderapi</id><url>https://repo.helpch.at/releases/</url></repository>
         <repository>
             <id>opencollab-snapshots</id>
@@ -57,14 +154,28 @@
             <id>opencollab-releases</id>
             <url>https://repo.opencollab.dev/maven-releases/</url>
         </repository>
+        <repository>
+            <!-- EntityLib (Tofaa) - librería sobre PacketEvents para entidades
+                 falsas (TextDisplay del nametag propio, ver managers/nametag).
+                 Publican solo versiones "-SNAPSHOT" como esquema permanente,
+                 no como builds inestables en movimiento - repo Reposilite real
+                 con metadata de snapshot válida, no jitpack. -->
+            <id>pvphub-tofaa</id>
+            <url>https://maven.pvphub.me/tofaa</url>
+        </repository>
     </repositories>
 
     <!-- TODAS LAS DEPENDENCIAS EN PROVIDED (Solo sirven para que el IDE no marque errores) -->
     <dependencies>
         <dependency>
+            <!-- 1.21.11 (última build 1.21.x del repo de PaperMC): producción
+                 bajó de la línea 26.1 a 1.21.x - el plugin ahora compila y
+                 corre contra esta API. TaskScheduler (org.dqnylux.mincore.scheduler)
+                 abstrae el scheduler de Folia para que el mismo jar funcione
+                 igual en Paper normal (sin Folia) y en Folia. -->
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.1-R0.1-SNAPSHOT</version>
+            <version>1.21.11-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -98,12 +209,20 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <!-- invui-core 1.49 en vez de la línea invui 2.x: la 2.x (incluida 2.2.0,
-                 la última) está compilada con bytecode de Java 25, incompatible con
-                 el JDK 21/22 usado para construir este proyecto. La 1.49 es Java 11. -->
-            <groupId>xyz.xenondevs.invui</groupId>
-            <artifactId>invui-core</artifactId>
-            <version>1.49</version>
+            <!-- triumph-gui reemplaza a InvUI (ver historial de commits: InvUI dio 4
+                 fallos distintos encadenados en producción, todos por depender de
+                 acceso a NMS/internals - reflexión por versión en v1, acceso directo
+                 sin ofuscar en v2, y en ambos casos rompía en cuanto la build real del
+                 servidor (UniverseSpigot) divergía un poco de lo que la librería
+                 esperaba). triumph-gui-paper es 100% API pública de Bukkit/Paper
+                 (Inventory, ItemStack, PersistentDataContainer) - el único camino con
+                 reflexión de NMS (LegacyNbt) es un fallback para servidores <1.14 que
+                 nunca se activa aquí. Por eso funciona igual sin importar el fork
+                 (Spigot/Paper/Purpur/Pufferfish/UniverseSpigot) o la versión exacta del
+                 servidor - justo lo que se necesitaba. -->
+            <groupId>dev.triumphteam</groupId>
+            <artifactId>triumph-gui-paper</artifactId>
+            <version>3.1.13</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -131,6 +250,34 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <!-- FALTABAN: DatabaseConfig.MySQL.type soporta "MySQL"/"MariaDB" y
+                 DatabaseManager arma jdbc:mariadb://.../jdbc:mysql://... para ambos,
+                 pero nunca hubo un driver JDBC real en el classpath - solo
+                 sqlite-jdbc estaba. Con mysql.enabled=true esto rompía SIEMPRE con
+                 "Failed to get driver instance", cayendo a datos en blanco en cada
+                 join (PlayerManager.loadPlayer: dataSource null -> PlayerData por
+                 defecto, sin cosméticos ni coins).
+
+                 A diferencia de sqlite-jdbc/HikariCP/etc (que sí quedan en
+                 "provided" y se resuelven en runtime vía MincoreLoader como
+                 siempre), ESTOS DOS van con scope normal (compile) e INCRUSTADOS
+                 en el jar vía maven-shade-plugin (ver abajo, mismo mecanismo que
+                 EntityLib) - un host de hosting compartido puede tener salida a
+                 internet restringida y el MavenLibraryResolver de Paper fallar en
+                 silencio para un artefacto puntual sin loguear nada claro (visto
+                 en vivo: mismo error "Failed to get driver instance" después de
+                 agregarlo a MincoreLoader). Incrustado en el jar no depende de que
+                 el server pueda alcanzar Maven Central al arrancar. -->
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>3.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>9.3.0</version>
+        </dependency>
+        <dependency>
             <!-- Igual que LuckPerms/PAPI/PacketEvents: Geyser y Floodgate son plugins
                  completos que el propio servidor instala por separado - solo necesitamos
                  el stub de compilación, nunca se añaden al MincoreLoader (sección 20). -->
@@ -150,6 +297,39 @@
             <artifactId>api</artifactId>
             <version>5.5</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- Igual que LuckPerms/Floodgate/PAPI: TAB Reborn es un plugin
+                 completo que el propio servidor instala por separado - solo
+                 el stub de compilación, nunca en MincoreLoader (ver su
+                 javadoc: jitpack exige token en runtime). El acceso real pasa
+                 SIEMPRE por TabHook.isInstalled() antes de tocar cualquier
+                 clase de este paquete, mismo patrón que BedrockUtil para
+                 Floodgate - nunca debe crashear un server sin TAB instalado. -->
+            <groupId>com.github.NEZNAMY</groupId>
+            <artifactId>TAB-API</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- A diferencia de TAB/LuckPerms/Floodgate/etc (provided, se
+                 resuelven en runtime vía MincoreLoader o vienen de otro
+                 plugin), EntityLib se INCRUSTA en el jar (maven-shade-plugin
+                 arriba, relocado a org.dqnylux.mincore.libs.entitylib) - por
+                 eso scope normal (compile), no provided: shade solo empaqueta
+                 dependencias compile/runtime. Ver el comentario del plugin de
+                 shade para el porqué (interoperar en tiempo de tipo con la
+                 misma instancia de PacketEventsAPI que ya usa el resto de
+                 Mincore, algo que un classloader de librería aislado no
+                 puede hacer). -->
+            <groupId>io.github.tofaa2</groupId>
+            <artifactId>common</artifactId>
+            <version>3.3.6-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.tofaa2</groupId>
+            <artifactId>spigot</artifactId>
+            <version>3.3.6-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

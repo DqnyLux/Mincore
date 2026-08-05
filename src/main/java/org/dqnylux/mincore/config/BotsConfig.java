@@ -1,6 +1,7 @@
 package org.dqnylux.mincore.config;
 
 import eu.okaeri.configs.annotation.Comment;
+import eu.okaeri.configs.annotation.Include;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Include(MincoreConfig.class)
 public class BotsConfig extends MincoreConfig {
 
     @Comment("Respuestas automáticas: si un jugador escribe uno de los 'triggers', el bot responde.")
@@ -57,7 +59,7 @@ public class BotsConfig extends MincoreConfig {
 
         CustomCommand discord = new CustomCommand();
         discord.aliases = new ArrayList<>(List.of("discord"));
-        discord.response = new ArrayList<>(List.of("<#5865F2>Únete a nuestro Discord: <white>discord.gg/minecuador"));
+        discord.response = new ArrayList<>(List.of("<#5865F2>Únete a nuestro Discord: <#FFFFFF>discord.gg/minecuador"));
         map.put("discord", discord);
 
         return map;

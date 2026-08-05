@@ -1,4 +1,4 @@
-name: Mincore
+name: CoreEC
 version: '1.0'
 main: org.dqnylux.mincore.Mincore
 loader: org.dqnylux.mincore.MincoreLoader
@@ -6,10 +6,19 @@ loader: org.dqnylux.mincore.MincoreLoader
 api-version: '1.21'
 authors: [DqnyLux]
 
+# Necesario para que Folia acepte cargar el plugin (si no está esta clave,
+# Folia lo rechaza directo sin importar si el código es compatible o no).
+# En Paper normal esta clave simplemente se ignora - segura de dejar siempre,
+# el soporte real de Folia lo decide TaskScheduler en runtime, no esta clave.
+folia-supported: true
+
 description: algoxd
 
 dependencies:
   server:
+    packetevents:
+      load: BEFORE
+      required: true
     PlaceholderAPI:
       load: BEFORE
       required: false
@@ -19,3 +28,35 @@ dependencies:
     floodgate:
       load: BEFORE
       required: false
+    TAB:
+      load: BEFORE
+      required: false
+
+# Sin registrar acá, cualquier nodo desconocido para Bukkit cae en
+# PermissionDefault.OP - un jugador OP (típico en un server de pruebas)
+# obtiene automáticamente hasPermission()=true incluso sin que ningún plugin
+# de permisos se lo haya otorgado. mincore.admin.bypass es justo el bypass
+# del toggle "no recibir mensajes" de otro jugador - sin este bloque, CUALQUIER
+# cuenta OP lo saltea siempre, haciendo parecer que el toggle "no funciona".
+permissions:
+  coreec.admin.bypass:
+    description: Permite ignorar el toggle de "no recibir mensajes privados" de otros jugadores.
+    default: false
+  coreec.commandblocker.bypass.commands:
+    description: Permite usar comandos bloqueados por commandblocker.yml sin ser cancelados.
+    default: false
+  coreec.commandblocker.bypass.tab:
+    description: Evita que un grupo de tab de commandblocker.yml reemplace el autocompletado "/" del jugador.
+    default: false
+  coreec.sanction.immune:
+    description: El jugador con este permiso no puede ser sancionado (salvo por staff con coreec.sanction.bypass.immune).
+    default: false
+  coreec.sanction.bypass.immune:
+    description: Permite sancionar a un jugador que tenga coreec.sanction.immune.
+    default: false
+  coreec.sanction.pardon:
+    description: Permite perdonar (deshacer) el último nivel de sanción aplicado desde el menú de sanciones (clic derecho).
+    default: false
+  coreec.report.exempt:
+    description: El jugador con este permiso no puede ser reportado con /report.
+    default: false

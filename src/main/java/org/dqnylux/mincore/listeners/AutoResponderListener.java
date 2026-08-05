@@ -42,10 +42,18 @@ public class AutoResponderListener implements Listener {
         }
     }
 
+    /**
+     * regex=false NO es "el mensaje completo es igual al trigger" (eso obligaba
+     * a escribir "ip" y nada más para disparar) - es "el trigger aparece como
+     * PALABRA COMPLETA en cualquier parte del mensaje", con \b de por medio.
+     * Así "ip" dispara en "cual es la ip del servidor" pero NO en "flipo loco"
+     * (ahí "ip" es parte de "flipo", no una palabra propia - sin \b, contains()
+     * también dispararía ahí, que es justo el falso positivo que había).
+     */
     private boolean matches(String trigger, String message, boolean regex) {
         if (regex) {
             return Pattern.compile(trigger, Pattern.CASE_INSENSITIVE).matcher(message).find();
         }
-        return message.equalsIgnoreCase(trigger);
+        return Pattern.compile("\\b" + Pattern.quote(trigger) + "\\b", Pattern.CASE_INSENSITIVE).matcher(message).find();
     }
 }

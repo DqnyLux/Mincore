@@ -16,26 +16,24 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Generaliza el patrón de CosmeticSyncManager (sección 18) a TODA la
- * configuración, no solo cosméticos: cada archivo se guarda como texto
- * completo en mincore_config_sync, sincronizado por poll periódico + push/pull
- * manual - igual que la sección 5/13.4 - más pub/sub por Redis (sección 19)
- * para recarga instantánea en vez de esperar el siguiente poll.
- * storage.yml (database.yml aquí) nunca se sincroniza: define cómo conectarse
- * a la propia BD, es inherentemente de instancia.
+ * Generaliza el patrón de CosmeticSyncManager (sección 18): cada archivo se
+ * guarda como texto completo en mincore_config_sync, sincronizado por poll
+ * periódico + push/pull manual, más pub/sub por Redis (sección 19) para
+ * recarga instantánea en vez de esperar el siguiente poll. Qué archivos se
+ * sincronizan es 100% configurable (storage.yml -> sync.synced-files, por
+ * defecto solo cosméticos/menús) - no un listado fijo en Java. storage.yml
+ * (database.yml aquí) nunca se sincroniza: define cómo conectarse a la
+ * propia BD, es inherentemente de instancia.
  */
 public class ConfigSyncManager {
 
-    private static final String[] SYNCED_FILES = {
-            "config.yml", "messages.yml", "filters.yml", "chatformat.yml", "bots.yml", "announcements.yml"
-    };
-
-    private static final String CONFIG_CHANNEL = "mincore:config:reload";
-    private static final String COSMETICS_CHANNEL = "mincore:cosmetics:updated";
+    private static final String CONFIG_CHANNEL = "coreec:config:reload";
+    private static final String COSMETICS_CHANNEL = "coreec:cosmetics:updated";
 
     private final Mincore plugin;
     private ScheduledTask pullTask;
@@ -80,15 +78,19 @@ public class ConfigSyncManager {
                     }
                 }, CONFIG_CHANNEL, COSMETICS_CHANNEL);
             } catch (Exception e) {
-                Bukkit.getLogger().warning("[Mincore] Suscripción Redis de config terminada: " + e.getMessage());
+                Bukkit.getLogger().warning("[CoreEC] Suscripción Redis de config terminada: " + e.getMessage());
             }
         });
+    }
+
+    private List<String> syncedFiles() {
+        return plugin.getConfigManager().getDatabaseConfig().sync.syncedFiles;
     }
 
     public CompletableFuture<Void> pushAll() {
         if (!networkModeActive()) return CompletableFuture.completedFuture(null);
         return CompletableFuture.runAsync(() -> {
-            for (String file : SYNCED_FILES) pushFile(file);
+            for (String file : syncedFiles()) pushFile(file);
         });
     }
 
@@ -96,12 +98,18 @@ public class ConfigSyncManager {
         if (!networkModeActive()) return CompletableFuture.completedFuture(null);
         return CompletableFuture.runAsync(() -> {
             boolean changed = false;
-            for (String file : SYNCED_FILES) {
+            for (String file : syncedFiles()) {
                 changed |= pullFile(file);
             }
             if (changed) {
-                org.dqnylux.mincore.utils.ConsoleLogger.info("<yellow>Configuración de red actualizada desde la base de datos - recargando.");
-                Bukkit.getGlobalRegionScheduler().run(plugin, task -> reloadEverything());
+                org.dqnylux.mincore.utils.ConsoleLogger.info("<#FFEB3B>Configuración de red actualizada desde la base de datos - recargando.");
+                // reloadEverything() es lectura de disco + parseo de YAML,
+                // nada de API de Bukkit que dependa de una región específica
+                // (mismo patrón que ya usa /coreec reload, que llama estos
+                // mismos métodos directo sin saltar de hilo) - saltar a la
+                // región global acá solo bloqueaba el hilo principal con
+                // trabajo pesado de I/O cada vez que esto disparaba.
+                reloadEverything();
             }
         });
     }
@@ -139,6 +147,18 @@ public class ConfigSyncManager {
                 String localContent = file.exists() ? Files.readString(file.toPath(), StandardCharsets.UTF_8) : null;
                 if (remoteContent.equals(localContent)) return false;
 
+                // Nunca bajar la versión de un archivo local: si la copia en
+                // red quedó vieja (ej. nadie corrió /mincore sync push ni
+                // /mincore reload después de una migración de esquema como
+                // chatformat.yml v1->v2), pisar el archivo local recién
+                // migrado con la vieja de la BD lo regresaría a la versión
+                // anterior en cada pull (cada reinicio + cada 300s) - un loop
+                // sin fin de "se desactualizó" que además borra cualquier
+                // personalización hecha después de la migración.
+                if (localContent != null && extractVersion(remoteContent) < extractVersion(localContent)) {
+                    return false;
+                }
+
                 Files.writeString(file.toPath(), remoteContent, StandardCharsets.UTF_8);
                 return true;
             }
@@ -146,6 +166,12 @@ public class ConfigSyncManager {
             org.dqnylux.mincore.utils.ConsoleLogger.error("Error en pull de " + fileName + ": " + e.getMessage());
             return false;
         }
+    }
+
+    /** Lee el "version: N" de nivel raíz de un YAML de Mincore sin pasar por Okaeri - 0 si no se encuentra (archivo vacío/corrupto, nunca menor que una versión real). */
+    private int extractVersion(String yamlContent) {
+        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("(?m)^version:\\s*(\\d+)").matcher(yamlContent);
+        return matcher.find() ? Integer.parseInt(matcher.group(1)) : 0;
     }
 
     private void upsertConfig(Connection connection, String fileName, String content) throws SQLException {
@@ -164,6 +190,7 @@ public class ConfigSyncManager {
 
     private void reloadEverything() {
         plugin.getConfigManager().loadConfigs();
+        plugin.getCosmeticConfigManager().loadConfigs();
         plugin.getChatFilterManager().reload();
         plugin.getAnnouncementManager().start();
         plugin.getDynamicCommandManager().reload();

@@ -18,6 +18,12 @@ public class TextUtils {
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([a-fA-F0-9]{6})");
     private static final Pattern CENTER_PATTERN = Pattern.compile("<center>(.*?)</center>", Pattern.CASE_INSENSITIVE);
 
+    /** &-code + &#RRGGBB hex (mismo formato que HEX_PATTERN ya sabe leer) - lo que esperan plugins externos (LuckPerms, TAB, Vault) que no entienden MiniMessage. */
+    private static final LegacyComponentSerializer LEGACY_AMPERSAND_HEX = LegacyComponentSerializer.builder()
+            .character('&')
+            .hexColors()
+            .build();
+
     private static final int CHAT_CENTER_PIXELS = 154;
 
     public static Component format(String text) {
@@ -39,12 +45,12 @@ public class TextUtils {
         hexMatcher.appendTail(hexSb);
         text = hexSb.toString();
 
-        text = text.replace("&0", "<black>").replace("&1", "<dark_blue>").replace("&2", "<dark_green>")
-                .replace("&3", "<dark_aqua>").replace("&4", "<dark_red>").replace("&5", "<dark_purple>")
-                .replace("&6", "<gold>").replace("&7", "<gray>").replace("&8", "<dark_gray>")
-                .replace("&9", "<blue>").replace("&a", "<green>").replace("&b", "<aqua>")
-                .replace("&c", "<red>").replace("&d", "<light_purple>").replace("&e", "<yellow>")
-                .replace("&f", "<white>").replace("&l", "<bold>").replace("&o", "<italic>")
+        text = text.replace("&0", "<black>").replace("&1", "<#2A3B99>").replace("&2", "<#2E8B22>")
+                .replace("&3", "<#00B8B8>").replace("&4", "<#B22222>").replace("&5", "<#8A2BE2>")
+                .replace("&6", "<#FFD700>").replace("&7", "<#AAAAAA>").replace("&8", "<#555555>")
+                .replace("&9", "<#4C6FFF>").replace("&a", "<#5CE65C>").replace("&b", "<#55FFFF>")
+                .replace("&c", "<#FF4C4C>").replace("&d", "<#FF6EFF>").replace("&e", "<#FFEB3B>")
+                .replace("&f", "<#FFFFFF>").replace("&l", "<bold>").replace("&o", "<italic>")
                 .replace("&n", "<underlined>").replace("&m", "<strikethrough>").replace("&k", "<obfuscated>")
                 .replace("&r", "<reset>");
 
@@ -84,6 +90,19 @@ public class TextUtils {
         if (text == null || text.isEmpty()) return "";
         Component comp = format(text);
         return LegacyComponentSerializer.legacySection().serialize(comp);
+    }
+
+    /**
+     * Convierte MiniMessage a texto legacy con &-codes (y &#RRGGBB para hex) -
+     * usado para que plugins externos que consumen prefijos/sufijos de
+     * LuckPerms (tab list, nametags, Vault) muestren el color configurado
+     * en vez del tag MiniMessage crudo. Mincore vuelve a leer ese mismo
+     * &#RRGGBB al re-parsear vía PAPI (%luckperms_prefix%), así que el color
+     * se mantiene también en el propio chat.
+     */
+    public static String toLegacyAmpersand(String text) {
+        if (text == null || text.isEmpty()) return "";
+        return LEGACY_AMPERSAND_HEX.serialize(format(text));
     }
 
     public static String stripColors(String text) {

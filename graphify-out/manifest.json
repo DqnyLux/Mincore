@@ -1,442 +1,1267 @@
 {
   ".ed-minecraft-dev/server/banned-ips.json": {
-    "mtime": 1783716464.4236903,
+    "mtime": 1784082173.5612154,
     "ast_hash": "d751713988987e9331980363e24189ce",
     "semantic_hash": "d751713988987e9331980363e24189ce"
   },
   ".ed-minecraft-dev/server/banned-players.json": {
-    "mtime": 1783716464.422181,
+    "mtime": 1784082173.5612154,
     "ast_hash": "d751713988987e9331980363e24189ce",
     "semantic_hash": "d751713988987e9331980363e24189ce"
   },
   ".ed-minecraft-dev/server/ops.json": {
-    "mtime": 1783716464.4246943,
+    "mtime": 1784082174.456467,
     "ast_hash": "d751713988987e9331980363e24189ce",
     "semantic_hash": "d751713988987e9331980363e24189ce"
   },
   ".ed-minecraft-dev/server/usercache.json": {
-    "mtime": 1783716464.422181,
+    "mtime": 1784082174.4604785,
     "ast_hash": "d751713988987e9331980363e24189ce",
     "semantic_hash": "d751713988987e9331980363e24189ce"
   },
   ".ed-minecraft-dev/server/version_history.json": {
-    "mtime": 1783638210.601326,
+    "mtime": 1784082174.4604785,
     "ast_hash": "839a78ed90545985a2f7ff379abd8e1c",
     "semantic_hash": "839a78ed90545985a2f7ff379abd8e1c"
   },
   ".ed-minecraft-dev/server/whitelist.json": {
-    "mtime": 1783716455.1767614,
+    "mtime": 1784082174.6028745,
     "ast_hash": "35d0e0b801444bb1f4c2115720f8e4f6",
     "semantic_hash": "35d0e0b801444bb1f4c2115720f8e4f6"
   },
   "pom.xml": {
-    "mtime": 1783829691.6282353,
-    "ast_hash": "f9c54e99f407f118e665cd275e8beb09",
-    "semantic_hash": "f9c54e99f407f118e665cd275e8beb09"
+    "mtime": 1784926357.0208466,
+    "ast_hash": "6db4f998555c8dfce4f7227b5ec58f3a",
+    "semantic_hash": "6db4f998555c8dfce4f7227b5ec58f3a"
   },
   "src/main/java/org/dqnylux/mincore/Mincore.java": {
-    "mtime": 1783829888.083526,
-    "ast_hash": "4046ecb9ef6312eb7514ee0317d83422",
-    "semantic_hash": "4046ecb9ef6312eb7514ee0317d83422"
+    "mtime": 1785203631.0436904,
+    "ast_hash": "8d5e60aa2fbe159c209127cd5b4da407",
+    "semantic_hash": "8d5e60aa2fbe159c209127cd5b4da407"
   },
   "src/main/java/org/dqnylux/mincore/MincoreLoader.java": {
-    "mtime": 1783826507.7876258,
-    "ast_hash": "75d56b03a55db554163bfaf49b450061",
-    "semantic_hash": "75d56b03a55db554163bfaf49b450061"
+    "mtime": 1784176165.5581243,
+    "ast_hash": "30949a44123c63802628cc049c3fbc9d",
+    "semantic_hash": "30949a44123c63802628cc049c3fbc9d"
+  },
+  "src/main/java/org/dqnylux/mincore/commands/CosmeticsCommand.java": {
+    "mtime": 1784082174.6558406,
+    "ast_hash": "0a71e42333c94bb8a2109f8cf0a6b5e6",
+    "semantic_hash": "0a71e42333c94bb8a2109f8cf0a6b5e6"
+  },
+  "src/main/java/org/dqnylux/mincore/commands/DynamicCommand.java": {
+    "mtime": 1784082174.6558406,
+    "ast_hash": "15aca2f8b5ed22543cd4171f696cf8f1",
+    "semantic_hash": "15aca2f8b5ed22543cd4171f696cf8f1"
+  },
+  "src/main/java/org/dqnylux/mincore/commands/MessageCommand.java": {
+    "mtime": 1784954326.508947,
+    "ast_hash": "a618d3e1491b4126dbb4b39f2a0410f5",
+    "semantic_hash": "a618d3e1491b4126dbb4b39f2a0410f5"
   },
   "src/main/java/org/dqnylux/mincore/commands/MincoreCommand.java": {
-    "mtime": 1783829958.325728,
-    "ast_hash": "373352ba05f3c36bbbf5d33c95899de8",
-    "semantic_hash": "373352ba05f3c36bbbf5d33c95899de8"
+    "mtime": 1784954344.673974,
+    "ast_hash": "410ed7b8b356e1624fdbdeaa17df16be",
+    "semantic_hash": "410ed7b8b356e1624fdbdeaa17df16be"
+  },
+  "src/main/java/org/dqnylux/mincore/commands/MiscCommand.java": {
+    "mtime": 1784082174.656843,
+    "ast_hash": "46166475371c9c36025de278e61d14a6",
+    "semantic_hash": "46166475371c9c36025de278e61d14a6"
+  },
+  "src/main/java/org/dqnylux/mincore/commands/OnlinePlayerSuggestionProvider.java": {
+    "mtime": 1784954315.518063,
+    "ast_hash": "56af4168a9faae5eb723286207ba1fad",
+    "semantic_hash": "56af4168a9faae5eb723286207ba1fad"
+  },
+  "src/main/java/org/dqnylux/mincore/commands/PreviewZoneCommand.java": {
+    "mtime": 1784586197.3262773,
+    "ast_hash": "bc45a0e3f5308224def3f5d5b1ca62de",
+    "semantic_hash": "bc45a0e3f5308224def3f5d5b1ca62de"
+  },
+  "src/main/java/org/dqnylux/mincore/commands/StaffCommand.java": {
+    "mtime": 1784995981.7677245,
+    "ast_hash": "f351d54c803b2ecd60d4d6f073dc2dfb",
+    "semantic_hash": "f351d54c803b2ecd60d4d6f073dc2dfb"
+  },
+  "src/main/java/org/dqnylux/mincore/commands/TrackCommand.java": {
+    "mtime": 1784774179.4299045,
+    "ast_hash": "60edd373964145b5ccf3a2ef53fc2b71",
+    "semantic_hash": "60edd373964145b5ccf3a2ef53fc2b71"
+  },
+  "src/main/java/org/dqnylux/mincore/config/AnnouncementsConfig.java": {
+    "mtime": 1785012576.9855192,
+    "ast_hash": "88039ddcffe2c63b38cd55df142b7b48",
+    "semantic_hash": "88039ddcffe2c63b38cd55df142b7b48"
+  },
+  "src/main/java/org/dqnylux/mincore/config/BotsConfig.java": {
+    "mtime": 1785012577.3670576,
+    "ast_hash": "08ba338b6f8be523015e0db92c5f1acc",
+    "semantic_hash": "08ba338b6f8be523015e0db92c5f1acc"
+  },
+  "src/main/java/org/dqnylux/mincore/config/CategoriesMenuConfig.java": {
+    "mtime": 1785012577.757714,
+    "ast_hash": "d5e1b85d16b5433cd466b03485703784",
+    "semantic_hash": "d5e1b85d16b5433cd466b03485703784"
+  },
+  "src/main/java/org/dqnylux/mincore/config/ChatFormatConfig.java": {
+    "mtime": 1785012578.143262,
+    "ast_hash": "79f2310caae398b7100fa1fd7808fe20",
+    "semantic_hash": "79f2310caae398b7100fa1fd7808fe20"
+  },
+  "src/main/java/org/dqnylux/mincore/config/CosmeticsMenuConfig.java": {
+    "mtime": 1785012578.5773695,
+    "ast_hash": "97d26a69271722fccc87c72d5ea53815",
+    "semantic_hash": "97d26a69271722fccc87c72d5ea53815"
   },
   "src/main/java/org/dqnylux/mincore/config/DatabaseConfig.java": {
-    "mtime": 1783661758.1222105,
-    "ast_hash": "d5ee26bf571cfb3282edd582a8f54009",
-    "semantic_hash": "d5ee26bf571cfb3282edd582a8f54009"
+    "mtime": 1784330964.624702,
+    "ast_hash": "c38cd93da62ce48667d82257a07500fe",
+    "semantic_hash": "c38cd93da62ce48667d82257a07500fe"
+  },
+  "src/main/java/org/dqnylux/mincore/config/DeathSystemConfig.java": {
+    "mtime": 1785012578.930467,
+    "ast_hash": "339892c3f82a905ded7639f3a04983aa",
+    "semantic_hash": "339892c3f82a905ded7639f3a04983aa"
+  },
+  "src/main/java/org/dqnylux/mincore/config/FiltersConfig.java": {
+    "mtime": 1785012579.329416,
+    "ast_hash": "ded7e3328574f22d579c199557ac4008",
+    "semantic_hash": "ded7e3328574f22d579c199557ac4008"
+  },
+  "src/main/java/org/dqnylux/mincore/config/MainConfig.java": {
+    "mtime": 1784928119.859716,
+    "ast_hash": "2588a21f7bd6a5cd659b6a6492d02c5e",
+    "semantic_hash": "2588a21f7bd6a5cd659b6a6492d02c5e"
+  },
+  "src/main/java/org/dqnylux/mincore/config/MainMenuConfig.java": {
+    "mtime": 1785012579.773209,
+    "ast_hash": "4a25be368c615c2eab01b842a9df817b",
+    "semantic_hash": "4a25be368c615c2eab01b842a9df817b"
+  },
+  "src/main/java/org/dqnylux/mincore/config/MessagePackConfig.java": {
+    "mtime": 1784082174.6598473,
+    "ast_hash": "05dbb86c2baba067c273d380e4a67581",
+    "semantic_hash": "05dbb86c2baba067c273d380e4a67581"
   },
   "src/main/java/org/dqnylux/mincore/config/MessagesConfig.java": {
-    "mtime": 1783830028.7376056,
-    "ast_hash": "5f4b9ab392aade66a587685e7604db86",
-    "semantic_hash": "5f4b9ab392aade66a587685e7604db86"
+    "mtime": 1785012580.2063184,
+    "ast_hash": "e2bbfefb4fbc4835e775bdd6b68fffec",
+    "semantic_hash": "e2bbfefb4fbc4835e775bdd6b68fffec"
   },
   "src/main/java/org/dqnylux/mincore/config/MincoreConfig.java": {
-    "mtime": 1783637053.9127848,
+    "mtime": 1784082174.6608474,
     "ast_hash": "5a704cd7dc0950311bdcdcff6f575240",
     "semantic_hash": "5a704cd7dc0950311bdcdcff6f575240"
   },
+  "src/main/java/org/dqnylux/mincore/config/StaffConfig.java": {
+    "mtime": 1785012581.4143736,
+    "ast_hash": "578c7e834223c038b189b8aab18a6177",
+    "semantic_hash": "578c7e834223c038b189b8aab18a6177"
+  },
+  "src/main/java/org/dqnylux/mincore/config/StandardCosmeticConfig.java": {
+    "mtime": 1784082174.6608474,
+    "ast_hash": "3df6f9ff7fd3e098d6e92931eaef4396",
+    "semantic_hash": "3df6f9ff7fd3e098d6e92931eaef4396"
+  },
+  "src/main/java/org/dqnylux/mincore/config/WingsConfig.java": {
+    "mtime": 1784082174.6608474,
+    "ast_hash": "7252b7b60bac2247489baa916cd6712b",
+    "semantic_hash": "7252b7b60bac2247489baa916cd6712b"
+  },
+  "src/main/java/org/dqnylux/mincore/config/models/CategoryButton.java": {
+    "mtime": 1785012580.6387708,
+    "ast_hash": "7272dc223c3ff0dce9af6e47e1987818",
+    "semantic_hash": "7272dc223c3ff0dce9af6e47e1987818"
+  },
+  "src/main/java/org/dqnylux/mincore/config/models/CosmeticItem.java": {
+    "mtime": 1784764515.075585,
+    "ast_hash": "41e303f5d552ee9a81a8b5cf8a3c8e26",
+    "semantic_hash": "41e303f5d552ee9a81a8b5cf8a3c8e26"
+  },
+  "src/main/java/org/dqnylux/mincore/config/models/MenuItem.java": {
+    "mtime": 1785012581.0617864,
+    "ast_hash": "7ea5f14459062409afc878b0dac1b686",
+    "semantic_hash": "7ea5f14459062409afc878b0dac1b686"
+  },
+  "src/main/java/org/dqnylux/mincore/config/models/MessagePackCosmetic.java": {
+    "mtime": 1784082174.6618478,
+    "ast_hash": "b9d1aff328b1bb28a5beef48cbb11c3b",
+    "semantic_hash": "b9d1aff328b1bb28a5beef48cbb11c3b"
+  },
+  "src/main/java/org/dqnylux/mincore/config/models/WingCosmetic.java": {
+    "mtime": 1784319507.6230578,
+    "ast_hash": "401868988db8c3b75f823e90f5780294",
+    "semantic_hash": "401868988db8c3b75f823e90f5780294"
+  },
+  "src/main/java/org/dqnylux/mincore/hooks/LuckPermsHook.java": {
+    "mtime": 1784227210.0598364,
+    "ast_hash": "ce89688cfbca805d30e3028d80c72b02",
+    "semantic_hash": "ce89688cfbca805d30e3028d80c72b02"
+  },
+  "src/main/java/org/dqnylux/mincore/hooks/PAPIExpansion.java": {
+    "mtime": 1784758579.169488,
+    "ast_hash": "dfa5242bd6300938ee8baf8b2ee2b11c",
+    "semantic_hash": "dfa5242bd6300938ee8baf8b2ee2b11c"
+  },
+  "src/main/java/org/dqnylux/mincore/listeners/AdvancementBlockListener.java": {
+    "mtime": 1784336679.8524709,
+    "ast_hash": "d71f3f003eb07c2ae1d75f8dee8f29c1",
+    "semantic_hash": "d71f3f003eb07c2ae1d75f8dee8f29c1"
+  },
+  "src/main/java/org/dqnylux/mincore/listeners/AntiSignatureListener.java": {
+    "mtime": 1784082174.664175,
+    "ast_hash": "52d7b9d95d81ac7a836f3d481be14aba",
+    "semantic_hash": "52d7b9d95d81ac7a836f3d481be14aba"
+  },
+  "src/main/java/org/dqnylux/mincore/listeners/AutoResponderListener.java": {
+    "mtime": 1784082174.664175,
+    "ast_hash": "a673b0b79f0fe217eabe025bc504ab71",
+    "semantic_hash": "a673b0b79f0fe217eabe025bc504ab71"
+  },
+  "src/main/java/org/dqnylux/mincore/listeners/ChatListener.java": {
+    "mtime": 1784082174.664175,
+    "ast_hash": "665becf0b78e26deb71c7d50e3730a89",
+    "semantic_hash": "665becf0b78e26deb71c7d50e3730a89"
+  },
+  "src/main/java/org/dqnylux/mincore/listeners/CombatCosmeticsListener.java": {
+    "mtime": 1784952970.9515305,
+    "ast_hash": "554a1aaa4d6f4310626875541b0479db",
+    "semantic_hash": "554a1aaa4d6f4310626875541b0479db"
+  },
+  "src/main/java/org/dqnylux/mincore/listeners/DeathListener.java": {
+    "mtime": 1784927668.5071864,
+    "ast_hash": "1ab1783add1d49466fb83861dbc48ffc",
+    "semantic_hash": "1ab1783add1d49466fb83861dbc48ffc"
+  },
+  "src/main/java/org/dqnylux/mincore/listeners/PlayerConnectionListener.java": {
+    "mtime": 1785205211.1349716,
+    "ast_hash": "8b78cfd5a186cdaa580f84a2761d44dd",
+    "semantic_hash": "8b78cfd5a186cdaa580f84a2761d44dd"
+  },
+  "src/main/java/org/dqnylux/mincore/listeners/StaffListener.java": {
+    "mtime": 1785002934.034266,
+    "ast_hash": "48fa4707b8518ba29bb86bc43af4f6ed",
+    "semantic_hash": "48fa4707b8518ba29bb86bc43af4f6ed"
+  },
+  "src/main/java/org/dqnylux/mincore/listeners/TabCompleteListener.java": {
+    "mtime": 1784082174.6666253,
+    "ast_hash": "18d8de8c7fdbc317d0d8005e67b97bcf",
+    "semantic_hash": "18d8de8c7fdbc317d0d8005e67b97bcf"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/AnnouncementManager.java": {
+    "mtime": 1784082174.6666253,
+    "ast_hash": "0b360d660f70757e444909022c7c8c00",
+    "semantic_hash": "0b360d660f70757e444909022c7c8c00"
+  },
   "src/main/java/org/dqnylux/mincore/managers/CommandManager.java": {
-    "mtime": 1783830084.868935,
-    "ast_hash": "34b532f671201cfac6350759b2e80518",
-    "semantic_hash": "34b532f671201cfac6350759b2e80518"
+    "mtime": 1785001469.5938945,
+    "ast_hash": "2a5ecab36251e66149043fa0b5e659c3",
+    "semantic_hash": "2a5ecab36251e66149043fa0b5e659c3"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/ConfigSyncManager.java": {
+    "mtime": 1785012582.2025623,
+    "ast_hash": "aa544d40f34c032a7152d8aa7512d258",
+    "semantic_hash": "aa544d40f34c032a7152d8aa7512d258"
   },
   "src/main/java/org/dqnylux/mincore/managers/CoreConfigManager.java": {
-    "mtime": 1783827347.3626504,
-    "ast_hash": "9e57a770015795fad2f18250b102a9b1",
-    "semantic_hash": "9e57a770015795fad2f18250b102a9b1"
+    "mtime": 1785012582.665684,
+    "ast_hash": "ab143c597b350da042895152f9edc39a",
+    "semantic_hash": "ab143c597b350da042895152f9edc39a"
   },
   "src/main/java/org/dqnylux/mincore/managers/DatabaseManager.java": {
-    "mtime": 1783829821.760774,
-    "ast_hash": "ae8b7f8724952112e7a0972e04b086c0",
-    "semantic_hash": "ae8b7f8724952112e7a0972e04b086c0"
+    "mtime": 1785001202.6119964,
+    "ast_hash": "4b1cdfc318e482ad795036357191aea9",
+    "semantic_hash": "4b1cdfc318e482ad795036357191aea9"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/DeathTrackingManager.java": {
+    "mtime": 1784759468.6216857,
+    "ast_hash": "4963fd30f53f31e55ab2326dc698fe54",
+    "semantic_hash": "4963fd30f53f31e55ab2326dc698fe54"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/DynamicCommandManager.java": {
+    "mtime": 1784082174.668692,
+    "ast_hash": "147f46b38f85a1eb9bcb8541fbcba16a",
+    "semantic_hash": "147f46b38f85a1eb9bcb8541fbcba16a"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/EconomyAdminHandler.java": {
+    "mtime": 1784952994.4747455,
+    "ast_hash": "04cbbc95621fff58502cdae4e6475736",
+    "semantic_hash": "04cbbc95621fff58502cdae4e6475736"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/MotdManager.java": {
+    "mtime": 1785012583.8868241,
+    "ast_hash": "bc397ee838bb6f4440419b7461ecdc67",
+    "semantic_hash": "bc397ee838bb6f4440419b7461ecdc67"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/PlayerManager.java": {
+    "mtime": 1784757021.266348,
+    "ast_hash": "bddb0df048dc962bc6e7a15d3030c6f8",
+    "semantic_hash": "bddb0df048dc962bc6e7a15d3030c6f8"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/ReplyManager.java": {
+    "mtime": 1784082174.6696923,
+    "ast_hash": "47d459f31b4507e2d9b9fa6406600550",
+    "semantic_hash": "47d459f31b4507e2d9b9fa6406600550"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/chat/ChatFilterManager.java": {
+    "mtime": 1784082174.6706924,
+    "ast_hash": "a125ff81e4490dfbee94bf076c30ca62",
+    "semantic_hash": "a125ff81e4490dfbee94bf076c30ca62"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/chat/ChatFormatHandler.java": {
+    "mtime": 1785012581.8452063,
+    "ast_hash": "ab4f5babd6ee53d17d7b2984c0beb614",
+    "semantic_hash": "ab4f5babd6ee53d17d7b2984c0beb614"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/chat/ChatPunishmentHandler.java": {
+    "mtime": 1784317685.8722734,
+    "ast_hash": "ae386823af2f7181bfecfa16b3615ed4",
+    "semantic_hash": "ae386823af2f7181bfecfa16b3615ed4"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/chat/InfractionToastManager.java": {
+    "mtime": 1784317668.925102,
+    "ast_hash": "5beca4788dfc7853948fe601b0df5b9c",
+    "semantic_hash": "5beca4788dfc7853948fe601b0df5b9c"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/chat/MentionToastManager.java": {
+    "mtime": 1784771202.769801,
+    "ast_hash": "6a6689dc2b3b3a25375bc0f8ce80b0be",
+    "semantic_hash": "6a6689dc2b3b3a25375bc0f8ce80b0be"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/CosmeticConfigManager.java": {
+    "mtime": 1785012583.0902257,
+    "ast_hash": "c28fc53bdac4d31d21ce31886969e386",
+    "semantic_hash": "c28fc53bdac4d31d21ce31886969e386"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/CosmeticSyncManager.java": {
+    "mtime": 1784082174.6720266,
+    "ast_hash": "e0c0225516517c2c76426ce71968ceb2",
+    "semantic_hash": "e0c0225516517c2c76426ce71968ceb2"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/EffectRegistry.java": {
+    "mtime": 1784924178.7609298,
+    "ast_hash": "4b6d17a08ddde1c04fd1d11c4b79f2be",
+    "semantic_hash": "4b6d17a08ddde1c04fd1d11c4b79f2be"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/EffectUtils.java": {
+    "mtime": 1784926094.4660184,
+    "ast_hash": "dc2ca2e863bcb8be645905b3bbc55c01",
+    "semantic_hash": "dc2ca2e863bcb8be645905b3bbc55c01"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/GlowManager.java": {
+    "mtime": 1784844778.583458,
+    "ast_hash": "12b495eb1ec9008e998a9d46824ca43d",
+    "semantic_hash": "12b495eb1ec9008e998a9d46824ca43d"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/PreviewZoneManager.java": {
+    "mtime": 1784764529.7742307,
+    "ast_hash": "233e38f49c2b9ddd6f11145656201b08",
+    "semantic_hash": "233e38f49c2b9ddd6f11145656201b08"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/SensitiveBlockUtils.java": {
+    "mtime": 1784319558.808841,
+    "ast_hash": "5966a0eb070a6161468f6b6df4e20eea",
+    "semantic_hash": "5966a0eb070a6161468f6b6df4e20eea"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/TabListManager.java": {
+    "mtime": 1784770432.3228261,
+    "ast_hash": "d566ecc9d8a5f947b06173936d19f4e8",
+    "semantic_hash": "d566ecc9d8a5f947b06173936d19f4e8"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/TrailManager.java": {
+    "mtime": 1784833102.8489957,
+    "ast_hash": "8999a99e1419f53d097267ae1423a3f9",
+    "semantic_hash": "8999a99e1419f53d097267ae1423a3f9"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/WingManager.java": {
+    "mtime": 1784845471.8373244,
+    "ast_hash": "21af209ff54a5e9694a3703c05200632",
+    "semantic_hash": "21af209ff54a5e9694a3703c05200632"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/api/CosmeticEffect.java": {
+    "mtime": 1784082174.6751213,
+    "ast_hash": "f66ce9776b466a2c1a636a6a6ee2acc2",
+    "semantic_hash": "f66ce9776b466a2c1a636a6a6ee2acc2"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/api/ElytraEffect.java": {
+    "mtime": 1784082174.6751213,
+    "ast_hash": "c633a3ca2eb46119886a2f86590b91d0",
+    "semantic_hash": "c633a3ca2eb46119886a2f86590b91d0"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/api/ProjectileEffect.java": {
+    "mtime": 1784082174.6751213,
+    "ast_hash": "5b163a4b095ae0fd1f53dde3f68728dc",
+    "semantic_hash": "5b163a4b095ae0fd1f53dde3f68728dc"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/AbyssFangsEffect.java": {
+    "mtime": 1784599317.8909202,
+    "ast_hash": "a9fec31ee4d81a64e255e4dfd759c910",
+    "semantic_hash": "a9fec31ee4d81a64e255e4dfd759c910"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/AllaysEffect.java": {
+    "mtime": 1784677180.20831,
+    "ast_hash": "e11b79dcb78ff14e3844665f57fff97c",
+    "semantic_hash": "e11b79dcb78ff14e3844665f57fff97c"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/AuraFarmingEffect.java": {
+    "mtime": 1784584993.0162797,
+    "ast_hash": "34b7841858e518f1ac0a356ca4ed1017",
+    "semantic_hash": "34b7841858e518f1ac0a356ca4ed1017"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/BlackHoleProjectileEffect.java": {
+    "mtime": 1784585426.8634892,
+    "ast_hash": "3ecdde86c68e5de6b18028e2cbe99134",
+    "semantic_hash": "3ecdde86c68e5de6b18028e2cbe99134"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/BurstEffect.java": {
+    "mtime": 1784303643.422819,
+    "ast_hash": "9a4163b44230daa510cd904c38ec6ceb",
+    "semantic_hash": "9a4163b44230daa510cd904c38ec6ceb"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/ChickensEffect.java": {
+    "mtime": 1784584993.016796,
+    "ast_hash": "1f971758cf4f6050899f69c99aa2e6a9",
+    "semantic_hash": "1f971758cf4f6050899f69c99aa2e6a9"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/CloudBurstElytraEffect.java": {
+    "mtime": 1784303749.5609138,
+    "ast_hash": "0e9c850109010df63fa6be2f8926ea2c",
+    "semantic_hash": "0e9c850109010df63fa6be2f8926ea2c"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/CloudTrailElytraEffect.java": {
+    "mtime": 1784178435.417604,
+    "ast_hash": "ffc5154f28d5882ff68ee66de8b1cd6c",
+    "semantic_hash": "ffc5154f28d5882ff68ee66de8b1cd6c"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/CometTailElytraEffect.java": {
+    "mtime": 1784845657.3549864,
+    "ast_hash": "f92ee145bc67607c03dd066c0dbe8fae",
+    "semantic_hash": "f92ee145bc67607c03dd066c0dbe8fae"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/CryoCoreEffect.java": {
+    "mtime": 1784578991.9162967,
+    "ast_hash": "998a2127b9dd41a6702a50277b15b7d5",
+    "semantic_hash": "998a2127b9dd41a6702a50277b15b7d5"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/CrystalShatterEffect.java": {
+    "mtime": 1784845615.851223,
+    "ast_hash": "d9223782b27f2e54d7bd161c00049e76",
+    "semantic_hash": "d9223782b27f2e54d7bd161c00049e76"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/DimensionalRiftEffect.java": {
+    "mtime": 1784926143.7263644,
+    "ast_hash": "79ea89559f588153d240669759aa8fe7",
+    "semantic_hash": "79ea89559f588153d240669759aa8fe7"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/EnchantColumnEffect.java": {
+    "mtime": 1784584993.0188107,
+    "ast_hash": "b47b781359e0ab921c1e3dda527d96db",
+    "semantic_hash": "b47b781359e0ab921c1e3dda527d96db"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/ExplosionEffect.java": {
+    "mtime": 1784320288.884852,
+    "ast_hash": "115d9c7b2f1f92b5114ba619cbdb96af",
+    "semantic_hash": "115d9c7b2f1f92b5114ba619cbdb96af"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/FallingBeamEffect.java": {
+    "mtime": 1784584993.0188107,
+    "ast_hash": "201af8b94d3a7434a6284291dbef342e",
+    "semantic_hash": "201af8b94d3a7434a6284291dbef342e"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/FireworksEffect.java": {
+    "mtime": 1784584993.0198157,
+    "ast_hash": "8a8ae2bca8c0364fee7fc1985e3cc60a",
+    "semantic_hash": "8a8ae2bca8c0364fee7fc1985e3cc60a"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/FixedEmitterElytraEffect.java": {
+    "mtime": 1784303764.7867208,
+    "ast_hash": "33c6b30136135dff4c6ed63459991f08",
+    "semantic_hash": "33c6b30136135dff4c6ed63459991f08"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/FlameRingEffect.java": {
+    "mtime": 1784082174.6763134,
+    "ast_hash": "441ec2891f8e6ac0d0cae7506264c19e",
+    "semantic_hash": "441ec2891f8e6ac0d0cae7506264c19e"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/GenericTrailProjectileEffect.java": {
+    "mtime": 1784303783.6947057,
+    "ast_hash": "2c293f451b45e24bd123ab8d2b6e1aaf",
+    "semantic_hash": "2c293f451b45e24bd123ab8d2b6e1aaf"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/GiantTotemEffect.java": {
+    "mtime": 1784924167.3186922,
+    "ast_hash": "07fa3a9f6b3158af5a1080987472d101",
+    "semantic_hash": "07fa3a9f6b3158af5a1080987472d101"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/GlowMissileEffect.java": {
+    "mtime": 1784826586.3841312,
+    "ast_hash": "81a9cd337a8ac297b1715b681f7c34ea",
+    "semantic_hash": "81a9cd337a8ac297b1715b681f7c34ea"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/GraveEffect.java": {
+    "mtime": 1785012583.504393,
+    "ast_hash": "d12e72b65f34d905f2ca19b3280a83b4",
+    "semantic_hash": "d12e72b65f34d905f2ca19b3280a83b4"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/GuardianEffect.java": {
+    "mtime": 1784677186.5704675,
+    "ast_hash": "6cfd8c8b12385b4b633f427dff2e40ff",
+    "semantic_hash": "6cfd8c8b12385b4b633f427dff2e40ff"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/HeartBurstEffect.java": {
+    "mtime": 1784082174.6763134,
+    "ast_hash": "ac3d5c92a4daab286abb745f28ee0b91",
+    "semantic_hash": "ac3d5c92a4daab286abb745f28ee0b91"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/HelixProjectileEffect.java": {
+    "mtime": 1784303792.6600657,
+    "ast_hash": "322a9ca800a2bd286bba1bcf1bca1963",
+    "semantic_hash": "322a9ca800a2bd286bba1bcf1bca1963"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/IcewalkerEffect.java": {
+    "mtime": 1784756821.0722134,
+    "ast_hash": "1c0be383259054f6a6bae2a6af348628",
+    "semantic_hash": "1c0be383259054f6a6bae2a6af348628"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/LightningEffect.java": {
+    "mtime": 1784319661.7817864,
+    "ast_hash": "f6e78cbacc32ccf92614afcb4b853119",
+    "semantic_hash": "f6e78cbacc32ccf92614afcb4b853119"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/LightningWingsElytraEffect.java": {
+    "mtime": 1784862472.077747,
+    "ast_hash": "3fc9b2e47d08a5730f54bb322cadac13",
+    "semantic_hash": "3fc9b2e47d08a5730f54bb322cadac13"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/LineElytraEffect.java": {
+    "mtime": 1784303732.6503022,
+    "ast_hash": "4fcd7d04deb4066b8f6952023344602a",
+    "semantic_hash": "4fcd7d04deb4066b8f6952023344602a"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/MatrixCodeElytraEffect.java": {
+    "mtime": 1784845573.8738172,
+    "ast_hash": "f80f697dcc53ad49e1fc3f0ce1a70e12",
+    "semantic_hash": "f80f697dcc53ad49e1fc3f0ce1a70e12"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/MeteorsEffect.java": {
+    "mtime": 1784764238.3075647,
+    "ast_hash": "c34e304f51a75ddb1b6470cfb0261d57",
+    "semantic_hash": "c34e304f51a75ddb1b6470cfb0261d57"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/OrbitEffect.java": {
+    "mtime": 1784584993.0238101,
+    "ast_hash": "7bc15c112f3172515ccedec9f3e1246e",
+    "semantic_hash": "7bc15c112f3172515ccedec9f3e1246e"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/PandasEffect.java": {
+    "mtime": 1784756833.3049002,
+    "ast_hash": "215052774e15dfc5e325b8caada7f40c",
+    "semantic_hash": "215052774e15dfc5e325b8caada7f40c"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/PigTornadoEffect.java": {
+    "mtime": 1784677190.9088223,
+    "ast_hash": "f481fefaa1c48336002660b8a524bc5a",
+    "semantic_hash": "f481fefaa1c48336002660b8a524bc5a"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/PolygonElytraEffect.java": {
+    "mtime": 1784833084.384089,
+    "ast_hash": "45a728c768d70c5b0d373053d32caad8",
+    "semantic_hash": "45a728c768d70c5b0d373053d32caad8"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/PrismaticNovaEffect.java": {
+    "mtime": 1784783998.445464,
+    "ast_hash": "2fb3f06c6e340ec400df71f4f5d716a3",
+    "semantic_hash": "2fb3f06c6e340ec400df71f4f5d716a3"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/ProjectileTrailEffect.java": {
+    "mtime": 1784082174.6763134,
+    "ast_hash": "b0c706ff872f0c169725c45cebb7a693",
+    "semantic_hash": "b0c706ff872f0c169725c45cebb7a693"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/PulsingBurstEffect.java": {
+    "mtime": 1784584993.0333889,
+    "ast_hash": "0b8a29cd7549b820af84c1a68fd1bdf7",
+    "semantic_hash": "0b8a29cd7549b820af84c1a68fd1bdf7"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/RainbowRibbonElytraEffect.java": {
+    "mtime": 1784599468.33716,
+    "ast_hash": "17cc9e0bd535115f15608a8a76b92956",
+    "semantic_hash": "17cc9e0bd535115f15608a8a76b92956"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/RainbowTrailProjectileEffect.java": {
+    "mtime": 1784585719.929267,
+    "ast_hash": "15f67796f9b3f8573a793c9dc7c7af36",
+    "semantic_hash": "15f67796f9b3f8573a793c9dc7c7af36"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/RingElytraEffect.java": {
+    "mtime": 1784303725.571677,
+    "ast_hash": "a8e55b833be17c64bc86dad368e631fa",
+    "semantic_hash": "a8e55b833be17c64bc86dad368e631fa"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/RisingCloudEffect.java": {
+    "mtime": 1784845606.1005516,
+    "ast_hash": "a1c89c7046014e14ce384c4d72974d20",
+    "semantic_hash": "a1c89c7046014e14ce384c4d72974d20"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/ScaleTransformEffect.java": {
+    "mtime": 1784584993.0343964,
+    "ast_hash": "59d3394fadc50dc89139070ec1f9b3b7",
+    "semantic_hash": "59d3394fadc50dc89139070ec1f9b3b7"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/ShockwaveEffect.java": {
+    "mtime": 1784783981.8100994,
+    "ast_hash": "03f6a3eea00b709243f8c2f0e947ee27",
+    "semantic_hash": "03f6a3eea00b709243f8c2f0e947ee27"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/SkeletonArmorEffect.java": {
+    "mtime": 1784320272.6950374,
+    "ast_hash": "2e2c620693d9555454f97a7a74f094f2",
+    "semantic_hash": "2e2c620693d9555454f97a7a74f094f2"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/SmokeTrailProjectileEffect.java": {
+    "mtime": 1784178441.7708685,
+    "ast_hash": "7ce788825b8a36cec1339a64e552997c",
+    "semantic_hash": "7ce788825b8a36cec1339a64e552997c"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/SniperEffect.java": {
+    "mtime": 1784826548.1954203,
+    "ast_hash": "53af106a4837ba47a8a250f40ffded3a",
+    "semantic_hash": "53af106a4837ba47a8a250f40ffded3a"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/SnowVortexElytraEffect.java": {
+    "mtime": 1784924131.6006372,
+    "ast_hash": "2fe3be01943c50b156235720b8251c08",
+    "semantic_hash": "2fe3be01943c50b156235720b8251c08"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/StarShowerEffect.java": {
+    "mtime": 1784584993.0353987,
+    "ast_hash": "14ed552792c333e7f34c42f926917350",
+    "semantic_hash": "14ed552792c333e7f34c42f926917350"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/StellarCollapseEffect.java": {
+    "mtime": 1784926133.9102306,
+    "ast_hash": "4e70528f6f13f2f2002106a91d76af99",
+    "semantic_hash": "4e70528f6f13f2f2002106a91d76af99"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/SymphonyEffect.java": {
+    "mtime": 1784756871.8651204,
+    "ast_hash": "3602fcba4c0000bf35471bdc7e3b9b57",
+    "semantic_hash": "3602fcba4c0000bf35471bdc7e3b9b57"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/VoidLotusEffect.java": {
+    "mtime": 1784926114.9533186,
+    "ast_hash": "0b8a900eeca4ff2ebb433c7f6bae3840",
+    "semantic_hash": "0b8a900eeca4ff2ebb433c7f6bae3840"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/VolcanoEffect.java": {
+    "mtime": 1784584993.0379138,
+    "ast_hash": "f6fc099bb95b94327c07ef065d6afcda",
+    "semantic_hash": "f6fc099bb95b94327c07ef065d6afcda"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/WardenEffect.java": {
+    "mtime": 1784320072.0912726,
+    "ast_hash": "8b017c8d572204d5365e16f8ee323132",
+    "semantic_hash": "8b017c8d572204d5365e16f8ee323132"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/WingElytraEffect.java": {
+    "mtime": 1784303741.1803505,
+    "ast_hash": "dbd69aebc2ca65fdef52ecc051b7223f",
+    "semantic_hash": "dbd69aebc2ca65fdef52ecc051b7223f"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/WorldOrbitElytraEffect.java": {
+    "mtime": 1784303772.929293,
+    "ast_hash": "af230c407e19c07b60b2a1c609a4b022",
+    "semantic_hash": "af230c407e19c07b60b2a1c609a4b022"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/staff/StaffModeManager.java": {
+    "mtime": 1785012584.3202398,
+    "ast_hash": "88c350d51f5df48ea1102c71cbba47fb",
+    "semantic_hash": "88c350d51f5df48ea1102c71cbba47fb"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/staff/StaffNetworkManager.java": {
+    "mtime": 1784844843.1338382,
+    "ast_hash": "80a9826daf12b0b3f3959c7e8fbeb261",
+    "semantic_hash": "80a9826daf12b0b3f3959c7e8fbeb261"
+  },
+  "src/main/java/org/dqnylux/mincore/managers/staff/VanishManager.java": {
+    "mtime": 1784834936.5066967,
+    "ast_hash": "1278595611bf2b5415e2fe18a755dd43",
+    "semantic_hash": "1278595611bf2b5415e2fe18a755dd43"
+  },
+  "src/main/java/org/dqnylux/mincore/menus/CategoryMenu.java": {
+    "mtime": 1784684503.263884,
+    "ast_hash": "51384be3380a669be574eab0a93d36cf",
+    "semantic_hash": "51384be3380a669be574eab0a93d36cf"
+  },
+  "src/main/java/org/dqnylux/mincore/menus/CosmeticsGui.java": {
+    "mtime": 1785012584.6968784,
+    "ast_hash": "78f582f17f2b43d070f2350f00814026",
+    "semantic_hash": "78f582f17f2b43d070f2350f00814026"
   },
   "src/main/java/org/dqnylux/mincore/menus/MainMenu.java": {
-    "mtime": 1783826515.8855138,
-    "ast_hash": "58531e411fb0b3a7181c13ba7273ac3d",
-    "semantic_hash": "58531e411fb0b3a7181c13ba7273ac3d"
+    "mtime": 1784671088.061636,
+    "ast_hash": "c470d6fe9e1151bfb56c83e045c3e3a3",
+    "semantic_hash": "c470d6fe9e1151bfb56c83e045c3e3a3"
+  },
+  "src/main/java/org/dqnylux/mincore/menus/StaffMenu.java": {
+    "mtime": 1784995949.03224,
+    "ast_hash": "74c60894ef538a76f965f0ca69f5bc9d",
+    "semantic_hash": "74c60894ef538a76f965f0ca69f5bc9d"
+  },
+  "src/main/java/org/dqnylux/mincore/model/PlayerData.java": {
+    "mtime": 1784952981.5773184,
+    "ast_hash": "0b2a4197eb9cb0fc3de9d203f80389a1",
+    "semantic_hash": "0b2a4197eb9cb0fc3de9d203f80389a1"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/Animation.java": {
+    "mtime": 1785202318.8336349,
+    "ast_hash": "c71898e0bb2a7994b5b1e0e8292dd1d1",
+    "semantic_hash": "c71898e0bb2a7994b5b1e0e8292dd1d1"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/AnimationContext.java": {
+    "mtime": 1785204820.4966378,
+    "ast_hash": "2ccb17d562e5f32997b7369722da5910",
+    "semantic_hash": "2ccb17d562e5f32997b7369722da5910"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/PozoAnimationUtil.java": {
+    "mtime": 1785202275.1823459,
+    "ast_hash": "7fc0e232a6171a4e16b521f57c33ebb0",
+    "semantic_hash": "7fc0e232a6171a4e16b521f57c33ebb0"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim00EstallidoDorado.java": {
+    "mtime": 1785204848.763155,
+    "ast_hash": "38a8143c37c36032f51324e287e6876c",
+    "semantic_hash": "38a8143c37c36032f51324e287e6876c"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim01ChispaSimple.java": {
+    "mtime": 1785204848.7742536,
+    "ast_hash": "a69ccd72ba7f3a85f3fb535847b47015",
+    "semantic_hash": "a69ccd72ba7f3a85f3fb535847b47015"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim02PozoClasico.java": {
+    "mtime": 1785204848.7879834,
+    "ast_hash": "86af4af8f22d80ef256676cfd40a819c",
+    "semantic_hash": "86af4af8f22d80ef256676cfd40a819c"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim03SinfoniaMillonaria.java": {
+    "mtime": 1785204848.8013682,
+    "ast_hash": "8d6d40ff2b6ea1019ac0c418bdf1386f",
+    "semantic_hash": "8d6d40ff2b6ea1019ac0c418bdf1386f"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim04ArcoDeMonedas.java": {
+    "mtime": 1785204848.8113902,
+    "ast_hash": "3f09cdc90a60dcb57726bdddc573d814",
+    "semantic_hash": "3f09cdc90a60dcb57726bdddc573d814"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim05EsferaDeFortuna.java": {
+    "mtime": 1785204848.822106,
+    "ast_hash": "5adb0b4788f67491ab1627a9ed925fbf",
+    "semantic_hash": "5adb0b4788f67491ab1627a9ed925fbf"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim06ConejoDeLaSuerte.java": {
+    "mtime": 1785204848.8323078,
+    "ast_hash": "7d0d68d75cb035a03ce6f2c1582123ad",
+    "semantic_hash": "7d0d68d75cb035a03ce6f2c1582123ad"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim07CalabazaMistica.java": {
+    "mtime": 1785204848.842407,
+    "ast_hash": "7a52c3f98ab6b518506d43c65ce056aa",
+    "semantic_hash": "7a52c3f98ab6b518506d43c65ce056aa"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim08CampanaDelTesoro.java": {
+    "mtime": 1785204848.8521223,
+    "ast_hash": "83ea92bb97f67fd396bb7d6800a7d52c",
+    "semantic_hash": "83ea92bb97f67fd396bb7d6800a7d52c"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim09CargaDeEnergia.java": {
+    "mtime": 1785204848.8611462,
+    "ast_hash": "80b816213cde3366018e10d4266321e0",
+    "semantic_hash": "80b816213cde3366018e10d4266321e0"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim10EspiralDorada.java": {
+    "mtime": 1785204848.8727677,
+    "ast_hash": "86be45c5d3beb3108d984b1edc40e0f4",
+    "semantic_hash": "86be45c5d3beb3108d984b1edc40e0f4"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim11OrbitaPlanetaria.java": {
+    "mtime": 1785204848.8813941,
+    "ast_hash": "04834554d2ddff3100fb37dab7bdc033",
+    "semantic_hash": "04834554d2ddff3100fb37dab7bdc033"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim12VorticeDeBloques.java": {
+    "mtime": 1785204848.8918197,
+    "ast_hash": "4fabc37b1e382684dd9fb91ec0f94e9c",
+    "semantic_hash": "4fabc37b1e382684dd9fb91ec0f94e9c"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim13GuardianAncestral.java": {
+    "mtime": 1785204848.9019186,
+    "ast_hash": "f7b4cd14fba1a0d3f233aae969d16a66",
+    "semantic_hash": "f7b4cd14fba1a0d3f233aae969d16a66"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim14EnjambreDorado.java": {
+    "mtime": 1785204848.9127834,
+    "ast_hash": "d2d78317165ac75bcda1b149d72af384",
+    "semantic_hash": "d2d78317165ac75bcda1b149d72af384"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim15SerpienteDeFuego.java": {
+    "mtime": 1785204848.922321,
+    "ast_hash": "00ba9de27e9be7d4f94f7dc4ca9d28a3",
+    "semantic_hash": "00ba9de27e9be7d4f94f7dc4ca9d28a3"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim16RebanoAfortunado.java": {
+    "mtime": 1785204848.9326224,
+    "ast_hash": "07d1beb0eebfb1695e99b86a707e8814",
+    "semantic_hash": "07d1beb0eebfb1695e99b86a707e8814"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim17TormentaHelada.java": {
+    "mtime": 1785204848.943216,
+    "ast_hash": "37f8e93d12c4ca1ec269b3feee76e585",
+    "semantic_hash": "37f8e93d12c4ca1ec269b3feee76e585"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim18ObjetoFlotante.java": {
+    "mtime": 1785204848.9528296,
+    "ast_hash": "3a9dab5265bbc623d8c180e9ef83553f",
+    "semantic_hash": "3a9dab5265bbc623d8c180e9ef83553f"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim19EspadaLegendaria.java": {
+    "mtime": 1785204848.9628453,
+    "ast_hash": "fcf6896fdf558923d7ce30430a2a3a39",
+    "semantic_hash": "fcf6896fdf558923d7ce30430a2a3a39"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim20MurallaDeCajas.java": {
+    "mtime": 1785204848.9733765,
+    "ast_hash": "178e5161b4d7d0ed347ff0e336d92319",
+    "semantic_hash": "178e5161b4d7d0ed347ff0e336d92319"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim21RemolinoCosmico.java": {
+    "mtime": 1785204848.983536,
+    "ast_hash": "8696a9e9c672f49f3163d1a1757fbada",
+    "semantic_hash": "8696a9e9c672f49f3163d1a1757fbada"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim22IslasFlotantes.java": {
+    "mtime": 1785204848.9951446,
+    "ast_hash": "3325c0026fed48e4cac9755d3e2235c9",
+    "semantic_hash": "3325c0026fed48e4cac9755d3e2235c9"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim23LluviaDeOro.java": {
+    "mtime": 1785204849.0047665,
+    "ast_hash": "96076c4a761b64a70b58732a6d420e7b",
+    "semantic_hash": "96076c4a761b64a70b58732a6d420e7b"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim24RegaloMisterioso.java": {
+    "mtime": 1785204849.0147781,
+    "ast_hash": "6079c6b92affe9cc393286dc6506acdd",
+    "semantic_hash": "6079c6b92affe9cc393286dc6506acdd"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/animations/styles/Anim25GranFinal.java": {
+    "mtime": 1785204849.0248423,
+    "ast_hash": "75c0b09478d4e55a9ed764a9cd6a79cd",
+    "semantic_hash": "75c0b09478d4e55a9ed764a9cd6a79cd"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/commands/PozoCommand.java": {
+    "mtime": 1785203519.393478,
+    "ast_hash": "faee86c3e031e4b551e80a15f028af48",
+    "semantic_hash": "faee86c3e031e4b551e80a15f028af48"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/commands/PozoTargetSuggestionProvider.java": {
+    "mtime": 1785200444.1927106,
+    "ast_hash": "d44c4639c607077d9c61fb9bc7701f02",
+    "semantic_hash": "d44c4639c607077d9c61fb9bc7701f02"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/config/PozoAnimationSettingsConfig.java": {
+    "mtime": 1785202975.8444116,
+    "ast_hash": "c4a33d41c85e7e09d79612d90852765c",
+    "semantic_hash": "c4a33d41c85e7e09d79612d90852765c"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/config/PozoBoxTypesConfig.java": {
+    "mtime": 1785001277.001662,
+    "ast_hash": "511085ea37e4eee6f6f8a3f6c5df14c1",
+    "semantic_hash": "511085ea37e4eee6f6f8a3f6c5df14c1"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/config/PozoConfig.java": {
+    "mtime": 1785204768.109857,
+    "ast_hash": "04ddfa34378e4b47e75eaf19551e7716",
+    "semantic_hash": "04ddfa34378e4b47e75eaf19551e7716"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/config/PozoCraftingConfig.java": {
+    "mtime": 1785200561.947312,
+    "ast_hash": "1dc843cd99b5d0cda6cfbe74613d43f3",
+    "semantic_hash": "1dc843cd99b5d0cda6cfbe74613d43f3"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/config/models/PozoBoxType.java": {
+    "mtime": 1785001261.6728463,
+    "ast_hash": "1f77b07e1bbcb0a076b1acd67866756f",
+    "semantic_hash": "1f77b07e1bbcb0a076b1acd67866756f"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/config/models/PozoCraftIngredient.java": {
+    "mtime": 1785001264.6946392,
+    "ast_hash": "89e97a08e3b48d60321fe2b36a6dc764",
+    "semantic_hash": "89e97a08e3b48d60321fe2b36a6dc764"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/config/models/PozoCraftRecipe.java": {
+    "mtime": 1785001268.0460486,
+    "ast_hash": "6bd8a30f1600cea349593bed18354059",
+    "semantic_hash": "6bd8a30f1600cea349593bed18354059"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/config/models/PozoRarity.java": {
+    "mtime": 1785001235.9282649,
+    "ast_hash": "91e3ba64e1fee56a7677fcda3107855f",
+    "semantic_hash": "91e3ba64e1fee56a7677fcda3107855f"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/config/models/PozoReward.java": {
+    "mtime": 1785001251.5537853,
+    "ast_hash": "4d4718c6fb611e896eaa3514804a1a9c",
+    "semantic_hash": "4d4718c6fb611e896eaa3514804a1a9c"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/listeners/PozoMachineInteractListener.java": {
+    "mtime": 1785204894.0824273,
+    "ast_hash": "f169078ad3a59fd973d94d7448309b46",
+    "semantic_hash": "f169078ad3a59fd973d94d7448309b46"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/managers/PozoAnimationRegistry.java": {
+    "mtime": 1785204865.3398008,
+    "ast_hash": "aaa54c4d14de68e37376f4c52945e4e8",
+    "semantic_hash": "aaa54c4d14de68e37376f4c52945e4e8"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/managers/PozoCatalogManager.java": {
+    "mtime": 1785203013.6739445,
+    "ast_hash": "1cd800e29f5814233e1b154d0de32925",
+    "semantic_hash": "1cd800e29f5814233e1b154d0de32925"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/managers/PozoCraftingManager.java": {
+    "mtime": 1785200529.1672282,
+    "ast_hash": "80a52bfae5623f8b27c0aa08b3324470",
+    "semantic_hash": "80a52bfae5623f8b27c0aa08b3324470"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/managers/PozoDataManager.java": {
+    "mtime": 1785199129.993752,
+    "ast_hash": "6abbae4162b79e7e1fe3776b6de408c0",
+    "semantic_hash": "6abbae4162b79e7e1fe3776b6de408c0"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/managers/PozoLootHistoryManager.java": {
+    "mtime": 1785199210.34341,
+    "ast_hash": "9848a8d7ab1ec78d6036f17908550175",
+    "semantic_hash": "9848a8d7ab1ec78d6036f17908550175"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/managers/PozoMachineManager.java": {
+    "mtime": 1785205205.9644752,
+    "ast_hash": "a2284431008e605611b4cd146c38034a",
+    "semantic_hash": "a2284431008e605611b4cd146c38034a"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/managers/PozoOpenManager.java": {
+    "mtime": 1785199285.5962515,
+    "ast_hash": "52c455bba1e9c150cd7058d2ffcf8663",
+    "semantic_hash": "52c455bba1e9c150cd7058d2ffcf8663"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/managers/PozoResultAnnouncer.java": {
+    "mtime": 1785203535.67188,
+    "ast_hash": "1c2382db3fecf2709b9b7031f695eb09",
+    "semantic_hash": "1c2382db3fecf2709b9b7031f695eb09"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/managers/PozoRewardDispatcher.java": {
+    "mtime": 1785199244.8177977,
+    "ast_hash": "a22bbc3c5b3bb39361f77bdaa9f08d9e",
+    "semantic_hash": "a22bbc3c5b3bb39361f77bdaa9f08d9e"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/PozoAnimationPickerMenu.java": {
+    "mtime": 1785204796.3722982,
+    "ast_hash": "769f178a7e2fde130b261e4d273e8b3a",
+    "semantic_hash": "769f178a7e2fde130b261e4d273e8b3a"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/PozoCraftingConfirmMenu.java": {
+    "mtime": 1785201524.845292,
+    "ast_hash": "38cd27363e7467ffae8b2006a25333fd",
+    "semantic_hash": "38cd27363e7467ffae8b2006a25333fd"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/PozoCraftingMenu.java": {
+    "mtime": 1785201504.2566743,
+    "ast_hash": "878085d337f1e2100caa63565d5355e5",
+    "semantic_hash": "878085d337f1e2100caa63565d5355e5"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/PozoGiftAmountMenu.java": {
+    "mtime": 1785203542.9723763,
+    "ast_hash": "98251cce9c4f7fafb17754fdc97e4d41",
+    "semantic_hash": "98251cce9c4f7fafb17754fdc97e4d41"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/PozoGiftMenu.java": {
+    "mtime": 1785203550.2982945,
+    "ast_hash": "94545561a590700896bedaa9d9d949fe",
+    "semantic_hash": "94545561a590700896bedaa9d9d949fe"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/PozoGiftPlayerPickerMenu.java": {
+    "mtime": 1785201553.8028278,
+    "ast_hash": "af5ed53ce7280f53e0a1bf940c086c05",
+    "semantic_hash": "af5ed53ce7280f53e0a1bf940c086c05"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/PozoGiftSession.java": {
+    "mtime": 1785201531.937521,
+    "ast_hash": "d7b40247db704fd2439734dc03f79447",
+    "semantic_hash": "d7b40247db704fd2439734dc03f79447"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/PozoLootHistoryMenu.java": {
+    "mtime": 1785201585.6464636,
+    "ast_hash": "37539aca095377f58db12032c76fa365",
+    "semantic_hash": "37539aca095377f58db12032c76fa365"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/PozoMainMenu.java": {
+    "mtime": 1785204748.6646564,
+    "ast_hash": "482336cfcc5141c5009868332bd084c1",
+    "semantic_hash": "482336cfcc5141c5009868332bd084c1"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/PozoMenus.java": {
+    "mtime": 1785203103.145528,
+    "ast_hash": "000df7d1b984f8e61d0d63e45eb3f2df",
+    "semantic_hash": "000df7d1b984f8e61d0d63e45eb3f2df"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/admin/PozoAdminAnimationSettingsMenu.java": {
+    "mtime": 1785203227.164687,
+    "ast_hash": "51e0023dda6d8968cfb4d1c15916906a",
+    "semantic_hash": "51e0023dda6d8968cfb4d1c15916906a"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/admin/PozoAdminCosmeticPickerMenu.java": {
+    "mtime": 1785203187.2674747,
+    "ast_hash": "73e655e320683b67dd128a93ac6a750a",
+    "semantic_hash": "73e655e320683b67dd128a93ac6a750a"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/admin/PozoAdminRarityMenu.java": {
+    "mtime": 1785203131.4129772,
+    "ast_hash": "c4374504a1c2e880f324dcccfb0c6c0e",
+    "semantic_hash": "c4374504a1c2e880f324dcccfb0c6c0e"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/admin/PozoAdminRewardsMenu.java": {
+    "mtime": 1785203166.7120755,
+    "ast_hash": "bbf0995a0a2d3f6efb4b1683e624d1f7",
+    "semantic_hash": "bbf0995a0a2d3f6efb4b1683e624d1f7"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/admin/PozoAdminTypeEditMenu.java": {
+    "mtime": 1785203119.9092674,
+    "ast_hash": "9d02b274657764e6e5e88240cbebb21f",
+    "semantic_hash": "9d02b274657764e6e5e88240cbebb21f"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/menus/admin/PozoAdminTypeListMenu.java": {
+    "mtime": 1785203251.0429199,
+    "ast_hash": "b817a7f4cc7a2bcd71d2b9b8910367d3",
+    "semantic_hash": "b817a7f4cc7a2bcd71d2b9b8910367d3"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/model/PozoDispatchResult.java": {
+    "mtime": 1785199226.369303,
+    "ast_hash": "c357f8ebec00bdc42fea40b0b314ae09",
+    "semantic_hash": "c357f8ebec00bdc42fea40b0b314ae09"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/model/PozoHistoryEntry.java": {
+    "mtime": 1785199194.5858262,
+    "ast_hash": "631e2a6ea29f94948400656af28e37d6",
+    "semantic_hash": "631e2a6ea29f94948400656af28e37d6"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/model/PozoMachineDef.java": {
+    "mtime": 1785204883.9696627,
+    "ast_hash": "e3a73e11d3f8f43f4b0a689b3be9aad5",
+    "semantic_hash": "e3a73e11d3f8f43f4b0a689b3be9aad5"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/model/PozoOpenResult.java": {
+    "mtime": 1785199266.0116732,
+    "ast_hash": "27aa0c06ba84ad66edb0073ce3b68709",
+    "semantic_hash": "27aa0c06ba84ad66edb0073ce3b68709"
+  },
+  "src/main/java/org/dqnylux/mincore/pozomillonario/model/PozoPlayerData.java": {
+    "mtime": 1785199111.6371324,
+    "ast_hash": "5650d152794824d2580fc576727c5513",
+    "semantic_hash": "5650d152794824d2580fc576727c5513"
+  },
+  "src/main/java/org/dqnylux/mincore/tasks/ActiveCosmeticsTask.java": {
+    "mtime": 1784845446.2719953,
+    "ast_hash": "1980b3cfba5541a12c29a9fb45d68405",
+    "semantic_hash": "1980b3cfba5541a12c29a9fb45d68405"
+  },
+  "src/main/java/org/dqnylux/mincore/tasks/DeathGPSTask.java": {
+    "mtime": 1784845044.450809,
+    "ast_hash": "cf63ee568fce3cbce6fd007e729d4fa5",
+    "semantic_hash": "cf63ee568fce3cbce6fd007e729d4fa5"
+  },
+  "src/main/java/org/dqnylux/mincore/tasks/ElytraCosmeticsTask.java": {
+    "mtime": 1784082174.6808245,
+    "ast_hash": "c957b9c99b661af67196bbbf52d065f4",
+    "semantic_hash": "c957b9c99b661af67196bbbf52d065f4"
+  },
+  "src/main/java/org/dqnylux/mincore/utils/BedrockMenuHandler.java": {
+    "mtime": 1784774297.3387432,
+    "ast_hash": "d6be770406cb9b22e2cd837a79ec3f71",
+    "semantic_hash": "d6be770406cb9b22e2cd837a79ec3f71"
   },
   "src/main/java/org/dqnylux/mincore/utils/ConsoleLogger.java": {
-    "mtime": 1783825599.1427264,
-    "ast_hash": "8cd9bb23b03a844bb16d742cc71250e1",
-    "semantic_hash": "8cd9bb23b03a844bb16d742cc71250e1"
+    "mtime": 1785012586.2096632,
+    "ast_hash": "7ee018c87950acb0d67ebc122b8f93b3",
+    "semantic_hash": "7ee018c87950acb0d67ebc122b8f93b3"
+  },
+  "src/main/java/org/dqnylux/mincore/utils/MenuStructure.java": {
+    "mtime": 1784223993.7013648,
+    "ast_hash": "0265c21d25cc2caf2b6c982db894cb41",
+    "semantic_hash": "0265c21d25cc2caf2b6c982db894cb41"
   },
   "src/main/java/org/dqnylux/mincore/utils/TextUtils.java": {
-    "mtime": 1783660718.8119662,
-    "ast_hash": "59d6f9c7e9efecd8bfb4e0dc3f397bec",
-    "semantic_hash": "59d6f9c7e9efecd8bfb4e0dc3f397bec"
+    "mtime": 1785012586.5746558,
+    "ast_hash": "e889baa3e164e433d100bb8a99da62b6",
+    "semantic_hash": "e889baa3e164e433d100bb8a99da62b6"
+  },
+  "src/main/java/org/dqnylux/mincore/utils/WorldValidator.java": {
+    "mtime": 1784581015.0188081,
+    "ast_hash": "977b96c5a0b4e4724f202a08d614f0b0",
+    "semantic_hash": "977b96c5a0b4e4724f202a08d614f0b0"
   },
   ".ed-minecraft-dev/server/bukkit.yml": {
-    "mtime": 1783716463.8410914,
-    "ast_hash": "87b88051ef7b0b6cf4fb960fdca62c7f",
-    "semantic_hash": "87b88051ef7b0b6cf4fb960fdca62c7f"
+    "mtime": 1784082173.5612154,
+    "ast_hash": "728297c16f2d3df32a7e615818025a7c",
+    "semantic_hash": "728297c16f2d3df32a7e615818025a7c"
   },
   ".ed-minecraft-dev/server/commands.yml": {
-    "mtime": 1783716463.8453238,
-    "ast_hash": "38cefe7b9eb739e421a2d3e8eafd39f6",
-    "semantic_hash": "38cefe7b9eb739e421a2d3e8eafd39f6"
+    "mtime": 1784082173.7282538,
+    "ast_hash": "e08dea84f2fb04b498616302b8287300",
+    "semantic_hash": "e08dea84f2fb04b498616302b8287300"
   },
   ".ed-minecraft-dev/server/config/paper-global.yml": {
-    "mtime": 1783716464.294607,
-    "ast_hash": "7158d63762a96948940f6da62d3d856a",
-    "semantic_hash": "7158d63762a96948940f6da62d3d856a"
+    "mtime": 1784082173.729339,
+    "ast_hash": "169155b14b4350e3ba7298abdd566d2d",
+    "semantic_hash": "169155b14b4350e3ba7298abdd566d2d"
   },
   ".ed-minecraft-dev/server/config/paper-world-defaults.yml": {
-    "mtime": 1783716464.4176395,
-    "ast_hash": "50f05f21469ad68af41d2ed4048490ea",
-    "semantic_hash": "50f05f21469ad68af41d2ed4048490ea"
+    "mtime": 1784082173.729339,
+    "ast_hash": "30b6606c9cef895de6cb0e24348dc67f",
+    "semantic_hash": "30b6606c9cef895de6cb0e24348dc67f"
   },
   ".ed-minecraft-dev/server/ed_dev_world/paper-world.yml": {
-    "mtime": 1783716464.6229165,
-    "ast_hash": "67b27245baffd3766e021e8258d0d11d",
-    "semantic_hash": "67b27245baffd3766e021e8258d0d11d"
+    "mtime": 1784082173.733615,
+    "ast_hash": "b5f17424ffd45bff4e933a109cf4f652",
+    "semantic_hash": "b5f17424ffd45bff4e933a109cf4f652"
   },
   ".ed-minecraft-dev/server/ed_dev_world_nether/paper-world.yml": {
-    "mtime": 1783716464.9340878,
-    "ast_hash": "3eae0d666e9e203f70a3541d30fa854a",
-    "semantic_hash": "3eae0d666e9e203f70a3541d30fa854a"
+    "mtime": 1784082173.7513137,
+    "ast_hash": "558869f8fae9f3dbb6ebe100989ca501",
+    "semantic_hash": "558869f8fae9f3dbb6ebe100989ca501"
   },
   ".ed-minecraft-dev/server/ed_dev_world_the_end/paper-world.yml": {
-    "mtime": 1783716465.0024886,
-    "ast_hash": "2e826c09e0e715cbd1be75a2c8895d64",
-    "semantic_hash": "2e826c09e0e715cbd1be75a2c8895d64"
+    "mtime": 1784082173.7594156,
+    "ast_hash": "19d0e27f01b0bca339a1cf1f101acfe5",
+    "semantic_hash": "19d0e27f01b0bca339a1cf1f101acfe5"
   },
   ".ed-minecraft-dev/server/eula.txt": {
-    "mtime": 1783716455.1752503,
+    "mtime": 1784082173.760689,
     "ast_hash": "9615e5e3562298a54bab370e8f448922",
     "semantic_hash": "9615e5e3562298a54bab370e8f448922"
   },
   ".ed-minecraft-dev/server/help.yml": {
-    "mtime": 1783716464.5849118,
-    "ast_hash": "ffdbe1584c526d806a377e001e74ff50",
-    "semantic_hash": "ffdbe1584c526d806a377e001e74ff50"
+    "mtime": 1784082173.760689,
+    "ast_hash": "4e2b927c63022654df881d02682ea7f4",
+    "semantic_hash": "4e2b927c63022654df881d02682ea7f4"
   },
   ".ed-minecraft-dev/server/permissions.yml": {
-    "mtime": 1783638210.7183876,
+    "mtime": 1784082174.456467,
     "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
     "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
   },
   ".ed-minecraft-dev/server/purpur.yml": {
-    "mtime": 1783716465.0329177,
-    "ast_hash": "b61c803479a3e2538688b263c4bd59d9",
-    "semantic_hash": "b61c803479a3e2538688b263c4bd59d9"
+    "mtime": 1784082174.459476,
+    "ast_hash": "df5fbdf920760141b7f4ff90630fcb90",
+    "semantic_hash": "df5fbdf920760141b7f4ff90630fcb90"
   },
   ".ed-minecraft-dev/server/spigot.yml": {
-    "mtime": 1783716464.9928489,
-    "ast_hash": "d6540a2782c034c81e6bf63099ed75f8",
-    "semantic_hash": "d6540a2782c034c81e6bf63099ed75f8"
+    "mtime": 1784082174.459476,
+    "ast_hash": "d4519fc4eef65cffcc708b328bd72de3",
+    "semantic_hash": "d4519fc4eef65cffcc708b328bd72de3"
+  },
+  "docs/effects-reference.txt": {
+    "mtime": 1784925002.537895,
+    "ast_hash": "2336254be6de4ad61f7902c7319e8e88",
+    "semantic_hash": "2336254be6de4ad61f7902c7319e8e88"
+  },
+  "src/main/resources/cosmetics/chatcolors.yml": {
+    "mtime": 1785012586.9483087,
+    "ast_hash": "9c39eb6be692c84012001167092da6ff",
+    "semantic_hash": "9c39eb6be692c84012001167092da6ff"
+  },
+  "src/main/resources/cosmetics/death_effects.yml": {
+    "mtime": 1785012587.3224034,
+    "ast_hash": "bd6b8a5017de15749d6ab083a330e9af",
+    "semantic_hash": "bd6b8a5017de15749d6ab083a330e9af"
+  },
+  "src/main/resources/cosmetics/death_messages.yml": {
+    "mtime": 1785012587.7444823,
+    "ast_hash": "179d5dca9d3da340d64ba4e29fe58f8f",
+    "semantic_hash": "179d5dca9d3da340d64ba4e29fe58f8f"
+  },
+  "src/main/resources/cosmetics/elytra_effects.yml": {
+    "mtime": 1785012588.1427627,
+    "ast_hash": "b64c9480e494b3287827f84a8f0b1215",
+    "semantic_hash": "b64c9480e494b3287827f84a8f0b1215"
+  },
+  "src/main/resources/cosmetics/formats.yml": {
+    "mtime": 1784834722.6130085,
+    "ast_hash": "97ae9b06b5a7bb287dcdf6f13fa6c340",
+    "semantic_hash": "97ae9b06b5a7bb287dcdf6f13fa6c340"
+  },
+  "src/main/resources/cosmetics/glows.yml": {
+    "mtime": 1785012588.5482914,
+    "ast_hash": "97fd31d07c680cfa996ec057354e9ba9",
+    "semantic_hash": "97fd31d07c680cfa996ec057354e9ba9"
+  },
+  "src/main/resources/cosmetics/icons.yml": {
+    "mtime": 1785012588.9927897,
+    "ast_hash": "f7d3856099ac8345a96c0fdf2869e2fa",
+    "semantic_hash": "f7d3856099ac8345a96c0fdf2869e2fa"
+  },
+  "src/main/resources/cosmetics/join_effects.yml": {
+    "mtime": 1785012589.3614292,
+    "ast_hash": "5cffd8b1ece32503df0fad1091e81cd8",
+    "semantic_hash": "5cffd8b1ece32503df0fad1091e81cd8"
+  },
+  "src/main/resources/cosmetics/join_messages.yml": {
+    "mtime": 1785012589.7615159,
+    "ast_hash": "913f0731cb126ff9a67c0e41faac6cba",
+    "semantic_hash": "913f0731cb126ff9a67c0e41faac6cba"
+  },
+  "src/main/resources/cosmetics/kill_effects.yml": {
+    "mtime": 1785012590.17124,
+    "ast_hash": "5ed623f2e0d74067605e223e7b0981b1",
+    "semantic_hash": "5ed623f2e0d74067605e223e7b0981b1"
+  },
+  "src/main/resources/cosmetics/kill_messages.yml": {
+    "mtime": 1785012590.5846386,
+    "ast_hash": "0266463da333822260f2a76faff5814f",
+    "semantic_hash": "0266463da333822260f2a76faff5814f"
+  },
+  "src/main/resources/cosmetics/namecolors.yml": {
+    "mtime": 1785012590.9413307,
+    "ast_hash": "d636565cb2ed614d8d2fd581a1fcc7ec",
+    "semantic_hash": "d636565cb2ed614d8d2fd581a1fcc7ec"
+  },
+  "src/main/resources/cosmetics/prefixes.yml": {
+    "mtime": 1785012591.3601396,
+    "ast_hash": "7aa7e0ddf868cca7f76846defa7ddb5a",
+    "semantic_hash": "7aa7e0ddf868cca7f76846defa7ddb5a"
+  },
+  "src/main/resources/cosmetics/projectile_effects.yml": {
+    "mtime": 1785012591.7595077,
+    "ast_hash": "ca4a929e90d40247e0401fee4a059e52",
+    "semantic_hash": "ca4a929e90d40247e0401fee4a059e52"
+  },
+  "src/main/resources/cosmetics/trails.yml": {
+    "mtime": 1785012592.161427,
+    "ast_hash": "37206e5f4cb9aeda987ae671ec7655b8",
+    "semantic_hash": "37206e5f4cb9aeda987ae671ec7655b8"
+  },
+  "src/main/resources/cosmetics/wings.yml": {
+    "mtime": 1785012592.571283,
+    "ast_hash": "a7f55335ddb24e359ffee0927361a09f",
+    "semantic_hash": "a7f55335ddb24e359ffee0927361a09f"
   },
   "src/main/resources/paper-plugin.yml": {
-    "mtime": 1783713033.8348322,
-    "ast_hash": "9fa2e8b52081770b9995168cd8a2b5e2",
-    "semantic_hash": "9fa2e8b52081770b9995168cd8a2b5e2"
+    "mtime": 1784925871.8959465,
+    "ast_hash": "a152b0e5422a9ed4928d9ef37e67f449",
+    "semantic_hash": "a152b0e5422a9ed4928d9ef37e67f449"
   },
-  "src/main/java/org/dqnylux/mincore/commands/CosmeticsCommand.java": {
-    "mtime": 1783829994.4421208,
-    "ast_hash": "354a7e0d652e6f1dd7219f76533862af",
-    "semantic_hash": "354a7e0d652e6f1dd7219f76533862af"
-  },
-  "src/main/java/org/dqnylux/mincore/commands/DynamicCommand.java": {
-    "mtime": 1783827367.847574,
-    "ast_hash": "efdc40792fadaee0d93e755dd9555d95",
-    "semantic_hash": "efdc40792fadaee0d93e755dd9555d95"
-  },
-  "src/main/java/org/dqnylux/mincore/commands/MessageCommand.java": {
-    "mtime": 1783830001.4299622,
-    "ast_hash": "9dc82940de4bf1c28a732fcdd892ca7a",
-    "semantic_hash": "9dc82940de4bf1c28a732fcdd892ca7a"
-  },
-  "src/main/java/org/dqnylux/mincore/commands/MiscCommand.java": {
-    "mtime": 1783830076.389512,
-    "ast_hash": "fdfe2891b594e88a80809134b8a52186",
-    "semantic_hash": "fdfe2891b594e88a80809134b8a52186"
-  },
-  "src/main/java/org/dqnylux/mincore/commands/TrackCommand.java": {
-    "mtime": 1783829970.1943772,
-    "ast_hash": "8df08832efac4d8cdc64fb6ffe2f132a",
-    "semantic_hash": "8df08832efac4d8cdc64fb6ffe2f132a"
-  },
-  "src/main/java/org/dqnylux/mincore/config/AnnouncementsConfig.java": {
-    "mtime": 1783827313.226122,
-    "ast_hash": "2f96aed23038cad9d4e80e489020ead6",
-    "semantic_hash": "2f96aed23038cad9d4e80e489020ead6"
-  },
-  "src/main/java/org/dqnylux/mincore/config/BotsConfig.java": {
-    "mtime": 1783827360.9984443,
-    "ast_hash": "9a0fcfbc1f2a3261a274ef7e8361369e",
-    "semantic_hash": "9a0fcfbc1f2a3261a274ef7e8361369e"
-  },
-  "src/main/java/org/dqnylux/mincore/config/ChatFormatConfig.java": {
-    "mtime": 1783826912.5198834,
-    "ast_hash": "33c475e94fdc4e0a556383735e986ada",
-    "semantic_hash": "33c475e94fdc4e0a556383735e986ada"
-  },
-  "src/main/java/org/dqnylux/mincore/config/FiltersConfig.java": {
-    "mtime": 1783826907.0617511,
-    "ast_hash": "99b98f5d35e3c5ad085f6db231881133",
-    "semantic_hash": "99b98f5d35e3c5ad085f6db231881133"
-  },
-  "src/main/java/org/dqnylux/mincore/config/MainConfig.java": {
-    "mtime": 1783825709.3928292,
-    "ast_hash": "6b1b3a8c79821760a1014da1c49c5aeb",
-    "semantic_hash": "6b1b3a8c79821760a1014da1c49c5aeb"
-  },
-  "src/main/java/org/dqnylux/mincore/config/MessagePackConfig.java": {
-    "mtime": 1783827988.9945593,
-    "ast_hash": "a5791900e00d8d31c5700b8ab9a62ca3",
-    "semantic_hash": "a5791900e00d8d31c5700b8ab9a62ca3"
-  },
-  "src/main/java/org/dqnylux/mincore/config/StandardCosmeticConfig.java": {
-    "mtime": 1783827985.830885,
-    "ast_hash": "d9156fc0d2252d6e8c3d1291f60c0e49",
-    "semantic_hash": "d9156fc0d2252d6e8c3d1291f60c0e49"
-  },
-  "src/main/java/org/dqnylux/mincore/config/WingsConfig.java": {
-    "mtime": 1783827992.0669415,
-    "ast_hash": "6db9097bc986a0fbe9f7232f2b708865",
-    "semantic_hash": "6db9097bc986a0fbe9f7232f2b708865"
-  },
-  "src/main/java/org/dqnylux/mincore/config/models/CosmeticItem.java": {
-    "mtime": 1783827970.0850394,
-    "ast_hash": "d96ca9d1a7cbbe981000133856d44d5b",
-    "semantic_hash": "d96ca9d1a7cbbe981000133856d44d5b"
-  },
-  "src/main/java/org/dqnylux/mincore/config/models/MessagePackCosmetic.java": {
-    "mtime": 1783827975.539265,
-    "ast_hash": "996152adb933b744d45e2759e4b86a88",
-    "semantic_hash": "996152adb933b744d45e2759e4b86a88"
-  },
-  "src/main/java/org/dqnylux/mincore/config/models/WingCosmetic.java": {
-    "mtime": 1783827980.4547787,
-    "ast_hash": "c6974a2f74dba732b3e100907af4b3d7",
-    "semantic_hash": "c6974a2f74dba732b3e100907af4b3d7"
-  },
-  "src/main/java/org/dqnylux/mincore/hooks/LuckPermsHook.java": {
-    "mtime": 1783829652.2162862,
-    "ast_hash": "8e23a13811eb7410003bd46f7a95974f",
-    "semantic_hash": "8e23a13811eb7410003bd46f7a95974f"
-  },
-  "src/main/java/org/dqnylux/mincore/hooks/PAPIExpansion.java": {
-    "mtime": 1783829686.352939,
-    "ast_hash": "459c761cbfe9808cb3aed73fd071f3f1",
-    "semantic_hash": "459c761cbfe9808cb3aed73fd071f3f1"
-  },
-  "src/main/java/org/dqnylux/mincore/listeners/AntiSignatureListener.java": {
-    "mtime": 1783827075.3105469,
-    "ast_hash": "46f122db641a31473b2a8e3a2cfe6419",
-    "semantic_hash": "46f122db641a31473b2a8e3a2cfe6419"
-  },
-  "src/main/java/org/dqnylux/mincore/listeners/AutoResponderListener.java": {
-    "mtime": 1783827064.696439,
-    "ast_hash": "8b30ef52eae863821b31bb2c8f2f1956",
-    "semantic_hash": "8b30ef52eae863821b31bb2c8f2f1956"
-  },
-  "src/main/java/org/dqnylux/mincore/listeners/ChatListener.java": {
-    "mtime": 1783827056.3454356,
-    "ast_hash": "f097e8af7cfe532e48018a3946b46289",
-    "semantic_hash": "f097e8af7cfe532e48018a3946b46289"
-  },
-  "src/main/java/org/dqnylux/mincore/listeners/CombatCosmeticsListener.java": {
-    "mtime": 1783829492.6872504,
-    "ast_hash": "39b432b8ecfdc03658ac7e845a107578",
-    "semantic_hash": "39b432b8ecfdc03658ac7e845a107578"
-  },
-  "src/main/java/org/dqnylux/mincore/listeners/DeathListener.java": {
-    "mtime": 1783830010.5365903,
-    "ast_hash": "774f62636c1f4b6329b99562fefe4653",
-    "semantic_hash": "774f62636c1f4b6329b99562fefe4653"
-  },
-  "src/main/java/org/dqnylux/mincore/listeners/PlayerConnectionListener.java": {
-    "mtime": 1783828412.1832569,
-    "ast_hash": "7ce3cd4670408448762a7a1df8608e26",
-    "semantic_hash": "7ce3cd4670408448762a7a1df8608e26"
-  },
-  "src/main/java/org/dqnylux/mincore/listeners/TabCompleteListener.java": {
-    "mtime": 1783827069.2663436,
-    "ast_hash": "e37bfe0e9ff2d4315ba2e122e1252c04",
-    "semantic_hash": "e37bfe0e9ff2d4315ba2e122e1252c04"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/AnnouncementManager.java": {
-    "mtime": 1783827324.229341,
-    "ast_hash": "97a3afbbb8b17c1720b5c06c1c61f2a3",
-    "semantic_hash": "97a3afbbb8b17c1720b5c06c1c61f2a3"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/ConfigSyncManager.java": {
-    "mtime": 1783829853.2023208,
-    "ast_hash": "3ec644f4e804d3b4cd08b333a4a18c16",
-    "semantic_hash": "3ec644f4e804d3b4cd08b333a4a18c16"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/DeathTrackingManager.java": {
-    "mtime": 1783829467.9172232,
-    "ast_hash": "01ac7db69c8e77e9fc08f88c3215788f",
-    "semantic_hash": "01ac7db69c8e77e9fc08f88c3215788f"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/DynamicCommandManager.java": {
-    "mtime": 1783827376.5723052,
-    "ast_hash": "fd17c0a53227dcaac861e30ecc7ecfe2",
-    "semantic_hash": "fd17c0a53227dcaac861e30ecc7ecfe2"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/EconomyAdminHandler.java": {
-    "mtime": 1783826634.310333,
-    "ast_hash": "f3737bbf0edafe633e9a22c6b2bc33ab",
-    "semantic_hash": "f3737bbf0edafe633e9a22c6b2bc33ab"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/PlayerManager.java": {
-    "mtime": 1783828145.80118,
-    "ast_hash": "bac78a8750e707bfd387f6d5f3aa9763",
-    "semantic_hash": "bac78a8750e707bfd387f6d5f3aa9763"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/ReplyManager.java": {
-    "mtime": 1783827282.7297876,
-    "ast_hash": "9bdcc62bcee63b2c4167979c2a7eaa66",
-    "semantic_hash": "9bdcc62bcee63b2c4167979c2a7eaa66"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/chat/ChatFilterManager.java": {
-    "mtime": 1783827021.7262316,
-    "ast_hash": "02d76977759cf6799a63f05bdc9aefd6",
-    "semantic_hash": "02d76977759cf6799a63f05bdc9aefd6"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/chat/ChatFormatHandler.java": {
-    "mtime": 1783827042.357866,
-    "ast_hash": "2016c712ad2d948a711b3f052c84a306",
-    "semantic_hash": "2016c712ad2d948a711b3f052c84a306"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/chat/ChatPunishmentHandler.java": {
-    "mtime": 1783827032.1376932,
-    "ast_hash": "4b23436c4c07efef1418140c4da2c6b0",
-    "semantic_hash": "4b23436c4c07efef1418140c4da2c6b0"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/CosmeticConfigManager.java": {
-    "mtime": 1783829461.3578804,
-    "ast_hash": "e0bcd57650a0d7abd5ab38adf187e57a",
-    "semantic_hash": "e0bcd57650a0d7abd5ab38adf187e57a"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/CosmeticSyncManager.java": {
-    "mtime": 1783829859.5026155,
-    "ast_hash": "ada41bf7b0ee8f5d40dd11ef0fe9e4aa",
-    "semantic_hash": "ada41bf7b0ee8f5d40dd11ef0fe9e4aa"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/EffectRegistry.java": {
-    "mtime": 1783828044.7233312,
-    "ast_hash": "27073e314670c42220e1fb07b0e84ad0",
-    "semantic_hash": "27073e314670c42220e1fb07b0e84ad0"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/EffectUtils.java": {
-    "mtime": 1783828011.010859,
-    "ast_hash": "9a86ca7cab51d452c01afc4f330de2da",
-    "semantic_hash": "9a86ca7cab51d452c01afc4f330de2da"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/GlowManager.java": {
-    "mtime": 1783828068.3708854,
-    "ast_hash": "c9f3774922784825bcf663f5c8178e05",
-    "semantic_hash": "c9f3774922784825bcf663f5c8178e05"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/TrailManager.java": {
-    "mtime": 1783828052.936448,
-    "ast_hash": "b3b7ddfbefc2d29fc09dbbd948b0629b",
-    "semantic_hash": "b3b7ddfbefc2d29fc09dbbd948b0629b"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/WingManager.java": {
-    "mtime": 1783828060.1571612,
-    "ast_hash": "fdf0825917cb3bf8cf607f2d03ba3f72",
-    "semantic_hash": "fdf0825917cb3bf8cf607f2d03ba3f72"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/api/CosmeticEffect.java": {
-    "mtime": 1783827998.8855662,
-    "ast_hash": "ef366a57892ff1ac11b0bbfb6fd7d9c4",
-    "semantic_hash": "ef366a57892ff1ac11b0bbfb6fd7d9c4"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/api/ElytraEffect.java": {
-    "mtime": 1783828002.6345062,
-    "ast_hash": "3b5d5e413869c1d4147252bef37da847",
-    "semantic_hash": "3b5d5e413869c1d4147252bef37da847"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/api/ProjectileEffect.java": {
-    "mtime": 1783828006.5013847,
-    "ast_hash": "ad4c6415a9398664acb478d6b39b93d7",
-    "semantic_hash": "ad4c6415a9398664acb478d6b39b93d7"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/FlameRingEffect.java": {
-    "mtime": 1783828022.4971595,
-    "ast_hash": "65a095a93ec9cea9b7f0e72f68ef31f4",
-    "semantic_hash": "65a095a93ec9cea9b7f0e72f68ef31f4"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/HeartBurstEffect.java": {
-    "mtime": 1783828017.1244924,
-    "ast_hash": "93a272149ee85f88008e72435f149092",
-    "semantic_hash": "93a272149ee85f88008e72435f149092"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/ProjectileTrailEffect.java": {
-    "mtime": 1783828033.5700643,
-    "ast_hash": "5206e1c84162573d52add7d523971ea8",
-    "semantic_hash": "5206e1c84162573d52add7d523971ea8"
-  },
-  "src/main/java/org/dqnylux/mincore/managers/cosmetics/effects/TrailSparkleElytraEffect.java": {
-    "mtime": 1783828027.189266,
-    "ast_hash": "89ae8e8f41cd91959ce6c83e5a9f5c71",
-    "semantic_hash": "89ae8e8f41cd91959ce6c83e5a9f5c71"
-  },
-  "src/main/java/org/dqnylux/mincore/menus/CategoryMenu.java": {
-    "mtime": 1783828446.3069296,
-    "ast_hash": "92c151eeadcfd3f986959e223bd9c188",
-    "semantic_hash": "92c151eeadcfd3f986959e223bd9c188"
-  },
-  "src/main/java/org/dqnylux/mincore/menus/CosmeticsGui.java": {
-    "mtime": 1783830037.846828,
-    "ast_hash": "9f5b17a8122f8903971b4d35b7d1984f",
-    "semantic_hash": "9f5b17a8122f8903971b4d35b7d1984f"
-  },
-  "src/main/java/org/dqnylux/mincore/model/PlayerData.java": {
-    "mtime": 1783828105.7829604,
-    "ast_hash": "b92936e38316ab178420b71b9a272693",
-    "semantic_hash": "b92936e38316ab178420b71b9a272693"
-  },
-  "src/main/java/org/dqnylux/mincore/tasks/ActiveCosmeticsTask.java": {
-    "mtime": 1783828170.886148,
-    "ast_hash": "2d49aad5247f741ddf4c84e3974aef5f",
-    "semantic_hash": "2d49aad5247f741ddf4c84e3974aef5f"
-  },
-  "src/main/java/org/dqnylux/mincore/tasks/DeathGPSTask.java": {
-    "mtime": 1783830021.9287539,
-    "ast_hash": "95e526c1e9a27a13904650e6ae6cf273",
-    "semantic_hash": "95e526c1e9a27a13904650e6ae6cf273"
-  },
-  "src/main/java/org/dqnylux/mincore/tasks/ElytraCosmeticsTask.java": {
-    "mtime": 1783828178.5314796,
-    "ast_hash": "2ebf3a5b98215cb721af17e0cc1b7cd7",
-    "semantic_hash": "2ebf3a5b98215cb721af17e0cc1b7cd7"
-  },
-  "src/main/java/org/dqnylux/mincore/utils/BedrockMenuHandler.java": {
-    "mtime": 1783829500.3130534,
-    "ast_hash": "11ed3a042d65bcdcf8cb9384db8c3bc4",
-    "semantic_hash": "11ed3a042d65bcdcf8cb9384db8c3bc4"
+  "src/main/resources/pozo/box_types.yml": {
+    "mtime": 1785012592.9323163,
+    "ast_hash": "4941846a0a9bf1b5ee930d6ad31123f4",
+    "semantic_hash": "4941846a0a9bf1b5ee930d6ad31123f4"
   }
 }

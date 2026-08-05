@@ -14,6 +14,7 @@ public class PlayerData {
     private boolean globalChat;
     private int chatWarnings;
     private boolean messagesEnabled;
+    private boolean mentionsEnabled;
 
     /** categoría -> id del cosmético equipado en esa categoría. */
     private final Map<String, String> activeCosmetics = new HashMap<>();
@@ -25,13 +26,27 @@ public class PlayerData {
      */
     private final Set<String> unlockedCosmetics = new HashSet<>();
 
-    public PlayerData(UUID uuid, String name, double coins, boolean globalChat, int chatWarnings, boolean messagesEnabled) {
+    /**
+     * IDs de cosmetics/formats.yml activos a la vez (bold/italic/underline...) -
+     * a diferencia de las demás categorías, no es "equipar uno", son varios
+     * flags independientes que se aplican todos juntos. Separado en dos
+     * ámbitos independientes - "chat" (mensajes) y "name" (nombre mostrado) -
+     * porque activar negrita para el chat no debería forzarla también en el
+     * nombre, y viceversa; cada menú (chatcolors/namecolors) controla su
+     * propio ámbito.
+     */
+    private final Set<String> activeChatFormats = new HashSet<>();
+    private final Set<String> activeNameFormats = new HashSet<>();
+
+    public PlayerData(UUID uuid, String name, double coins, boolean globalChat, int chatWarnings,
+                       boolean messagesEnabled, boolean mentionsEnabled) {
         this.uuid = uuid;
         this.name = name;
         this.coins = coins;
         this.globalChat = globalChat;
         this.chatWarnings = chatWarnings;
         this.messagesEnabled = messagesEnabled;
+        this.mentionsEnabled = mentionsEnabled;
     }
 
     public UUID getUuid() {
@@ -50,7 +65,17 @@ public class PlayerData {
         return coins;
     }
 
+    /**
+     * BUG encontrado: Math.max(0, coins) NO sanea NaN/Infinity (Math.max con
+     * NaN devuelve NaN) - si alguna vez llega un monto inválido (ej.
+     * "/mincore eco give <jugador> NaN", que revxrsal sí parsea como double
+     * válido), coins queda envenenado en NaN para siempre, y
+     * CosmeticsGui#purchase()'s "data.getCoins() < cosmetic.price" es SIEMPRE
+     * false para NaN - ese jugador desbloquea todo gratis desde ese momento.
+     * Se descarta cualquier valor no-finito antes del clamp normal.
+     */
     public void setCoins(double coins) {
+        if (!Double.isFinite(coins)) return;
         this.coins = Math.max(0, coins);
     }
 
@@ -90,6 +115,14 @@ public class PlayerData {
         this.messagesEnabled = messagesEnabled;
     }
 
+    public boolean isMentionsEnabled() {
+        return mentionsEnabled;
+    }
+
+    public void setMentionsEnabled(boolean mentionsEnabled) {
+        this.mentionsEnabled = mentionsEnabled;
+    }
+
     public String getActiveCosmetic(String category) {
         return activeCosmetics.get(category);
     }
@@ -116,5 +149,25 @@ public class PlayerData {
 
     public Set<String> getUnlockedCosmetics() {
         return unlockedCosmetics;
+    }
+
+    public static final String FORMAT_SCOPE_CHAT = "chat";
+    public static final String FORMAT_SCOPE_NAME = "name";
+
+    public boolean isFormatActive(String scope, String formatId) {
+        return formatsFor(scope).contains(formatId);
+    }
+
+    public void toggleFormat(String scope, String formatId) {
+        Set<String> formats = formatsFor(scope);
+        if (!formats.remove(formatId)) formats.add(formatId);
+    }
+
+    public Set<String> getActiveFormats(String scope) {
+        return formatsFor(scope);
+    }
+
+    private Set<String> formatsFor(String scope) {
+        return FORMAT_SCOPE_NAME.equals(scope) ? activeNameFormats : activeChatFormats;
     }
 }

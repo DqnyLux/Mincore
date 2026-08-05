@@ -37,7 +37,13 @@ public class EconomyAdminHandler {
     }
 
     private Result mutate(String targetName, double amount, BiConsumer<PlayerData, Double> operation) {
-        if (amount < 0) return Result.INVALID_AMOUNT;
+        // "amount < 0" por sí solo NO rechaza NaN (NaN < 0 es false) - un
+        // monto inválido (ej. /mincore eco give <jugador> NaN, que revxrsal
+        // sí parsea como double "válido") pasaba este chequeo y envenenaba
+        // coins a NaN, dejando a ese jugador con desbloqueos gratis
+        // permanentes (ver PlayerData#setCoins). Se rechaza explícito acá
+        // también para devolver INVALID_AMOUNT en vez de un no-op silencioso.
+        if (!Double.isFinite(amount) || amount < 0) return Result.INVALID_AMOUNT;
 
         Player target = Bukkit.getPlayerExact(targetName);
         if (target == null) return Result.PLAYER_OFFLINE;

@@ -10,6 +10,7 @@ import org.dqnylux.mincore.config.MessagesConfig;
 import org.dqnylux.mincore.model.PlayerData;
 import org.dqnylux.mincore.utils.TextUtils;
 import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.SuggestWith;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 
 import java.util.UUID;
@@ -23,7 +24,7 @@ public class MessageCommand {
     }
 
     @Command({"msg", "tell", "w", "whisper"})
-    public void message(BukkitCommandActor actor, String player, String messageText) {
+    public void message(BukkitCommandActor actor, @SuggestWith(OnlinePlayerSuggestionProvider.class) String player, String messageText) {
         CommandSender sender = actor.sender();
         MessagesConfig.PrivateMessages pm = plugin.getConfigManager().getMessagesConfig().privateMessages;
         String prefix = plugin.getConfigManager().getMessagesConfig().prefix;

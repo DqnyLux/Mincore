@@ -70,7 +70,7 @@ public class CosmeticSyncManager {
                 org.dqnylux.mincore.utils.ConsoleLogger.error("Error en sync push: " + e.getMessage());
                 return;
             }
-            plugin.getDatabaseManager().publishRedis("mincore:cosmetics:updated", "catalog");
+            plugin.getDatabaseManager().publishRedis("coreec:cosmetics:updated", "catalog");
         });
     }
 
@@ -80,26 +80,51 @@ public class CosmeticSyncManager {
             DataSource dataSource = plugin.getDatabaseManager().getHikariDataSource();
             if (dataSource == null) return;
 
+            // SOLO se reescribe a disco la categoría que realmente tuvo un
+            // valor distinto - antes se reescribían las 13 SIEMPRE, cada 5
+            // minutos, aunque nada hubiera cambiado. Eso generaba bytes
+            // apenas distintos a lo que ConfigSyncManager tiene guardado en
+            // mincore_config_sync para esos mismos archivos (otro sync
+            // aparte, también cada 5 min, sobre el TEXTO completo del
+            // archivo) - su propio pullAll() los veía como "cambiados",
+            // los volvía a pisar Y disparaba reloadEverything() (recarga
+            // completa bloqueando el hilo principal) - un loop que se
+            // retroalimentaba solo cada 5 minutos sin que nada real hubiera
+            // cambiado nunca, causa raíz del log repetido y el lag.
+            java.util.Set<String> changedCategories = new java.util.HashSet<>();
             try (Connection connection = dataSource.getConnection();
                  PreparedStatement statement = connection.prepareStatement(
                          "SELECT category, item_id, display_name, value, material, price FROM mincore_global_cosmetics");
                  ResultSet rs = statement.executeQuery()) {
 
                 while (rs.next()) {
-                    StandardCosmeticConfig config = plugin.getCosmeticConfigManager().getCategory(rs.getString("category"));
+                    String category = rs.getString("category");
+                    StandardCosmeticConfig config = plugin.getCosmeticConfigManager().getCategory(category);
                     if (config == null) continue;
 
                     CosmeticItem item = config.items.get(rs.getString("item_id"));
                     if (item == null) continue;
 
-                    item.displayName = rs.getString("display_name");
-                    item.value = rs.getString("value");
-                    item.material = rs.getString("material");
-                    item.price = rs.getDouble("price");
+                    String displayName = rs.getString("display_name");
+                    String value = rs.getString("value");
+                    String material = rs.getString("material");
+                    double price = rs.getDouble("price");
+
+                    boolean itemChanged = !java.util.Objects.equals(item.displayName, displayName)
+                            || !java.util.Objects.equals(item.value, value)
+                            || !java.util.Objects.equals(item.material, material)
+                            || item.price != price;
+                    if (!itemChanged) continue;
+
+                    item.displayName = displayName;
+                    item.value = value;
+                    item.material = material;
+                    item.price = price;
+                    changedCategories.add(category);
                 }
 
-                for (StandardCosmeticConfig config : plugin.getCosmeticConfigManager().getCategories().values()) {
-                    config.save();
+                for (String category : changedCategories) {
+                    plugin.getCosmeticConfigManager().saveStandardCategory(category);
                 }
             } catch (SQLException e) {
                 org.dqnylux.mincore.utils.ConsoleLogger.error("Error en sync pull: " + e.getMessage());

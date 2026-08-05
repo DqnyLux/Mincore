@@ -47,6 +47,11 @@
       <option name="url" value="https://repo.xenondevs.xyz/releases" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="pvphub-tofaa" />
+      <option name="name" value="pvphub-tofaa" />
+      <option name="url" value="https://maven.pvphub.me/tofaa" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="codemc-releases" />
       <option name="name" value="codemc-releases" />
       <option name="url" value="https://repo.codemc.io/repository/maven-releases/" />

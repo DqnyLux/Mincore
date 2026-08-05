@@ -42,6 +42,7 @@ public class ElytraCosmeticsTask {
 
     private void tick(Player player) {
         if (!player.isOnline() || !player.isGliding()) return;
+        if (org.dqnylux.mincore.managers.cosmetics.CosmeticVisibility.isHiddenFromOthers(plugin, player)) return;
 
         PlayerData data = plugin.getPlayerManager().get(player.getUniqueId());
         if (data == null) return;

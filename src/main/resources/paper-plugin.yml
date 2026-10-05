@@ -25,6 +25,9 @@ dependencies:
     LuckPerms:
       load: BEFORE
       required: false
+    Vault:
+      load: BEFORE
+      required: false
     floodgate:
       load: BEFORE
       required: false
@@ -59,4 +62,7 @@ permissions:
     default: false
   coreec.report.exempt:
     description: El jugador con este permiso no puede ser reportado con /report.
+    default: false
+  coreec.staff.invsee.edit:
+    description: Permite mover/quitar/poner ítems de verdad en /invsee y /enderchest (edición en vivo, no solo lectura).
     default: false

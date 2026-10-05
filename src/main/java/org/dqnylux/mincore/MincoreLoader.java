@@ -47,9 +47,15 @@ public class MincoreLoader implements PluginLoader {
         // triumph-gui-paper (reemplaza InvUI - ver el comentario en pom.xml).
         // Trae triumph-gui (core) transitivamente vía su propio POM.
         resolver.addDependency(new Dependency(new DefaultArtifact("dev.triumphteam:triumph-gui-paper:3.1.13"), null));
+        resolver.addDependency(new Dependency(new DefaultArtifact("net.kyori:adventure-platform-bukkit:4.4.1"), null));
         resolver.addDependency(new Dependency(new DefaultArtifact("io.github.revxrsal:lamp.common:4.0.0-rc.17"), null));
         resolver.addDependency(new Dependency(new DefaultArtifact("io.github.revxrsal:lamp.bukkit:4.0.0-rc.17"), null));
         resolver.addDependency(new Dependency(new DefaultArtifact("org.xerial:sqlite-jdbc:3.53.2.0"), null));
+        // JDA (bot de Discord para aprobación de patrones de IA - ver
+        // DiscordApprovalBot) - opus-java (voz) es dependencia OPTIONAL en el
+        // propio POM de JDA, así que Aether no la arrastra transitivamente
+        // acá (no hace falta excluirla a mano, no usamos canales de voz).
+        resolver.addDependency(new Dependency(new DefaultArtifact("net.dv8tion:JDA:5.6.1"), null));
         // EntityLib (Tofaa) NO va acá - se incrusta directo en el jar de
         // Mincore vía maven-shade-plugin (ver pom.xml), no se resuelve como
         // librería aparte en runtime. Idem PacketEvents de siempre: nunca se

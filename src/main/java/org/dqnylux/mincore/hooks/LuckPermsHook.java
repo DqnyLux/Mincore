@@ -4,8 +4,6 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.PrefixNode;
-import net.luckperms.api.node.types.SuffixNode;
-import org.dqnylux.mincore.utils.TextUtils;
 
 import java.util.UUID;
 
@@ -13,17 +11,36 @@ import java.util.UUID;
  * Wrapper estático - se inicializa solo si LuckPerms está presente (try/catch
  * sobre LuckPermsProvider.get()).
  *
- * El prefijo/sufijo de cosmético se añade como un nodo DIRECTO del jugador con
- * prioridad muy alta (config.yml -> luckPerms.prefixPriority/suffixPriority,
- * por defecto 1000) en vez de borrar todos los nodos de prefijo/sufijo antes
- * de añadir el nuevo: así nunca se toca el prefijo/sufijo que el jugador ya
- * tenía por su rango (normalmente un nodo heredado de su grupo, con prioridad
- * mucho más baja) - el cosmético solo se superpone mientras está equipado. Al
- * desequipar, solo se quita el nodo con exactamente esa prioridad reservada,
- * dejando intacto cualquier otro prefijo/sufijo (de rango o asignado a mano
- * por un admin directamente al jugador).
+ * setRawPrefix/removeCustomPrefix (usados por DisguiseManager) añaden/quitan
+ * un nodo DIRECTO del jugador con prioridad alta (StaffConfig.prefixPriority)
+ * en vez de borrar todos los nodos de prefijo antes de añadir el nuevo: así
+ * nunca se toca el prefijo que el jugador ya tenía por su rango (normalmente
+ * heredado de su grupo, con prioridad mucho más baja) - el disfraz solo se
+ * superpone mientras está activo. Al quitarse el disfraz, solo se quita el
+ * nodo con exactamente esa prioridad reservada, dejando intacto cualquier
+ * otro prefijo (de rango o asignado a mano por un admin directamente al
+ * jugador).
+ *
+ * Los cosméticos de "prefixes"/"icons" (tags/íconos comprables) YA NO pasan
+ * por acá - ver el javadoc de CosmeticsGui#applySideEffects para el porqué
+ * (pisaban el prefijo/sufijo REAL del rango en cualquier plugin externo que
+ * leyera %luckperms_prefix%/%luckperms_suffix%, TAB Reborn incluido).
+ *
+ * purgeLegacyCosmeticNodes() limpia lo que ese sistema viejo dejó pegado:
+ * cualquier jugador que tuviera un tag/ícono equipado ANTES de este cambio
+ * se quedó con un PrefixNode/SuffixNode real en LuckPerms a prioridad 1000
+ * (el valor fijo que usaba el sistema viejo, config.yml -> luckPerms.
+ * prefixPriority/suffixPriority, ya eliminado) - como equipar/desequipar ya
+ * no toca LuckPerms para nada, ese nodo viejo queda ahí PARA SIEMPRE, tapando
+ * el prefijo/sufijo real del rango sin que elegir un tag distinto lo
+ * reemplace (el nuevo cosmético ahora solo cambia %coreec_prefix%/
+ * %coreec_icon%, nunca ese nodo fantasma). Se llama una vez por conexión
+ * (PlayerConnectionListener) - no-op instantáneo una vez que el nodo ya fue
+ * removido la primera vez.
  */
 public final class LuckPermsHook {
+
+    private static final int LEGACY_COSMETIC_PRIORITY = 1000;
 
     private static LuckPerms api;
 
@@ -42,12 +59,17 @@ public final class LuckPermsHook {
         return api != null;
     }
 
-    public static void setCustomPrefix(UUID uuid, String prefix, int priority) {
+    /** Usuario de LuckPerms ya cargado en memoria para este UUID, o null si LP no está o aún no está cargado. */
+    public static net.luckperms.api.model.user.User getUser(UUID uuid) {
+        if (api == null) return null;
+        return api.getUserManager().getUser(uuid);
+    }
+
+    public static void purgeLegacyCosmeticNodes(UUID uuid) {
         if (api == null) return;
-        String legacyPrefix = TextUtils.toLegacyAmpersand(prefix);
         api.getUserManager().loadUser(uuid).thenAccept(user -> {
-            user.data().clear(NodeType.PREFIX.predicate(node -> node.getPriority() == priority));
-            user.data().add(PrefixNode.builder(legacyPrefix, priority).build());
+            user.data().clear(NodeType.PREFIX.predicate(node -> node.getPriority() == LEGACY_COSMETIC_PRIORITY));
+            user.data().clear(NodeType.SUFFIX.predicate(node -> node.getPriority() == LEGACY_COSMETIC_PRIORITY));
             api.getUserManager().saveUser(user);
         });
     }
@@ -91,21 +113,14 @@ public final class LuckPermsHook {
         return group.getCachedData().getMetaData(net.luckperms.api.query.QueryOptions.nonContextual()).getPrefix();
     }
 
-    public static void setCustomSuffix(UUID uuid, String suffix, int priority) {
-        if (api == null) return;
-        String legacySuffix = TextUtils.toLegacyAmpersand(suffix);
-        api.getUserManager().loadUser(uuid).thenAccept(user -> {
-            user.data().clear(NodeType.SUFFIX.predicate(node -> node.getPriority() == priority));
-            user.data().add(SuffixNode.builder(legacySuffix, priority).build());
-            api.getUserManager().saveUser(user);
-        });
+    public static String getPrimaryGroup(UUID uuid) {
+        if (api == null) return "Usuario";
+        net.luckperms.api.model.user.User user = getUser(uuid);
+        if (user != null) {
+            String primaryGroup = user.getPrimaryGroup();
+            return primaryGroup != null && !primaryGroup.isBlank() ? primaryGroup : "Usuario";
+        }
+        return "Usuario";
     }
 
-    public static void removeCustomSuffix(UUID uuid, int priority) {
-        if (api == null) return;
-        api.getUserManager().loadUser(uuid).thenAccept(user -> {
-            user.data().clear(NodeType.SUFFIX.predicate(node -> node.getPriority() == priority));
-            api.getUserManager().saveUser(user);
-        });
-    }
 }

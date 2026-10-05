@@ -20,8 +20,47 @@ public class FiltersConfig extends MincoreConfig {
     public Repetition repetition = new Repetition();
     public BadWords badWords = new BadWords();
     public Ads ads = new Ads();
+
+    public ClickableLinks clickableLinks = new ClickableLinks();
+
     public Punishment punishment = new Punishment();
     public AiModeration aiModeration = new AiModeration();
+    public DiscordApproval discordApproval = new DiscordApproval();
+
+    /**
+     * Bot de Discord real (no un webhook - un webhook es de una sola vía, no
+     * puede recibir clics de vuelta) para aprobar/rechazar en caliente los
+     * patrones que la IA de moderación aprende de mensajes tóxicos
+     * confirmados (ver ChatFilterManager.PendingPattern), directo desde un
+     * canal de Discord con botones - alternativa a hacerlo a mano con
+     * /coreec ai approve/reject en el juego. Desactivado por defecto - no
+     * hace nada hasta que el dueño del server cree su propia app/bot en
+     * https://discord.com/developers/applications y pegue el token acá.
+     */
+    public static class DiscordApproval extends MincoreConfig {
+        @Comment("¿Activar el bot de Discord de aprobación? Requiere botToken y channelId propios.")
+        public boolean enabled = true;
+
+        @Comment({"Nombre corto de ESTE servidor (ej. \"lobby\", \"survival\", \"skyblock\") - se muestra",
+                "en el embed de Discord y se mete en el ID de cada botón. Hace falta ÚNICO por",
+                "servidor SOLO si varios servidores de la misma network comparten el MISMO",
+                "botToken/canal - así cada instancia del plugin reconoce e ignora los clics que",
+                "no son suyos, en vez de intentar resolver un ID de patrón que solo existe en la",
+                "memoria de OTRO servidor. Si cada servidor tiene su propio bot, esto da lo mismo."})
+        public String serverName = "server";
+
+        @Comment("Token del bot (Developer Portal -> tu app -> Bot -> Reset Token). Nunca lo compartas ni lo subas a un repositorio público.")
+        public String botToken = "";
+
+        @Comment("ID del canal de Discord donde el bot postea cada patrón pendiente con botones Aprobar/Rechazar (clic derecho en el canal -> Copiar ID de canal, necesita el modo desarrollador activado en Discord).")
+        public String channelId = "1125570393646841916";
+
+        @Comment({"ID de un rol de Discord (opcional) - si se pone, solo miembros CON ese rol",
+                "pueden clickear los botones (cualquier otro clic se rechaza con un aviso privado).",
+                "Vacío = cualquiera que vea el canal puede aprobar/rechazar - la seguridad real",
+                "recae entonces en que el canal sea privado, solo para staff."})
+        public String staffRoleId = "1433585071235010762";
+    }
 
     public static class AntiSpam extends MincoreConfig {
         @Comment("¿Activar el filtro anti-spam por ráfaga de mensajes?")
@@ -113,14 +152,14 @@ public class FiltersConfig extends MincoreConfig {
         @Comment({"Lista de palabras prohibidas escritas a mano. Cada palabra se expande sola a un",
                 "regex tolerante a espaciado y leetspeak (ej. \"puta\" también bloquea \"p.u.t.a\", \"pvt4\").",
                 "El blocklist generado por IA (regex real, más completo) vive aparte en",
-                "plugins/CoreEC/badwords_regex.txt - ver regexGenerationPrompt más abajo."})
+                "plugins/Mincore/badwords_regex.txt - ver regexGenerationPrompt más abajo."})
         public List<String> words = new ArrayList<>();
 
         @Comment({"Nombre del archivo .txt (dentro de la carpeta del plugin) donde vive el blocklist",
                 "de regex generado por IA - una expresión regular de Java por línea, líneas que",
                 "empiezan con # se ignoran. Si el archivo no existe o está vacío al arrancar (y",
                 "enabled=true con una apiKey de Gemini configurada en aiModeration), se genera",
-                "solo. /coreec ai refreshbadwords AGREGA patrones nuevos sin borrar los que ya",
+                "solo. /mincore ai refreshbadwords AGREGA patrones nuevos sin borrar los que ya",
                 "estén - podés además editar el archivo a mano, una regex por línea."})
         public String regexFile = "badwords_regex.txt";
 
@@ -145,6 +184,23 @@ public class FiltersConfig extends MincoreConfig {
                 "lista de arriba o al blocklist de regex - para casos donde algo normal genera",
                 "falsos positivos. Si una palabra está acá, gana esta (nunca se bloquea)."})
         public List<String> whitelistWords = new ArrayList<>();
+
+        @Comment({"Instrucción usada por /coreec ai addbadword <palabra> - a diferencia de",
+                "regexGenerationPrompt (que pide una lista entera desde cero), esta le pide a",
+                "Gemini UNA sola regex nueva para UNA palabra puntual que un admin quiere agregar",
+                "en caliente, sin esperar a /coreec ai refreshbadwords. %word% se reemplaza por la",
+                "palabra pedida."})
+        public String singleWordRegexPrompt = "Generá UNA SOLA EXPRESIÓN REGULAR de Java (java.util.regex) que "
+                + "detecte la palabra \"%word%\" (y sus variantes obvias de leetspeak/espaciado) usada como "
+                + "insulto/lenguaje ofensivo en un chat de Minecraft en español o inglés. Seguí ESTE estilo "
+                + "exacto (son ejemplos reales ya en uso, imitá la estructura): "
+                + "\"(^|[^\\\\wñ])b[0o]l[uú]d([0o]|[i1]t[0o]|[i1]n)(s)*([^\\\\wñ]|$)\" para \"boludo\", "
+                + "\"(^|[^\\\\wñ])[\\\\w]?sh(i|1|!)t(head)*(s)*[\\\\w]?([^\\\\wñ]|$)\" para \"shit\". "
+                + "Patrón general: \"(^|[^\\\\wñ])\" al inicio y \"([^\\\\wñ]|$)\" al final para exigir un límite "
+                + "de palabra real (así no matchea adentro de otra palabra más larga), y entre letras de la "
+                + "palabra base usá clases de leetspeak como [a4@], [e3], [i1!], [o0], [s5$] en vez de la letra "
+                + "sola cuando tenga sentido. Respondé ÚNICAMENTE con esa UNA línea de regex, sin numerar, sin "
+                + "explicación y sin comillas ni backticks alrededor.";
     }
 
     public static class Ads extends MincoreConfig {
@@ -159,6 +215,23 @@ public class FiltersConfig extends MincoreConfig {
 
         @Comment("¿Normalizar unicode (acentos, letras 'fancy' matemáticas/fraktur que imitan al alfabeto normal, etc.) antes de buscar un enlace? Evita bypasses con caracteres que se ven iguales pero no lo son.")
         public boolean detectUnicodeUrls = true;
+    }
+
+    /**
+     * Enlaces clickeables en el chat: toda URL que SOBREVIVA al filtro de
+     * anuncios (ojalá: un admin con bypass, o un jugador con un enlace
+     * whitelisteado) se renderiza clickeable - se abre con un clic
+     * (ClickEvent.openUrl) en vez de quedar como texto plano.
+     *
+     * No tiene permiso propio NI hace falta uno: el que ya controla qué
+     * enlaces pasan es filters.yml -> ads (con su bypassPermission), así que
+     * un jugador normal que mande un enlace no permitido sigue bloqueado/
+     * censurado como siempre y su texto nunca llega a ser clickeable. Este
+     * toggle solo enciende/apaga la parte de "hacer clic".
+     */
+    public static class ClickableLinks extends MincoreConfig {
+        @Comment("¿Activar enlaces clickeables en el chat?")
+        public boolean enabled = true;
     }
 
     public static class Punishment extends MincoreConfig {
@@ -194,17 +267,37 @@ public class FiltersConfig extends MincoreConfig {
      * principal, así que bloquear ahí no congela el server.
      */
     public static class AiModeration extends MincoreConfig {
-        @Comment("¿Activar la revisión por IA? Requiere apiKey propia y al menos una palabra en reviewWords.")
-        public boolean enabled = false;
+        @Comment("¿Activar la revisión por IA? Requiere apiKey propia (según provider) y al menos una palabra en reviewWords.")
+        public boolean enabled = true;
 
-        @Comment("API key de Google Gemini (https://ai.google.dev).")
-        public String apiKey = "";
+        @Comment({"Proveedor a usar: \"gemini\" (Google, en la nube, requiere apiKey) u \"openai\"",
+                "(cualquier servidor compatible con el formato de chat de OpenAI - LiteLLM, LM Studio,",
+                "Ollama en modo compat, o un router local como OmniRoute - usa baseUrl de abajo, apiKey",
+                "es opcional según el servidor, muchos locales no piden nada)."})
+        public String provider = "openai";
 
-        @Comment("Modelo de Gemini a usar - configurable por si Google lo renombra/retira.")
-        public String model = "gemini-3.6-flash";
+        @Comment({"URL base del servidor OpenAI-compatible cuando provider=\"openai\" (se ignora con",
+                "provider=\"gemini\"). Ejemplo para OmniRoute corriendo en la misma máquina:",
+                "\"http://localhost:20128/v1\" - se le agrega \"/chat/completions\" automáticamente."})
+        public String baseUrl = "https://omnirouter.minecuador.lat/v1";
 
-        @Comment("Timeout de la llamada HTTP en milisegundos - corto a propósito, mejor fallar rápido que trabar el chat.")
-        public int timeoutMillis = 1500;
+        @Comment("API key de Google Gemini (https://ai.google.dev) si provider=\"gemini\". Con provider=\"openai\" es opcional (Bearer token) - dejala vacía si tu servidor local no pide una.")
+        public String apiKey = "sk-4e48ea97badf447a-b106f3-5f61df9b";
+
+        @Comment({"Modelo a usar. Con provider=\"gemini\", el nombre real del modelo (ej. gemini-3.6-flash) -",
+                "configurable por si Google lo renombra/retira. Con provider=\"openai\", el nombre que",
+                "espere tu servidor (ej. \"auto\" para el ruteo inteligente de OmniRoute)."})
+        public String model = "agy/gemini-3.1-flash-lite";
+
+        @Comment("Timeout de la llamada HTTP en milisegundos para la revisión de UN mensaje puntual (isToxic) - 1500 se quedaba corto en la práctica con proveedores locales/tuneleados (ej. un router self-hosted detrás de Cloudflare); 5000 da más margen sin afectar el chat (el mensaje ya se muestra al instante de cualquier forma).")
+        public int timeoutMillis = 5000;
+
+        @Comment({"Timeout en milisegundos para las llamadas de GENERACIÓN en lote (/coreec ai",
+                "refreshwords, refreshbadwords, addbadword, y la regex que se aprende de un mensaje",
+                "tóxico confirmado) - piden mucho más texto de respuesta que isToxic, así que",
+                "necesitan bastante más margen. Subilo si tu proveedor (sobre todo uno local detrás",
+                "de un túnel, como OmniRoute vía Cloudflare) tarda más de lo que da esto por defecto."})
+        public int batchTimeoutMillis = 45000;
 
         @Comment("Si la IA falla, tarda más del timeout, o responde algo inesperado, ¿se permite el mensaje (true) o se bloquea (false)? Recomendado: true - nunca bloquear sin un veredicto real.")
         public boolean failOpen = true;
@@ -214,10 +307,20 @@ public class FiltersConfig extends MincoreConfig {
 
         @Comment({"¿Loguear cada llamada a Gemini (prompt enviado, respuesta cruda, veredicto) en la consola?",
                 "Útil para diagnosticar por qué la IA no está actuando - activalo temporalmente si algo no anda."})
-        public boolean debugLogging = false;
+        public boolean debugLogging = true;
 
         @Comment("Cuántos de los mensajes anteriores del mismo jugador se mandan como contexto en el prompt.")
         public int contextMessages = 2;
+
+        @Comment({"Minutos que se guarda en caché el veredicto de un mensaje - si el mismo texto",
+                "exacto (normalizado, sin importar mayúsculas/espacios) vuelve a aparecer (de ese",
+                "mismo jugador u OTRO) dentro de este tiempo, se reusa el veredicto sin volver a",
+                "consultar a la IA. Útil contra insultos copy-paste que se repiten entre varios",
+                "jugadores. 0 desactiva el caché (consulta siempre a la IA)."})
+        public int cacheTtlMinutes = 30;
+
+        @Comment("Máxima cantidad de veredictos guardados en caché a la vez - por encima de este límite, los veredictos nuevos simplemente no se cachean (no hace falta expulsar los viejos a mano).")
+        public int cacheMaxSize = 1000;
 
         @Comment({"Palabras ambiguas por contexto que disparan la revisión por IA (no confundir con",
                 "badWords.words, que siempre bloquea sin excepción). Vacía por defecto - si enabled",
@@ -241,5 +344,28 @@ public class FiltersConfig extends MincoreConfig {
                 + "CONTEXTO - la palabra marcada puede referirse a un color, objeto u otra cosa inocente "
                 + "en vez de un insulto. Mensajes previos del jugador (más viejo primero):\n%context%\n"
                 + "Mensaje a evaluar: \"%message%\"\nRespondé con una sola palabra, sin explicación: TOXICO u OK.";
+
+        @Comment({"Cuando la IA confirma que un mensaje es tóxico, además le pide una regex nueva",
+                "a partir de esta instrucción para \"aprender\" ese caso puntual - a diferencia de",
+                "badWords.singleWordRegexPrompt (que apunta a UNA PALABRA sola), esto apunta a la",
+                "FRASE/combinación completa del mensaje, para no terminar bloqueando el uso inocente",
+                "de una palabra ambigua de reviewWords en otro contexto. La regex generada NO se agrega",
+                "sola al blocklist - queda pendiente de aprobación por un staff (/coreec ai pending,",
+                "approve, reject). %message% se reemplaza por el mensaje ya confirmado como tóxico,",
+                "%word% por la palabra puntual de reviewWords que disparó la revisión (ej. \"negro\") -",
+                "se le pasa aparte para que la IA no tenga que adivinar cuál, de toda la oración, es la",
+                "parte ambigua a la que hay que apuntar."})
+        public String learnedPhrasePrompt = "Generá UNA SOLA EXPRESIÓN REGULAR de Java (java.util.regex) que "
+                + "detecte ESPECÍFICAMENTE la frase/combinación ofensiva alrededor de la palabra \"%word%\" "
+                + "en este mensaje de chat de Minecraft, ya confirmado como tóxico: \"%message%\". El regex "
+                + "tiene que ser lo bastante ESPECÍFICO para NO matchear el uso inocente de \"%word%\" (u otras "
+                + "palabras del mensaje) por separado en otro contexto (ej. si el mensaje es \"sos un negro de "
+                + "mierda\" y la palabra marcada es \"negro\", el regex debe exigir la combinación completa "
+                + "tipo insulto, nunca solo la palabra \"negro\" sola). Seguí este estilo: \"(^|[^\\\\wñ])\" al "
+                + "inicio y \"([^\\\\wñ]|$)\" al final para exigir un límite de palabra real, clases de "
+                + "leetspeak [a4@][e3][i1!][o0][s5$] entre letras (tolerantes a mayúsculas/minúsculas y "
+                + "números en vez de letras) cuando tenga sentido, y \\\\s+ o [^\\\\wñ]* entre las palabras de "
+                + "la frase para tolerar espaciado extra. Respondé ÚNICAMENTE con esa UNA línea de regex, sin "
+                + "numerar, sin explicación y sin comillas ni backticks alrededor.";
     }
 }

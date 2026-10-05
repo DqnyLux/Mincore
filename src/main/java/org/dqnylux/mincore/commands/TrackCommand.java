@@ -7,6 +7,9 @@ import org.dqnylux.mincore.config.MessagesConfig;
 import org.dqnylux.mincore.managers.DeathTrackingManager;
 import org.dqnylux.mincore.utils.TextUtils;
 import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Description;
+import revxrsal.commands.annotation.Named;
+import revxrsal.commands.annotation.Usage;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 
 public class TrackCommand {
@@ -18,7 +21,9 @@ public class TrackCommand {
     }
 
     @Command("trackcore")
-    public void track(BukkitCommandActor actor, int id) {
+    @Usage("/trackcore <id>")
+    @Description("Inicia el rastreo GPS hacia una ubicación de muerte")
+    public void track(BukkitCommandActor actor, @Named("id") int id) {
         MessagesConfig messages = plugin.getConfigManager().getMessagesConfig();
         DeathSystemConfig deathSystem = plugin.getConfigManager().getDeathSystemConfig();
 

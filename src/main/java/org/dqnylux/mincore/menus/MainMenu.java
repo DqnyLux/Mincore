@@ -48,7 +48,7 @@ public class MainMenu {
 
         place(gui, cellsFor(cells, '#'), (r, c) -> background(plugin, layout.fillerMaterial));
         place(gui, cellsFor(cells, symbol(layout.profileHeadSymbol)),
-                (r, c) -> CosmeticsGui.infoHead(plugin, player, layout.profileHead));
+                (r, c) -> profileButton(plugin, player, layout.profileHead));
         place(gui, cellsFor(cells, symbol(layout.cosmeticsButtonSymbol)),
                 (r, c) -> cosmeticsButton(plugin, player, layout.cosmeticsButton));
         place(gui, cellsFor(cells, symbol(layout.flyToggleSymbol)),
@@ -95,6 +95,15 @@ public class MainMenu {
                     .replace("%coins%", String.valueOf(coins))));
         }
         return result;
+    }
+
+    private static GuiItem profileButton(Mincore plugin, Player viewer, MenuItem item) {
+        ItemStack head = CosmeticsGui.infoHead(plugin, viewer, item).getItemStack();
+        return PaperItemBuilder.from(head).asGuiItem(click -> {
+            if (plugin.getProfileManager() != null && plugin.getConfigManager().getModulesConfig().profiles) {
+                org.dqnylux.mincore.profiles.gui.ProfileGui.open(viewer, viewer, plugin);
+            }
+        });
     }
 
     private static GuiItem cosmeticsButton(Mincore plugin, Player viewer, MenuItem item) {

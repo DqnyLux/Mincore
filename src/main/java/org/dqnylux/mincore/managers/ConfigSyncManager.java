@@ -1,6 +1,5 @@
 package org.dqnylux.mincore.managers;
 
-import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.dqnylux.mincore.Mincore;
 import redis.clients.jedis.Jedis;
@@ -18,17 +17,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Generaliza el patrón de CosmeticSyncManager (sección 18): cada archivo se
- * guarda como texto completo en mincore_config_sync, sincronizado por poll
- * periódico + push/pull manual, más pub/sub por Redis (sección 19) para
- * recarga instantánea en vez de esperar el siguiente poll. Qué archivos se
+ * guarda como texto completo en mincore_config_sync. Qué archivos se
  * sincronizan es 100% configurable (storage.yml -> sync.synced-files, por
  * defecto solo cosméticos/menús) - no un listado fijo en Java. storage.yml
  * (database.yml aquí) nunca se sincroniza: define cómo conectarse a la
  * propia BD, es inherentemente de instancia.
+ *
+ * SIN poll periódico a propósito: la sincronización antes corría sola cada
+ * 300s (además de al conectar) sin que ningún admin hubiera pedido nada,
+ * causando recargas completas (reloadEverything(), I/O de disco + reparse de
+ * YAML) sin aviso ni control - el pedido explícito fue que esto SOLO se
+ * mueva cuando se usa /coreec sync push|pull. subscribeToReloads() sigue
+ * activo porque no es un disparador aparte: es la reacción, en tiempo real,
+ * a ESE mismo comando corrido en OTRO server de la red (sección 19) - sin
+ * esto, un push en el server A nunca llegaría al server B hasta que alguien
+ * corriera /coreec sync pull a mano ahí también.
  */
 public class ConfigSyncManager {
 
@@ -36,7 +42,6 @@ public class ConfigSyncManager {
     private static final String COSMETICS_CHANNEL = "coreec:cosmetics:updated";
 
     private final Mincore plugin;
-    private ScheduledTask pullTask;
 
     public ConfigSyncManager(Mincore plugin) {
         this.plugin = plugin;
@@ -47,13 +52,7 @@ public class ConfigSyncManager {
         return type == DatabaseManager.StorageType.MYSQL || type == DatabaseManager.StorageType.MARIADB;
     }
 
-    public void startAutoSync() {
-        if (!networkModeActive()) return;
-        pullTask = Bukkit.getAsyncScheduler().runAtFixedRate(plugin, task -> pullAll(), 20L, 300L, TimeUnit.SECONDS);
-    }
-
     public void stop() {
-        if (pullTask != null) pullTask.cancel();
     }
 
     /** Bloqueante (Jedis.subscribe no retorna hasta desuscribirse) - se lanza en su propio hilo async, nunca en el principal. */

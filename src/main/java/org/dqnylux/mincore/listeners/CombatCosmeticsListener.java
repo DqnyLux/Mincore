@@ -7,9 +7,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.dqnylux.mincore.Mincore;
 import org.dqnylux.mincore.config.models.CosmeticItem;
+import org.dqnylux.mincore.managers.cosmetics.EffectUtils;
 import org.dqnylux.mincore.managers.cosmetics.effects.GraveEffect;
 import org.dqnylux.mincore.model.PlayerData;
 
@@ -26,6 +28,19 @@ public class CombatCosmeticsListener implements Listener {
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         if (!(event.getEntity().getShooter() instanceof Player shooter)) return;
         playCategoryEffect(shooter, "projectile-effects", null, event.getEntity());
+    }
+
+    /**
+     * Marca el proyectil como "ya golpeó algo" - los efectos de trail
+     * (ProjectileTrailEffect y hermanos) chequean esto cada tick para cortar
+     * la estela apenas llega a destino. Sin esto, para la mayoría de
+     * proyectiles daba igual (isValid()/isDead() cambian rápido al aterrizar),
+     * pero un FishHook (caña de pescar) sigue vivo/válido flotando en el agua
+     * mucho después del "impacto" - la estela seguía animando indefinidamente.
+     */
+    @EventHandler
+    public void onProjectileHit(ProjectileHitEvent event) {
+        EffectUtils.markProjectileHit(event.getEntity());
     }
 
     /**
@@ -54,6 +69,7 @@ public class CombatCosmeticsListener implements Listener {
     }
 
     private void playCategoryEffect(Player player, String category, Location location, org.bukkit.entity.Projectile projectile) {
+        if (player == null || org.dqnylux.mincore.managers.cosmetics.CosmeticVisibility.isHiddenFromOthers(plugin, player)) return;
         PlayerData data = plugin.getPlayerManager().get(player.getUniqueId());
         if (data == null) return;
 

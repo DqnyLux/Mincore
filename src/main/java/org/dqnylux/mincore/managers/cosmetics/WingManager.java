@@ -49,8 +49,7 @@ public class WingManager {
     /** Estela reforzada: un punto por símbolo distinto del layout (con su propio color/velocidad), sin dibujar la forma completa. */
     private void renderMoving(WingCosmetic wings, Location base, double yawRad, double height) {
         double pushBack = wings.wings.startDistanceToPlayer;
-        Location point = base.clone().add(0, height, 0)
-                .subtract(Math.cos(yawRad) * pushBack, 0, Math.sin(yawRad) * pushBack);
+        Location point = base.clone().add(Math.sin(yawRad) * pushBack, height, -Math.cos(yawRad) * pushBack);
 
         for (WingCosmetic.WingParticleData data : distinctParticles(wings.wings.particleMap)) {
             spawnWingParticle(point, data, 2);
@@ -62,8 +61,9 @@ public class WingManager {
         double flap = Math.sin(System.currentTimeMillis() / 200.0 * wings.wings.flapSpeed) * Math.toRadians(wings.wings.maxAngle);
         double breathing = Math.sin(System.currentTimeMillis() / 300.0) * 0.05;
         double spacing = wings.wings.spacing;
+        double pushBack = wings.wings.startDistanceToPlayer;
 
-        Location center = base.clone().add(0, height + breathing, 0);
+        Location center = base.clone().add(Math.sin(yawRad) * pushBack, height + breathing, -Math.cos(yawRad) * pushBack);
         List<String> layout = wings.wings.layout;
         int rows = layout.size();
 
@@ -77,25 +77,28 @@ public class WingManager {
                 if (data == null) continue;
 
                 double drawY = (rows / 2.0 - row) * spacing;
-                spawnWingPoint(center, data, col * spacing, drawY, -1, yawRad, flap);
-                spawnWingPoint(center, data, col * spacing, drawY, 1, yawRad, flap);
+                spawnWingPoint(center, data, (col + 1) * spacing, drawY, -1, yawRad, flap);
+                spawnWingPoint(center, data, (col + 1) * spacing, drawY, 1, yawRad, flap);
             }
         }
     }
 
     private void spawnWingPoint(Location center, WingCosmetic.WingParticleData data, double x, double y, int side, double yawRad, double flap) {
-        double sideYaw = yawRad + (side < 0 ? -flap : Math.PI + flap);
-        Location point = center.clone().add(Math.cos(sideYaw) * x, y, Math.sin(sideYaw) * x);
+        double angle = side < 0 ? yawRad - flap : yawRad + flap;
+        double dirX = side < 0 ? Math.cos(angle) : -Math.cos(angle);
+        double dirZ = side < 0 ? Math.sin(angle) : -Math.sin(angle);
+        Location point = center.clone().add(dirX * x, y, dirZ * x);
         spawnWingParticle(point, data, 1);
     }
 
     private void spawnWingParticle(Location point, WingCosmetic.WingParticleData data, int count) {
-        Particle particle = EffectUtils.parseParticle(data.particle, Particle.CLOUD);
+        data.resolveCache();
+        Particle particle = data.cachedParticle;
         ParticleDisplay display = ParticleDisplay.of(particle).withCount(count).offset(0, 0, 0).withExtra(data.speed);
 
-        if (particle == Particle.DUST && data.color != null && !data.color.isBlank()) {
-            Color color = EffectUtils.parseColor(data.color, Color.WHITE);
-            display.withColor(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()), 1.2f);
+        if (data.cachedDust != null) {
+            org.bukkit.Color c = data.cachedDust.getColor();
+            display.withColor(new java.awt.Color(c.getRed(), c.getGreen(), c.getBlue()), data.cachedDust.getSize());
         }
 
         display.spawn(point);

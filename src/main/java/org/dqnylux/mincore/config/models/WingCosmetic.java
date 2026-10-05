@@ -1,5 +1,6 @@
 package org.dqnylux.mincore.config.models;
 
+import org.bukkit.Particle;
 import org.dqnylux.mincore.config.MincoreConfig;
 
 import java.util.ArrayList;
@@ -44,6 +45,24 @@ public class WingCosmetic extends CosmeticItem {
         public String color = "";
 
         public double speed = 0.0;
+
+        // --- Campos cacheados (transient, no se serializan a YAML) ---
+        /** Particle parseado una sola vez, null hasta el primer uso. */
+        public transient Particle cachedParticle;
+        /** DustOptions pre-construido (solo si particle==DUST y color válido), null si no aplica. */
+        public transient org.bukkit.Particle.DustOptions cachedDust;
+        private transient boolean cacheResolved;
+
+        /** Resuelve y cachea Particle + DustOptions. Llamar antes de spawnear. */
+        public void resolveCache() {
+            if (cacheResolved) return;
+            cacheResolved = true;
+            cachedParticle = org.dqnylux.mincore.managers.cosmetics.EffectUtils.parseParticle(particle, Particle.CLOUD);
+            if (cachedParticle == Particle.DUST && color != null && !color.isBlank()) {
+                org.bukkit.Color c = org.dqnylux.mincore.managers.cosmetics.EffectUtils.parseColor(color, org.bukkit.Color.WHITE);
+                cachedDust = new org.bukkit.Particle.DustOptions(c, 1.2f);
+            }
+        }
 
         public WingParticleData() {
         }

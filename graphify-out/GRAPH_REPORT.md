@@ -1,823 +1,558 @@
-# Graph Report - .  (2026-07-27)
+# Graph Report - Mincore  (2026-09-15)
 
 ## Corpus Check
-- 253 files · ~99,951 words
+- 357 files · ~198,443 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2409 nodes · 6518 edges · 306 communities (111 shown, 195 thin omitted)
-- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 609 edges (avg confidence: 0.8)
-- Token cost: 150,000 input · 10,251 output
+- 3180 nodes · 11797 edges · 159 communities (103 shown, 56 thin omitted)
+- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 1187 edges (avg confidence: 0.8)
+- Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- Cosmetics Effect Registry
-- Utils Text Utils
-- Effects Grave Effect
-- Cosmetics Cosmetic Config Manager
-- Staff Staff Mode Manager
-- Tasks Death Gpstask
-- Model Player Data
-- Commands Misc Command
-- Listeners Staff Listener
-- Cosmetics Trail Manager
-- Admin Pozo Admin Cosmetic
-- Effects Pandas Effect
-- Listeners Player Connection Listener
-- Menus Cosmetics Gui
-- Commands Pozo Command
-- Managers Pozo Catalog Manager
-- Effects Explosion Effect
-- Effects Snow Vortex Elytra
-- Effects Guardian Effect
-- Model Pozo Open Result
-- Animations Animation
-- Cosmetics Wing Manager
-- Listeners Chat Listener
-- Effects Cloud Burst Elytra
-- Hooks Papiexpansion
-- Menus Pozo Crafting Menu
-- Managers Pozo Data Manager
-- Chat Chat Filter Manager
-- Managers Pozo Machine Manager
-- Commands Mincore Command
-- Effects Symphony Effect
-- Chat Chat Format Handler
-- Cosmetics Cosmetic Sync Manager
-- Menus Pozo Gift Amount
-- Commands Dynamic Command
-- Menus Category Menu
-- Menus Main Menu
-- Managers Pozo Reward Dispatcher
-- Managers Database Manager
-- Styles Anim25gran Final
-- Utils Menu Structure
-- Cosmetics Glow Manager
-- Managers Core Config Manager
-- Utils Console Logger
-- Effects Icewalker Effect
-- Managers Announcement Manager
-- Config Chat Format Config
-- Effects Cloud Trail Elytra
-- Utils Text Utils
-- Managers Config Sync Manager
-- Managers Pozo Animation Registry
-- Commands Online Player Suggestion
-- Commands Staff Command
-- Config Staff Config
-- Admin Pozo Admin Animation
-- Hooks Luck Perms Hook
-- Chat Mention Toast Manager
-- Chat Infraction Toast Manager
-- Effects Shockwave Effect
-- Server Bukkit
-- Config Main Config
-- Managers Economy Admin Handler
-- Staff Vanish Manager
-- Menus Staff Menu
-- Styles Anim01chispa Simple
-- Styles Anim14enjambre Dorado
-- Effects Skeleton Armor Effect
-- Mincore Loader.java Mincore Loader
-- Styles Anim06conejo De La
-- Styles Anim16rebano Afortunado
-- Effects Enchant Column Effect
-- Effects Void Lotus Effect
-- Staff Staff Network Manager
-- Styles Anim04arco De Monedas
-- Styles Anim08campana Del Tesoro
-- Styles Anim18objeto Flotante
-- Styles Anim19espada Legendaria
-- Styles Anim24regalo Misterioso
-- Menus Pozo Animation Picker
-- Managers Dynamic Command Manager
-- Config Filters Config
-- Config Messages Config
-- Effects Dimensional Rift Effect
-- Effects Meteors Effect
-- Effects Prismatic Nova Effect
-- Effects Star Shower Effect
-- Styles Anim00estallido Dorado
-- Styles Anim03sinfonia Millonaria
-- Styles Anim05esfera De Fortuna
-- Styles Anim09carga De Energia
-- Styles Anim11orbita Planetaria
-- Listeners Anti Signature Listener
-- Effects Aura Farming Effect
-- Effects Chickens Effect
-- Effects Sniper Effect
-- Effects Stellar Collapse Effect
-- Effects Volcano Effect
-- Cosmetics Tab List Manager
-- Styles Anim02pozo Clasico
-- Styles Anim07calabaza Mistica
-- Styles Anim10espiral Dorada
-- Styles Anim12vortice De Bloques
-- Styles Anim13guardian Ancestral
-- Styles Anim15serpiente De Fuego
-- Styles Anim17tormenta Helada
-- Styles Anim20muralla De Cajas
-- Styles Anim21remolino Cosmico
-- Styles Anim22islas Flotantes
-- Styles Anim23lluvia De Oro
-- Commands Preview Zone Command
-- Config Bots Config
-- Listeners Auto Responder Listener
-- Effects Abyss Fangs Effect
-- Effects Comet Tail Elytra
-- Effects Flame Ring Effect
-- Effects Giant Totem Effect
-- Effects Heart Burst Effect
-- Effects Lightning Effect
-- Effects Orbit Effect
-- Effects Pulsing Burst Effect
-- Effects Rising Cloud Effect
-- Admin Pozo Admin Rarity
-- Docs Effects-reference
-- Effects World Orbit Elytra
-- Resources Paper-plugin
-- Cosmetics Death Messages
-- Listeners Staff Listener
-- Cosmetics Kill Effects
-- Cosmetics Kill Effects
-- Cosmetics Chatcolors
-- Cosmetics Death Effects
-- Cosmetics Death Messages
-- Cosmetics Death Messages
-- Cosmetics Icons
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Cosmetics Death Messages
-- Cosmetics Death Messages
-- Cosmetics Death Messages
-- Cosmetics Death Messages
-- Cosmetics Death Messages
-- Cosmetics Death Messages
-- Cosmetics Death Messages
-- Cosmetics Icons
-- Cosmetics Icons
-- Cosmetics Join Messages
-- Cosmetics Join Messages
-- Cosmetics Join Messages
-- Cosmetics Trails
-- Server Permissions
-- abstractitem
-- announcementmanager
-- announcementsconfig
-- arrivalsound
-- bossbar
-- botsconfig
-- categoriesmenuconfig
-- cell
-- chatfiltermanager
-- chatformatconfig
-- configsyncmanager
-- cosmeticconfigmanager
-- cosmeticeffect
-- cosmeticsyncmanager
-- databaseconfig
-- databasemanager
-- deathtrackingmanager
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- Docs Effects-reference
-- dynamiccommandmanager
-- economyadminhandler
-- elytracosmeticstask
-- elytraeffect
-- executioncontext
-- filtersconfig
-- guiaction
-- inventoryclickevent
-- mainmenuconfig
-- menuitem
-- messagepackconfig
-- messagepackcosmetic
-- mincoreconfig
-- motdmanager
-- overlay
-- Pom.xml Pom
-- playerdeathevent
-- playerinteractevent
-- playerjoinevent
-- playermanager
-- playerquitevent
-- previewzonemanager
-- privatemessages
-- projectileeffect
-- projectilelaunchevent
-- replymanager
-- result
-- src_main_java_org_dqnylux_mincore_listen
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_manage
-- src_main_java_org_dqnylux_mincore_menus_
-- src_main_java_org_dqnylux_mincore_menus_
-- src_main_java_org_dqnylux_mincore_menus_
-- src_main_java_org_dqnylux_mincore_menus_
-- src_main_java_org_dqnylux_mincore_menus_
-- src_main_java_org_dqnylux_mincore_menus_
-- src_main_java_org_dqnylux_mincore_menus_
-- src_main_java_org_dqnylux_mincore_menus_
-- src_main_java_org_dqnylux_mincore_menus_
-- src_main_java_org_dqnylux_mincore_menus_
-- src_main_java_org_dqnylux_mincore_menus_
-- src_main_java_org_dqnylux_mincore_menus_
-- src_main_java_org_dqnylux_mincore_tasks_
-- Cosmetics Formats
-- Cosmetics Formats
-- Cosmetics Formats
-- Cosmetics Formats
-- Cosmetics Formats
-- Cosmetics Join Effects
-- Cosmetics Join Effects
-- Cosmetics Join Effects
-- Cosmetics Join Effects
-- Cosmetics Join Effects
-- Cosmetics Join Effects
-- Cosmetics Join Effects
-- Cosmetics Projectile Effects
-- Pozo Box Types
-- suppresswarnings
-- tablistmanager
-- textdisplay
-- wingparticledata
-- wingsconfig
+- org.bukkit.Location
+- Mincore
+- .getConfigManager
+- DefaultFontInfo
+- NametagDisplayManager
+- .EffectRegistry
+- PozoMachineManager
+- ChatFormatHandler
+- revxrsal.commands.annotation.Command
+- revxrsal.commands.bukkit.actor.BukkitCommandActor
+- .format
+- StaffModeManager
+- MincoreConfig
+- TextUtils
+- org.bukkit.Color
+- PozoBoxType
+- PlayerData
+- DeathGPSTask
+- CosmeticConfigManager
+- SkinPreviewManager
+- CosmeticsGui
+- GlowManager
+- VaultEconomyProvider
+- CoreConfigManager
+- PozoPlayerData
+- DatabaseManager
+- Animation
+- dev.triumphteam.gui.guis.GuiItem
+- org.bukkit.Material
+- WarpRecord
+- org.bukkit.command.CommandSender
+- .itemFlags
+- PozoCatalogManager
+- .getDatabaseManager
+- .getPozoCatalogManager
+- DisguiseManager
+- PozoReward
+- .button
+- AfkPlayer
+- AfkListener
+- MincoreExceptionHandler.java
+- EconomyCommand
+- .runPreview
+- Mincore.java
+- me.tofaa.entitylib.wrapper.WrapperLivingEntity
+- .getPlayerManager
+- ReportDataManager
+- AfkManager
+- CommandBlockerConfig
+- PlayerConnectionListener
+- ChatFilterManager
+- .onEnable
+- ReportManager
+- MenuItem
+- org.bukkit.event.EventHandler
+- .getCosmeticConfigManager
+- .process
+- NametagPassengerGuardListener
+- Anim18ObjetoFlotante
+- HomesConfig
+- .onDisable
+- .tick
+- PozoCraftRecipe
+- PozoAnimationUtil.java
+- .resolveAfkZone
+- .spawnRaw
+- .lerpHex
+- PozoAnimationRegistry
+- DeathListener.java
+- SanctionManager
+- AfkZone
+- AiModerationClient
+- DiscordApprovalBot
+- AfkCommand
+- AfkConfig
+- HomesCommand
+- EconomyAdminHandler
+- ConfigSyncManager
+- PreviewZoneManager
+- StaffNetworkManager
+- .getPozoDataManager
+- LuckPermsHook
+- org.bukkit.event.player.PlayerCommandPreprocessEvent
+- PlayerConnectionListener.java
+- CommandManager
+- WarpsCommand
+- .spawnDust
+- MincoreLoader.java
+- DynamicCommandManager
+- CombatCosmeticsListener.java
+- Anim01ChispaSimple
+- SkeletonArmorEffect.java
+- Anim14EnjambreDorado
+- Anim13GuardianAncestral
+- Anim06ConejoDeLaSuerte
+- Anim16RebanoAfortunado
+- .getPozoMachineManager
+- SanctionsConfig
+- .requirePlayer
+- Anim04ArcoDeMonedas
+- com.github.retrooper.packetevents.event.PacketListenerAbstract
+- AfkToastManager
+- LiteBansHook
+- Anim00EstallidoDorado
+- Anim03SinfoniaMillonaria
+- Anim08CampanaDelTesoro
+- Anim09CargaDeEnergia
+- Anim24RegaloMisterioso
+- SubmitOutcome
+- .reviewAsync
+- DeathSystemConfig
+- .confirm
+- Anim05EsferaDeFortuna
+- Anim07CalabazaMistica
+- Anim11OrbitaPlanetaria
+- Anim12VorticeDeBloques
+- Anim15SerpienteDeFuego
+- Anim17TormentaHelada
+- Anim22IslasFlotantes
+- Anim23LluviaDeOro
+- NametagTrackerListener.java
+- WorldGuardHook
+- .play
+- StaffListener.java
+- AnnouncementsConfig
+- BotsConfig
+- CategoriesMenuConfig
+- EssentialsConfig
+- FireworksEffect
+- PrismaticNovaEffect
+- Repetition
+- MotdManager
+- .open
+- .queuePendingPattern
+- .play
+- .play
+- SnowVortexElytraEffect
+- .getSanctionManager
+- ElytraCosmeticsTask
+- CloudTrailElytraEffect
+- .play
+- .play
+- .play
+- .play
+- .play
+- .play
+- .play
+- .play
+- .play
+- BedrockUtil
+- org.dqnylux:CoreEC
 
 ## God Nodes (most connected - your core abstractions)
-1. `Mincore` - 446 edges
-2. `CosmeticItem` - 208 edges
-3. `MincoreConfig` - 96 edges
-4. `CosmeticEffect` - 80 edges
-5. `DefaultFontInfo` - 72 edges
-6. `PlayerData` - 71 edges
-7. `Animation` - 69 edges
-8. `PozoConfig` - 39 edges
-9. `CosmeticsGui` - 37 edges
-10. `PozoBoxType` - 37 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Kill effect: sangre (Explosion Sangrienta)` --references--> `effectType: burst (generic)`  [EXTRACTED]
-  src/main/resources/cosmetics/kill_effects.yml → docs/effects-reference.txt
-- `Kill effect: rayo (Castigo Divino)` --references--> `effectType: lightning_strike (dedicated)`  [EXTRACTED]
-  src/main/resources/cosmetics/kill_effects.yml → docs/effects-reference.txt
-- `Kill effect: fiesta (Fuegos Artificiales)` --references--> `effectType: fireworks_launch (dedicated)`  [EXTRACTED]
-  src/main/resources/cosmetics/kill_effects.yml → docs/effects-reference.txt
-- `Kill effect: almas (Robo de Almas)` --references--> `effectType: burst (generic)`  [EXTRACTED]
-  src/main/resources/cosmetics/kill_effects.yml → docs/effects-reference.txt
-- `Kill effect: pilar (Pilar de Encantamiento)` --references--> `effectType: enchantcolumn (dedicated)`  [EXTRACTED]
-  src/main/resources/cosmetics/kill_effects.yml → docs/effects-reference.txt
+- None detected - all connections are within the same source files.
 
 ## Import Cycles
 - None detected.
 
-## Hyperedges (group relationships)
-- **Paper/Purpur dev server configuration file set** — _ed_minecraft_dev_server_bukkit_config, _ed_minecraft_dev_server_commands_config, _ed_minecraft_dev_server_help_config, _ed_minecraft_dev_server_spigot_config, _ed_minecraft_dev_server_config_paper_global_config, _ed_minecraft_dev_server_purpur_config [INFERRED 0.75]
-- **Per-world Paper configuration override pattern** — _ed_minecraft_dev_server_config_paper_world_defaults_config, _ed_minecraft_dev_server_ed_dev_world_paper_world_config, _ed_minecraft_dev_server_ed_dev_world_nether_paper_world_config, _ed_minecraft_dev_server_ed_dev_world_the_end_paper_world_config [EXTRACTED 1.00]
-- **Cosmetic items across death/kill categories reusing the generic 'burst' effect engine** — docs_effects_reference_effecttype_burst, src_main_resources_cosmetics_death_effects_fantasma, src_main_resources_cosmetics_death_effects_cenizas, src_main_resources_cosmetics_kill_effects_sangre, src_main_resources_cosmetics_kill_effects_almas [INFERRED 0.85]
-- **Volcano-themed Join Effects (shared effectType: volcano)** — src_main_resources_cosmetics_join_effects_vulcan_fire, src_main_resources_cosmetics_join_effects_vulcan_wool, src_main_resources_cosmetics_join_effects_vulcan_diamond, src_main_resources_cosmetics_join_effects_vulcan_gold, src_main_resources_cosmetics_join_effects_vulcan_emerald, src_main_resources_cosmetics_join_effects_vulcan_redstone, src_main_resources_cosmetics_join_effects_vulcan_lapis [EXTRACTED 1.00]
-- **Ecuador Cultural Theme Across Cosmetic Categories** — src_main_resources_cosmetics_death_messages_ecuador, src_main_resources_cosmetics_kill_messages_ecuador, src_main_resources_cosmetics_join_messages_ecuador, src_main_resources_cosmetics_prefixes_ecuador, src_main_resources_cosmetics_wings_tricolor_ecuador [INFERRED 0.85]
-- **Anime Cultural Theme Across Message and Join Cosmetics** — src_main_resources_cosmetics_death_messages_anime, src_main_resources_cosmetics_kill_messages_anime, src_main_resources_cosmetics_join_messages_anime [INFERRED 0.85]
-- **Value-based Simple Cosmetic Schema (material/displayName/price/value/lore)** — src_main_resources_cosmetics_chatcolors_catalog, src_main_resources_cosmetics_namecolors_catalog, src_main_resources_cosmetics_prefixes_catalog, src_main_resources_cosmetics_icons_catalog, src_main_resources_cosmetics_glows_catalog [INFERRED 0.85]
+## Communities (159 total, 56 thin omitted)
 
-## Communities (306 total, 195 thin omitted)
+### Community 0 - "org.bukkit.Location"
+Cohesion: 0.07
+Nodes (24): org.bukkit.Location, org.bukkit.Particle, CosmeticItem, AbyssFangsEffect, Override, ChickensEffect, Override, Override (+16 more)
 
-### Community 0 - "Cosmetics Effect Registry"
-Cohesion: 0.05
-Nodes (33): ElytraEffect, Player, Projectile, ProjectileEffect, EffectRegistry, Location, Player, Projectile (+25 more)
+### Community 1 - "Mincore"
+Cohesion: 0.10
+Nodes (9): org.bukkit.entity.Player, CosmeticEffect, ElytraEffect, CloudBurstElytraEffect, CrystalShatterEffect, GiantTotemEffect, RisingCloudEffect, EffectUtils (+1 more)
 
-### Community 1 - "Utils Text Utils"
+### Community 2 - ".getConfigManager"
+Cohesion: 0.06
+Nodes (11): BlockReceiveGameEvent, PlayerInteractAtEntityEvent, PlayerSwapHandItemsEvent, Override, StaffCommand, AsyncChatEvent, ProjectileLaunchEvent, StaffListener (+3 more)
+
+### Community 3 - "DefaultFontInfo"
 Cohesion: 0.03
-Nodes (71): DefaultFontInfo, A, AMPERSAND, ASTERISK, AT_SYMBOL, B, BACK_SLASH, C (+63 more)
+Nodes (72): DefaultFontInfo, A, AMPERSAND, ASTERISK, AT_SYMBOL, B, BACK_SLASH, C (+64 more)
 
-### Community 2 - "Effects Grave Effect"
-Cohesion: 0.07
-Nodes (29): Block, BlockBreakEvent, BlockFace, CombatCosmeticsListener, EventHandler, Location, Player, PlayerDeathEvent (+21 more)
+### Community 4 - "NametagDisplayManager"
+Cohesion: 0.06
+Nodes (15): BillboardConstraints, com.github.retrooper.packetevents.protocol.world.Location, me.neznamy.tab.api.nametag.NameTagManager, me.neznamy.tab.api.TabPlayer, me.tofaa.entitylib.wrapper.WrapperEntity, Background, NametagConfig, NametagProfile (+7 more)
 
-### Community 3 - "Cosmetics Cosmetic Config Manager"
-Cohesion: 0.07
-Nodes (16): DamageCause, PlayerRespawnEvent, MessagePackConfig, MessagePackCosmetic, StandardCosmeticConfig, WingsConfig, DeathListener, EventHandler (+8 more)
+### Community 5 - ".EffectRegistry"
+Cohesion: 0.05
+Nodes (32): org.bukkit.entity.Entity, org.bukkit.entity.Projectile, ProjectileEffect, EffectRegistry, AllaysEffect, Override, AshesEffect, Override (+24 more)
 
-### Community 4 - "Staff Staff Mode Manager"
-Cohesion: 0.09
-Nodes (17): GameMode, Inventory, PlayerMoveEvent, PotionEffect, EventHandler, Location, Player, PlayerQuitEvent (+9 more)
+### Community 6 - "PozoMachineManager"
+Cohesion: 0.06
+Nodes (14): Beacon, Heart, Helix, Override, PozoMachineEffects, Pulsar, Rings, Simple (+6 more)
 
-### Community 5 - "Tasks Death Gpstask"
-Cohesion: 0.10
-Nodes (19): EnderCrystal, BukkitCommandActor, Command, TrackCommand, ArrivalSound, Beacon, BedrockMenu, Bossbar (+11 more)
+### Community 7 - "ChatFormatHandler"
+Cohesion: 0.06
+Nodes (17): com.google.gson.JsonObject, org.bukkit.NamespacedKey, ChatFormatHandler, Color, Overlay, InfractionToastManager, JsonObject, JsonObject (+9 more)
 
-### Community 6 - "Model Player Data"
-Cohesion: 0.09
-Nodes (4): Player, Connection, PlayerManager, PlayerData
+### Community 8 - "revxrsal.commands.annotation.Command"
+Cohesion: 0.06
+Nodes (9): org.bukkit.World, revxrsal.commands.annotation.Command, CosmeticsCommand, MessageCommand, PreviewZoneCommand, SkinsPreviewZoneCommand, TrackCommand, PozoCommand (+1 more)
 
-### Community 7 - "Commands Misc Command"
+### Community 9 - "revxrsal.commands.bukkit.actor.BukkitCommandActor"
 Cohesion: 0.08
-Nodes (18): Lamp, CosmeticsCommand, BukkitCommandActor, Command, Player, BukkitCommandActor, Command, CommandSender (+10 more)
+Nodes (22): revxrsal.commands.autocomplete.SuggestionProvider, revxrsal.commands.bukkit.actor.BukkitCommandActor, revxrsal.commands.node.ExecutionContext, DisguiseRankSuggestionProvider, Override, MiscCommand, OnlinePlayerSuggestionProvider, Override (+14 more)
 
-### Community 8 - "Listeners Staff Listener"
-Cohesion: 0.13
-Nodes (17): EntityDamageByEntityEvent, EntityInteractEvent, EntityPickupItemEvent, EntityTargetEvent, FoodLevelChangeEvent, InventoryCloseEvent, PlayerChangedWorldEvent, PlayerCommandPreprocessEvent (+9 more)
-
-### Community 9 - "Cosmetics Trail Manager"
-Cohesion: 0.16
-Nodes (11): CosmeticItem, GlowMissileEffect, Location, Override, Player, Override, Player, WingElytraEffect (+3 more)
-
-### Community 10 - "Admin Pozo Admin Cosmetic"
-Cohesion: 0.12
-Nodes (15): Gui, GuiItem, Player, PozoAdminCosmeticPickerMenu, Player, PozoAdminTypeEditMenu, GuiItem, Player (+7 more)
-
-### Community 11 - "Effects Pandas Effect"
-Cohesion: 0.10
-Nodes (18): Panda, Pig, CrystalShatterEffect, Location, Override, Player, BlockDisplay, Location (+10 more)
-
-### Community 12 - "Listeners Player Connection Listener"
-Cohesion: 0.11
-Nodes (10): EventHandler, Player, PlayerJoinEvent, PlayerQuitEvent, PlayerConnectionListener, Player, MotdManager, ElytraCosmeticsTask (+2 more)
-
-### Community 13 - "Menus Cosmetics Gui"
-Cohesion: 0.17
-Nodes (3): CosmeticsGui, ItemStack, Player
-
-### Community 14 - "Commands Pozo Command"
-Cohesion: 0.16
-Nodes (9): BukkitCommandActor, Command, Player, PozoCommand, EventHandler, Player, PlayerInteractEvent, PozoMachineInteractListener (+1 more)
-
-### Community 15 - "Managers Pozo Catalog Manager"
-Cohesion: 0.12
-Nodes (7): OkaeriConfig, FlatDocument, PozoBoxType, PozoAnimationSettingsConfig, PozoBoxTypesConfig, FlatDocument, PozoCatalogManager
-
-### Community 16 - "Effects Explosion Effect"
-Cohesion: 0.11
-Nodes (17): Color, CosmeticEffect, Location, Player, ExplosionEffect, Location, Override, Player (+9 more)
-
-### Community 17 - "Effects Snow Vortex Elytra"
-Cohesion: 0.09
-Nodes (16): BurstEffect, Location, Override, Player, Override, Player, LightningWingsElytraEffect, Override (+8 more)
-
-### Community 18 - "Effects Guardian Effect"
-Cohesion: 0.14
-Nodes (8): ChatColor, Guardian, Particle, GuardianEffect, Location, Override, Player, Team
-
-### Community 19 - "Model Pozo Open Result"
-Cohesion: 0.11
-Nodes (13): Entity, Player, PozoOpenManager, Player, PozoResultAnnouncer, PozoDispatchResult, PozoOpenResult, Status (+5 more)
-
-### Community 20 - "Animations Animation"
-Cohesion: 0.12
-Nodes (4): Animation, AnimationContext, Location, Player
-
-### Community 21 - "Cosmetics Wing Manager"
-Cohesion: 0.16
-Nodes (10): WingCosmetic, WingParticleData, WingSettings, Location, Player, WingManager, ActiveCosmeticsTask, Location (+2 more)
-
-### Community 22 - "Listeners Chat Listener"
-Cohesion: 0.14
-Nodes (15): Audience, JavaPlugin, Listener, PlayerAdvancementCriterionGrantEvent, PlayerChatTabCompleteEvent, AdvancementBlockListener, EventHandler, ChatListener (+7 more)
-
-### Community 23 - "Effects Cloud Burst Elytra"
-Cohesion: 0.10
-Nodes (13): CloudBurstElytraEffect, Override, Player, FallingBeamEffect, Location, Override, Player, FixedEmitterElytraEffect (+5 more)
-
-### Community 24 - "Hooks Papiexpansion"
-Cohesion: 0.17
-Nodes (5): NotNull, PlaceholderExpansion, Override, Player, PAPIExpansion
-
-### Community 25 - "Menus Pozo Crafting Menu"
-Cohesion: 0.15
-Nodes (10): PozoCraftIngredient, PozoCraftRecipe, PozoCraftingConfig, PozoCraftingManager, Player, PozoCraftingConfirmMenu, Component, GuiItem (+2 more)
-
-### Community 26 - "Managers Pozo Data Manager"
-Cohesion: 0.20
-Nodes (3): Connection, PozoDataManager, PozoPlayerData
-
-### Community 27 - "Chat Chat Filter Manager"
-Cohesion: 0.14
-Nodes (9): CancelReason, ADS, BAD_WORD, REPETITION, SPAM, ChatFilterManager, FilterResult, Pattern (+1 more)
-
-### Community 28 - "Managers Pozo Machine Manager"
-Cohesion: 0.21
-Nodes (7): Component, Location, Player, ScheduledTask, TextDisplay, PozoMachineManager, PozoMachineDef
-
-### Community 29 - "Commands Mincore Command"
-Cohesion: 0.27
-Nodes (5): BukkitCommandActor, Command, CommandSender, SuppressWarnings, MincoreCommand
-
-### Community 30 - "Effects Symphony Effect"
-Cohesion: 0.26
-Nodes (9): ArmorStand, Chicken, BlockDisplay, Color, Location, Override, Player, SymphonyEffect (+1 more)
-
-### Community 31 - "Chat Chat Format Handler"
-Cohesion: 0.20
-Nodes (8): ChatFormatHandler, BossBar, Color, Component, Overlay, Pattern, Player, TextDecoration
-
-### Community 32 - "Cosmetics Cosmetic Sync Manager"
-Cohesion: 0.16
-Nodes (6): CosmeticSyncManager, Connection, ScheduledTask, PozoLootHistoryManager, PozoHistoryEntry, StandardCosmeticConfig
-
-### Community 33 - "Menus Pozo Gift Amount"
-Cohesion: 0.16
-Nodes (7): Player, Player, PozoGiftAmountMenu, GuiItem, Player, PozoGiftMenu, PozoGiftSession
-
-### Community 34 - "Commands Dynamic Command"
-Cohesion: 0.15
-Nodes (12): Command, Component, PaginatedGui, SimpleDateFormat, DynamicCommand, CommandSender, Override, GuiItem (+4 more)
-
-### Community 35 - "Menus Category Menu"
-Cohesion: 0.20
-Nodes (7): CategoriesMenuConfig, CategoryButton, CategoryMenu, GuiItem, ItemStack, Player, GuiItem
-
-### Community 36 - "Menus Main Menu"
-Cohesion: 0.28
-Nodes (7): MenuItem, Component, Gui, GuiItem, ItemStack, Player, MainMenu
-
-### Community 37 - "Managers Pozo Reward Dispatcher"
-Cohesion: 0.16
-Nodes (6): PozoReward, Player, PozoRewardDispatcher, GuiItem, Player, PozoAdminRewardsMenu
-
-### Community 38 - "Managers Database Manager"
-Cohesion: 0.17
-Nodes (8): HikariDataSource, JedisPool, DatabaseManager, StorageType, MARIADB, MYSQL, SQLITE, Statement
-
-### Community 39 - "Styles Anim25gran Final"
-Cohesion: 0.17
-Nodes (5): Color, Location, PozoAnimationUtil, Anim25GranFinal, Override
-
-### Community 40 - "Utils Menu Structure"
-Cohesion: 0.16
-Nodes (10): ItemFlag, CosmeticsMenuConfig, GuiAction, GuiItem, InventoryClickEvent, Location, Material, PaginatedGui (+2 more)
-
-### Community 41 - "Cosmetics Glow Manager"
-Cohesion: 0.28
-Nodes (5): NamedTextColor, GlowManager, Component, Player, ScheduledTask
-
-### Community 42 - "Managers Core Config Manager"
-Cohesion: 0.16
-Nodes (6): DatabaseConfig, MySQL, Redis, Sync, MainMenuConfig, CoreConfigManager
-
-### Community 43 - "Utils Console Logger"
-Cohesion: 0.12
-Nodes (5): ConsoleCommandSender, PluginCommand, Override, ConsoleLogger, Component
-
-### Community 44 - "Effects Icewalker Effect"
-Cohesion: 0.19
-Nodes (10): Entity, AllaysEffect, Location, Override, Player, IcewalkerEffect, BlockDisplay, Location (+2 more)
-
-### Community 45 - "Managers Announcement Manager"
-Cohesion: 0.21
-Nodes (5): AnnouncementEntry, AnnouncementsConfig, Settings, AnnouncementManager, ScheduledTask
-
-### Community 46 - "Config Chat Format Config"
-Cohesion: 0.26
-Nodes (12): Actionbar, BossbarSection, Chat, ChatFormatConfig, InteractiveItem, Mentions, NamePart, Part (+4 more)
-
-### Community 47 - "Effects Cloud Trail Elytra"
-Cohesion: 0.16
-Nodes (8): CloudTrailElytraEffect, Override, Player, GenericTrailProjectileEffect, Override, Projectile, Override, PolygonElytraEffect
-
-### Community 48 - "Utils Text Utils"
+### Community 10 - ".format"
 Cohesion: 0.18
-Nodes (7): LegacyComponentSerializer, MiniMessage, getDefaultFontInfo(), Component, Pattern, Player, TextUtils
+Nodes (3): revxrsal.commands.bukkit.annotation.CommandPermission, EssentialsCommand, ItemStack
 
-### Community 49 - "Managers Config Sync Manager"
-Cohesion: 0.26
-Nodes (3): ConfigSyncManager, Connection, ScheduledTask
+### Community 11 - "StaffModeManager"
+Cohesion: 0.08
+Nodes (14): org.bukkit.GameMode, org.bukkit.inventory.Inventory, org.bukkit.potion.PotionEffect, org.bukkit.potion.PotionEffectType, PotionEffect, ArmorPiece, StaffMode, ToolItem (+6 more)
 
-### Community 50 - "Managers Pozo Animation Registry"
-Cohesion: 0.29
-Nodes (3): Location, Player, PozoAnimationRegistry
+### Community 12 - "MincoreConfig"
+Cohesion: 0.07
+Nodes (41): Permissions, Actionbar, BossbarSection, Chat, ChatFormatConfig, InteractiveItem, Mentions, NamePart (+33 more)
 
-### Community 51 - "Commands Online Player Suggestion"
-Cohesion: 0.26
-Nodes (9): BukkitCommandActor, ExecutionContext, Override, OnlinePlayerSuggestionProvider, BukkitCommandActor, ExecutionContext, Override, PozoTargetSuggestionProvider (+1 more)
+### Community 13 - "TextUtils"
+Cohesion: 0.09
+Nodes (14): com.destroystokyo.paper.profile.PlayerProfile, DecimalFormat, io.papermc.paper.threadedregions.scheduler.ScheduledTask, java.net.http.HttpClient, java.net.http.HttpRequest, java.util.regex.Pattern, net.kyori.adventure.text.Component, net.kyori.adventure.text.format.TextDecoration (+6 more)
 
-### Community 52 - "Commands Staff Command"
-Cohesion: 0.35
-Nodes (3): BukkitCommandActor, Command, StaffCommand
+### Community 14 - "org.bukkit.Color"
+Cohesion: 0.07
+Nodes (16): DustOptions, org.bukkit.Color, CometTailElytraEffect, Override, EnchantColumnEffect, Override, ExplosionEffect, Override (+8 more)
 
-### Community 53 - "Config Staff Config"
-Cohesion: 0.24
-Nodes (9): ArmorPiece, HelpOp, Menu, Permissions, Report, StaffConfig, StaffMode, ToolItem (+1 more)
+### Community 15 - "PozoBoxType"
+Cohesion: 0.13
+Nodes (9): PozoMainMenu, PozoMenus, PozoRewardsPreviewMenu, PozoBoxType, PozoRarity, PozoSound, PozoConfig, PozoResultAnnouncer (+1 more)
 
-### Community 54 - "Admin Pozo Admin Animation"
-Cohesion: 0.27
-Nodes (6): GuiItem, Player, PozoAdminAnimationSettingsMenu, GuiItem, Player, PozoMainMenu
+### Community 16 - "PlayerData"
+Cohesion: 0.09
+Nodes (4): java.sql.Connection, PlayerManager, PlayerData, ResolvedPlayer
 
-### Community 56 - "Chat Mention Toast Manager"
-Cohesion: 0.32
-Nodes (4): JsonObject, NamespacedKey, Player, MentionToastManager
+### Community 17 - "DeathGPSTask"
+Cohesion: 0.08
+Nodes (10): org.bukkit.entity.ArmorStand, org.bukkit.entity.EnderCrystal, org.bukkit.entity.TextDisplay, ArrivalSound, Death, DeathTrackingManager, DeathGPSTask, HologramHandle (+2 more)
 
-### Community 57 - "Chat Infraction Toast Manager"
-Cohesion: 0.32
-Nodes (4): InfractionToastManager, JsonObject, NamespacedKey, Player
+### Community 18 - "CosmeticConfigManager"
+Cohesion: 0.09
+Nodes (11): eu.okaeri.configs.OkaeriConfig, MessagePackConfig, WingCosmetic, WingParticleData, WingSettings, StandardCosmeticConfig, WingsConfig, CosmeticConfigManager (+3 more)
 
-### Community 58 - "Effects Shockwave Effect"
-Cohesion: 0.45
-Nodes (5): Color, Location, Override, Player, ShockwaveEffect
+### Community 19 - "SkinPreviewManager"
+Cohesion: 0.11
+Nodes (12): com.destroystokyo.paper.profile.ProfileProperty, org.bukkit.event.block.BlockPlaceEvent, HeadClickListener, HeadPair, ArmorStand, ItemStack, Location, ProfileProperty (+4 more)
 
-### Community 59 - "Server Bukkit"
+### Community 20 - "CosmeticsGui"
+Cohesion: 0.13
+Nodes (12): dev.triumphteam.gui.components.GuiAction, dev.triumphteam.gui.guis.PaginatedGui, org.bukkit.event.inventory.InventoryClickEvent, CosmeticsGui, next(), SortMode, ALPHABETICAL, DEFAULT (+4 more)
+
+### Community 21 - "GlowManager"
+Cohesion: 0.11
+Nodes (8): NameTagVisibility, net.kyori.adventure.text.format.NamedTextColor, GlowMob, Override, WrapperEntity, WrapperLivingEntity, SymphonyEffect, GlowManager
+
+### Community 22 - "VaultEconomyProvider"
+Cohesion: 0.14
+Nodes (7): EconomyResponse, net.milkbowl.vault.economy.AbstractEconomy, net.milkbowl.vault.economy.EconomyResponse, org.bukkit.OfflinePlayer, Override, VaultEconomyProvider, VaultHook
+
+### Community 23 - "CoreConfigManager"
+Cohesion: 0.09
+Nodes (15): eu.okaeri.configs.annotation.Include, CosmeticsMenuConfig, DatabaseConfig, MySQL, Redis, Sync, BadWords, ClickableLinks (+7 more)
+
+### Community 24 - "PozoPlayerData"
+Cohesion: 0.11
+Nodes (3): PozoCraftingManager, PozoDataManager, PozoPlayerData
+
+### Community 25 - "DatabaseManager"
+Cohesion: 0.11
+Nodes (13): com.zaxxer.hikari.HikariDataSource, HikariDataSource, java.sql.PreparedStatement, java.sql.ResultSet, java.sql.Statement, javax.sql.DataSource, JedisPool, redis.clients.jedis.JedisPool (+5 more)
+
+### Community 27 - "dev.triumphteam.gui.guis.GuiItem"
+Cohesion: 0.15
+Nodes (8): dev.triumphteam.gui.guis.GuiItem, java.text.SimpleDateFormat, ReportsConfig, ReportDetailMenu, ReportsInboxMenu, ItemStack, ReportsMenus, ReportUserHistoryMenu
+
+### Community 28 - "org.bukkit.Material"
+Cohesion: 0.13
+Nodes (10): org.bukkit.block.Block, org.bukkit.block.BlockFace, org.bukkit.Material, CryoCoreEffect, Override, GraveEffect, Override, Override (+2 more)
+
+### Community 29 - "WarpRecord"
+Cohesion: 0.10
+Nodes (7): CooldownManager, Permissions, WarpsConfig, WarpsDataManager, WarpsGui, Location, WarpRecord
+
+### Community 30 - "org.bukkit.command.CommandSender"
+Cohesion: 0.17
+Nodes (4): org.bukkit.command.CommandSender, Override, SuppressWarnings, MincoreCommand
+
+### Community 31 - ".itemFlags"
+Cohesion: 0.15
+Nodes (6): org.bukkit.inventory.ItemFlag, SanctionCategory, SanctionCategoryMenu, SanctionConfirmMenu, SanctionMainMenu, SanctionPardonConfirmMenu
+
+### Community 32 - "PozoCatalogManager"
+Cohesion: 0.12
+Nodes (4): org.bukkit.command.ConsoleCommandSender, PozoAnimationSettingsConfig, PozoCatalogManager, ConsoleLogger
+
+### Community 33 - ".getDatabaseManager"
+Cohesion: 0.11
+Nodes (4): HomesDataManager, CosmeticSyncManager, SanctionDataManager, SanctionRecord
+
+### Community 34 - ".getPozoCatalogManager"
+Cohesion: 0.18
+Nodes (4): PozoAdminRarityMenu, PozoAdminRewardsMenu, PozoAdminTypeEditMenu, PozoAdminTypeListMenu
+
+### Community 35 - "DisguiseManager"
+Cohesion: 0.11
+Nodes (4): DisguiseManager, DisguiseSession, BossBar, ProfileProperty
+
+### Community 36 - "PozoReward"
+Cohesion: 0.13
+Nodes (11): PozoReward, PozoOpenManager, PozoRewardDispatcher, PozoDispatchResult, PozoOpenResult, Status, BOX_NOT_FOUND, NO_REWARDS_CONFIGURED (+3 more)
+
+### Community 37 - ".button"
+Cohesion: 0.15
+Nodes (7): PozoAdminCosmeticPickerMenu, PozoCraftingConfirmMenu, PozoCraftingMenu, PozoGiftMenu, PozoGiftPlayerPickerMenu, GuiItem, PozoLootHistoryMenu
+
+### Community 39 - "AfkListener"
+Cohesion: 0.14
+Nodes (6): org.bukkit.event.entity.EntityDamageEvent, org.bukkit.event.player.PlayerInteractEvent, org.bukkit.event.player.PlayerJoinEvent, org.bukkit.event.player.PlayerMoveEvent, AfkListener, PozoLootboxItemListener
+
+### Community 40 - "MincoreExceptionHandler.java"
+Cohesion: 0.18
+Nodes (13): revxrsal.commands.bukkit.exception.BukkitExceptionHandler, revxrsal.commands.exception.EnumNotFoundException, revxrsal.commands.exception.ExpectedLiteralException, revxrsal.commands.exception.InvalidBooleanException, revxrsal.commands.exception.InvalidDecimalException, revxrsal.commands.exception.InvalidIntegerException, revxrsal.commands.exception.MissingArgumentException, revxrsal.commands.exception.NoPermissionException (+5 more)
+
+### Community 41 - "EconomyCommand"
+Cohesion: 0.19
+Nodes (4): EconomyCommand, SuppressWarnings, SuppressWarnings, SucreCommand
+
+### Community 42 - ".runPreview"
+Cohesion: 0.11
+Nodes (3): CosmeticVisibility, ActiveCosmeticsTask, WorldValidator
+
+### Community 43 - "Mincore.java"
+Cohesion: 0.16
+Nodes (10): com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent, net.kyori.adventure.audience.Audience, org.bukkit.event.Listener, org.bukkit.event.player.PlayerChatTabCompleteEvent, org.bukkit.plugin.java.JavaPlugin, AdvancementBlockListener, AutoResponderListener, ChatListener (+2 more)
+
+### Community 44 - "me.tofaa.entitylib.wrapper.WrapperLivingEntity"
+Cohesion: 0.13
+Nodes (11): me.tofaa.entitylib.wrapper.WrapperLivingEntity, GuardianEffect, Override, WrapperLivingEntity, Override, WrapperEntity, WrapperLivingEntity, PandasEffect (+3 more)
+
+### Community 46 - "ReportDataManager"
 Cohesion: 0.22
-Nodes (11): Bukkit Configuration (bukkit.yml), Bukkit Commands Configuration (commands.yml), Paper Global Configuration (paper-global.yml), Paper World Defaults Configuration (paper-world-defaults.yml), ed_dev_world_nether Per-World Config (The Nether), ed_dev_world Per-World Config (Overworld), ed_dev_world_the_end Per-World Config (The End), Minecraft EULA Agreement (eula.txt) (+3 more)
+Nodes (5): Cooldown, ReportDataManager, SqlBinder, Report, Reporter
 
-### Community 60 - "Config Main Config"
-Cohesion: 0.33
-Nodes (9): Commands, Cosmetics, DeathTracking, LuckPermsIntegration, MainConfig, Modules, Permissions, PreviewZone (+1 more)
+### Community 47 - "AfkManager"
+Cohesion: 0.13
+Nodes (3): AfkManager, ItemStack, NamespacedKey
 
-### Community 61 - "Managers Economy Admin Handler"
-Cohesion: 0.31
+### Community 48 - "CommandBlockerConfig"
+Cohesion: 0.16
+Nodes (5): Action, CommandBlockerConfig, CustomActionGroup, TabGroup, CommandBlockerManager
+
+### Community 49 - "PlayerConnectionListener"
+Cohesion: 0.16
+Nodes (4): EntityDamageEvent, Location, PlayerDeathEvent, PlayerConnectionListener
+
+### Community 50 - "ChatFilterManager"
+Cohesion: 0.19
+Nodes (3): ChatFilterManager, CommandSender, ReviewWordsRefreshResult
+
+### Community 51 - ".onEnable"
+Cohesion: 0.10
+Nodes (4): TabListManager, ReplyManager, PozoChatInputManager, PozoLootHistoryManager
+
+### Community 52 - "ReportManager"
+Cohesion: 0.13
+Nodes (7): ReportManager, SubmitResult, ReportComment, ReportStatus, DONE, IN_PROGRESS, WAITING
+
+### Community 53 - "MenuItem"
+Cohesion: 0.20
+Nodes (5): dev.triumphteam.gui.guis.Gui, MenuItem, ItemStack, MainMenu, BalanceEntry
+
+### Community 54 - "org.bukkit.event.EventHandler"
+Cohesion: 0.21
+Nodes (5): io.papermc.paper.event.player.AsyncChatEvent, org.bukkit.event.EventHandler, org.bukkit.event.player.PlayerDropItemEvent, FreezeListener, SkinSessionListener
+
+### Community 55 - ".getCosmeticConfigManager"
+Cohesion: 0.19
+Nodes (4): me.clip.placeholderapi.expansion.PlaceholderExpansion, org.jetbrains.annotations.NotNull, Override, PAPIExpansion
+
+### Community 56 - ".process"
+Cohesion: 0.11
+Nodes (12): Ads, AntiSpam, Caps, FloodProtection, CancelReason, ADS, BAD_WORD, FLOOD (+4 more)
+
+### Community 57 - "NametagPassengerGuardListener"
+Cohesion: 0.20
+Nodes (8): com.github.retrooper.packetevents.event.PacketSendEvent, com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams, ScoreBoardTeamInfo, Override, NametagPassengerGuardListener, TeamState, test_teams, WrapperPlayServerTeams
+
+### Community 58 - "Anim18ObjetoFlotante"
+Cohesion: 0.16
+Nodes (5): org.bukkit.entity.ItemDisplay, Anim18ObjetoFlotante, Override, Anim19EspadaLegendaria, Override
+
+### Community 59 - "HomesConfig"
+Cohesion: 0.19
+Nodes (5): HomesConfig, Permissions, HomesGui, HomeRecord, Location
+
+### Community 60 - ".onDisable"
+Cohesion: 0.14
+Nodes (3): PluginCommand, AnnouncementManager, Override
+
+### Community 61 - ".tick"
+Cohesion: 0.16
+Nodes (4): AfkTask, Color, ItemStack, Overlay
+
+### Community 62 - "PozoCraftRecipe"
+Cohesion: 0.25
+Nodes (5): PozoAdminCraftingEditMenu, PozoAdminCraftingMenu, PozoCraftIngredient, PozoCraftRecipe, PozoCraftingConfig
+
+### Community 65 - ".spawnRaw"
+Cohesion: 0.21
+Nodes (4): Anim10EspiralDorada, Override, Anim21RemolinoCosmico, Override
+
+### Community 66 - ".lerpHex"
+Cohesion: 0.19
+Nodes (4): Anim02PozoClasico, Override, Anim20MurallaDeCajas, Override
+
+### Community 67 - "PozoAnimationRegistry"
+Cohesion: 0.24
+Nodes (5): Location, OpenContext, LOOTBOX_ITEM, MACHINE, PozoAnimationRegistry
+
+### Community 68 - "DeathListener.java"
+Cohesion: 0.21
+Nodes (5): DamageCause, org.bukkit.event.entity.PlayerDeathEvent, org.bukkit.event.player.PlayerRespawnEvent, MessagePackCosmetic, DeathListener
+
+### Community 69 - "SanctionManager"
+Cohesion: 0.24
+Nodes (4): IntConsumer, SanctionLevel, JsonObject, SanctionManager
+
+### Community 70 - "AfkZone"
+Cohesion: 0.22
+Nodes (3): AfkZone, ItemReward, ZoneConfig
+
+### Community 71 - "AiModerationClient"
+Cohesion: 0.24
+Nodes (3): AiModeration, AiModerationClient, CachedVerdict
+
+### Community 72 - "DiscordApprovalBot"
+Cohesion: 0.23
+Nodes (8): net.dv8tion.jda.api.entities.Member, net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent, net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent, net.dv8tion.jda.api.events.session.ReadyEvent, net.dv8tion.jda.api.hooks.ListenerAdapter, net.dv8tion.jda.api.JDA, DiscordApprovalBot, Override
+
+### Community 74 - "AfkConfig"
+Cohesion: 0.19
+Nodes (9): ActionBarConfig, AfkConfig, AutoAfk, BossBarConfig, CooldownMessages, TitleConfig, ToastConfig, Visuals (+1 more)
+
+### Community 76 - "EconomyAdminHandler"
+Cohesion: 0.27
 Nodes (5): EconomyAdminHandler, Result, INVALID_AMOUNT, PLAYER_OFFLINE, SUCCESS
 
-### Community 63 - "Menus Staff Menu"
+### Community 79 - "PreviewZoneManager"
+Cohesion: 0.29
+Nodes (3): Location, PreviewZoneManager, Session
+
+### Community 81 - ".getPozoDataManager"
+Cohesion: 0.24
+Nodes (3): PozoAdminAnimationSettingsMenu, PozoAnimationPickerMenu, GuiItem
+
+### Community 82 - "LuckPermsHook"
+Cohesion: 0.21
+Nodes (3): net.luckperms.api.LuckPerms, LuckPermsHook, User
+
+### Community 83 - "org.bukkit.event.player.PlayerCommandPreprocessEvent"
+Cohesion: 0.22
+Nodes (4): org.bukkit.event.player.PlayerCommandPreprocessEvent, org.bukkit.event.player.PlayerCommandSendEvent, CommandBlockerListener, CommandVisibilityListener
+
+### Community 84 - "PlayerConnectionListener.java"
+Cohesion: 0.20
+Nodes (4): org.bukkit.event.player.PlayerChangedWorldEvent, org.bukkit.event.player.PlayerQuitEvent, org.bukkit.event.player.PlayerTeleportEvent, PozoChatInputListener
+
+### Community 85 - "CommandManager"
+Cohesion: 0.29
+Nodes (4): revxrsal.commands.Lamp, CommandManager, Commands, Permissions
+
+### Community 88 - "MincoreLoader.java"
+Cohesion: 0.29
+Nodes (8): io.papermc.paper.plugin.loader.PluginClasspathBuilder, io.papermc.paper.plugin.loader.PluginLoader, org.eclipse.aether.repository.RemoteRepository, org.eclipse.aether.repository.RepositoryPolicy, RepositoryPolicy, Override, SuppressWarnings, MincoreLoader
+
+### Community 89 - "DynamicCommandManager"
+Cohesion: 0.33
+Nodes (4): org.bukkit.command.Command, org.bukkit.command.CommandMap, DynamicCommand, DynamicCommandManager
+
+### Community 90 - "CombatCosmeticsListener.java"
+Cohesion: 0.24
+Nodes (4): org.bukkit.event.block.BlockBreakEvent, org.bukkit.event.entity.ProjectileHitEvent, org.bukkit.event.entity.ProjectileLaunchEvent, CombatCosmeticsListener
+
+### Community 92 - "SkeletonArmorEffect.java"
+Cohesion: 0.33
+Nodes (5): com.github.retrooper.packetevents.protocol.item.ItemStack, me.tofaa.entitylib.wrapper.WrapperEntityEquipment, org.bukkit.inventory.PlayerInventory, Override, SkeletonArmorEffect
+
+### Community 93 - "Anim14EnjambreDorado"
+Cohesion: 0.33
+Nodes (3): org.bukkit.entity.Bee, Anim14EnjambreDorado, Override
+
+### Community 94 - "Anim13GuardianAncestral"
+Cohesion: 0.33
+Nodes (3): org.bukkit.entity.Guardian, Anim13GuardianAncestral, Override
+
+### Community 95 - "Anim06ConejoDeLaSuerte"
+Cohesion: 0.33
+Nodes (3): org.bukkit.entity.Rabbit, Anim06ConejoDeLaSuerte, Override
+
+### Community 96 - "Anim16RebanoAfortunado"
+Cohesion: 0.33
+Nodes (3): org.bukkit.entity.Sheep, Anim16RebanoAfortunado, Override
+
+### Community 97 - ".getPozoMachineManager"
+Cohesion: 0.31
+Nodes (3): org.bukkit.event.block.BlockExplodeEvent, org.bukkit.event.entity.EntityExplodeEvent, PozoMachineInteractListener
+
+### Community 98 - "SanctionsConfig"
+Cohesion: 0.20
+Nodes (8): Messages, Gui, Alerts, Discord, Gui, History, Messages, SanctionsConfig
+
+### Community 101 - "com.github.retrooper.packetevents.event.PacketListenerAbstract"
+Cohesion: 0.31
+Nodes (5): com.github.retrooper.packetevents.event.PacketListenerAbstract, com.github.retrooper.packetevents.event.PacketReceiveEvent, AntiSignatureListener, Override, Override
+
+### Community 109 - "SubmitOutcome"
+Cohesion: 0.22
+Nodes (9): SubmitOutcome, ALREADY_REPORTED, COOLDOWN, CREATED, EXEMPT, REASON_TOO_SHORT, SELF_REPORT, STACKED (+1 more)
+
+### Community 111 - "DeathSystemConfig"
+Cohesion: 0.29
+Nodes (5): Beacon, BedrockMenu, Bossbar, DeathSystemConfig, Waypoint
+
+### Community 121 - "NametagTrackerListener.java"
 Cohesion: 0.38
-Nodes (5): GuiItem, PaginatedGui, Player, LoreTransform, StaffMenu
+Nodes (3): io.papermc.paper.event.player.PlayerTrackEntityEvent, io.papermc.paper.event.player.PlayerUntrackEntityEvent, NametagTrackerListener
 
-### Community 65 - "Styles Anim14enjambre Dorado"
-Cohesion: 0.33
-Nodes (3): Bee, Anim14EnjambreDorado, Override
-
-### Community 66 - "Effects Skeleton Armor Effect"
-Cohesion: 0.33
-Nodes (6): EntityEquipment, PlayerInventory, Location, Override, Player, SkeletonArmorEffect
-
-### Community 67 - "Mincore Loader.java Mincore Loader"
-Cohesion: 0.33
-Nodes (7): PluginClasspathBuilder, PluginLoader, RemoteRepository, RepositoryPolicy, Override, SuppressWarnings, MincoreLoader
-
-### Community 68 - "Styles Anim06conejo De La"
-Cohesion: 0.33
-Nodes (3): Rabbit, Anim06ConejoDeLaSuerte, Override
-
-### Community 69 - "Styles Anim16rebano Afortunado"
-Cohesion: 0.33
-Nodes (3): Sheep, Anim16RebanoAfortunado, Override
-
-### Community 70 - "Effects Enchant Column Effect"
-Cohesion: 0.42
-Nodes (5): EnchantColumnEffect, Color, Location, Override, Player
-
-### Community 71 - "Effects Void Lotus Effect"
-Cohesion: 0.38
-Nodes (5): Color, Location, Override, Player, VoidLotusEffect
-
-### Community 75 - "Styles Anim18objeto Flotante"
-Cohesion: 0.33
-Nodes (3): Anim18ObjetoFlotante, ItemDisplay, Override
-
-### Community 76 - "Styles Anim19espada Legendaria"
-Cohesion: 0.33
-Nodes (3): Anim19EspadaLegendaria, ItemDisplay, Override
-
-### Community 77 - "Styles Anim24regalo Misterioso"
-Cohesion: 0.33
-Nodes (3): Anim24RegaloMisterioso, ItemDisplay, Override
-
-### Community 78 - "Menus Pozo Animation Picker"
-Cohesion: 0.49
-Nodes (4): PozoConfig, GuiItem, Player, PozoAnimationPickerMenu
-
-### Community 79 - "Managers Dynamic Command Manager"
-Cohesion: 0.36
-Nodes (3): CommandMap, DynamicCommandManager, Command
-
-### Community 80 - "Config Filters Config"
-Cohesion: 0.39
-Nodes (7): Ads, AntiSpam, BadWords, Caps, FiltersConfig, Punishment, Repetition
-
-### Community 81 - "Config Messages Config"
-Cohesion: 0.33
-Nodes (8): Chat, Commands, Console, Cosmetics, JoinQuit, Menus, MessagesConfig, PrivateMessages
-
-### Community 82 - "Effects Dimensional Rift Effect"
-Cohesion: 0.39
-Nodes (5): DimensionalRiftEffect, Location, Override, Particle, Player
-
-### Community 83 - "Effects Meteors Effect"
-Cohesion: 0.47
-Nodes (4): Location, Override, Player, MeteorsEffect
-
-### Community 84 - "Effects Prismatic Nova Effect"
-Cohesion: 0.44
-Nodes (4): Location, Override, Player, PrismaticNovaEffect
-
-### Community 85 - "Effects Star Shower Effect"
-Cohesion: 0.44
-Nodes (4): Location, Override, Player, StarShowerEffect
-
-### Community 91 - "Listeners Anti Signature Listener"
-Cohesion: 0.39
-Nodes (5): PacketListenerAbstract, PacketReceiveEvent, PacketSendEvent, AntiSignatureListener, Override
-
-### Community 92 - "Effects Aura Farming Effect"
-Cohesion: 0.43
-Nodes (4): AuraFarmingEffect, Location, Override, Player
-
-### Community 93 - "Effects Chickens Effect"
-Cohesion: 0.46
-Nodes (4): ChickensEffect, Location, Override, Player
-
-### Community 94 - "Effects Sniper Effect"
-Cohesion: 0.43
-Nodes (4): Location, Override, Player, SniperEffect
-
-### Community 95 - "Effects Stellar Collapse Effect"
-Cohesion: 0.36
-Nodes (4): Location, Override, Player, Location
-
-### Community 96 - "Effects Volcano Effect"
-Cohesion: 0.46
-Nodes (4): Location, Override, Player, VolcanoEffect
-
-### Community 97 - "Cosmetics Tab List Manager"
-Cohesion: 0.36
-Nodes (3): Player, ScheduledTask, TabListManager
-
-### Community 109 - "Commands Preview Zone Command"
-Cohesion: 0.38
-Nodes (4): CommandSender, BukkitCommandActor, Command, PreviewZoneCommand
-
-### Community 110 - "Config Bots Config"
+### Community 123 - ".play"
 Cohesion: 0.48
+Nodes (3): org.bukkit.entity.BlockDisplay, IcewalkerEffect, Override
+
+### Community 124 - "StaffListener.java"
+Cohesion: 0.29
+Nodes (6): org.bukkit.event.entity.EntityDamageByEntityEvent, org.bukkit.event.entity.EntityInteractEvent, org.bukkit.event.entity.EntityPickupItemEvent, org.bukkit.event.entity.EntityTargetEvent, org.bukkit.event.entity.FoodLevelChangeEvent, org.bukkit.event.inventory.InventoryCloseEvent
+
+### Community 125 - "AnnouncementsConfig"
+Cohesion: 0.33
+Nodes (3): AnnouncementEntry, AnnouncementsConfig, Settings
+
+### Community 126 - "BotsConfig"
+Cohesion: 0.38
 Nodes (3): AutoResponder, BotsConfig, CustomCommand
 
-### Community 111 - "Listeners Auto Responder Listener"
-Cohesion: 0.43
-Nodes (3): AutoResponderListener, AsyncChatEvent, EventHandler
-
-### Community 112 - "Effects Abyss Fangs Effect"
-Cohesion: 0.43
-Nodes (4): AbyssFangsEffect, Location, Override, Player
-
-### Community 113 - "Effects Comet Tail Elytra"
-Cohesion: 0.43
-Nodes (3): CometTailElytraEffect, Override, Player
-
-### Community 114 - "Effects Flame Ring Effect"
-Cohesion: 0.43
-Nodes (4): FlameRingEffect, Location, Override, Player
-
-### Community 115 - "Effects Giant Totem Effect"
-Cohesion: 0.43
-Nodes (4): GiantTotemEffect, Location, Override, Player
-
-### Community 116 - "Effects Heart Burst Effect"
-Cohesion: 0.43
-Nodes (4): HeartBurstEffect, Location, Override, Player
-
-### Community 117 - "Effects Lightning Effect"
-Cohesion: 0.43
-Nodes (4): Location, Override, Player, LightningEffect
-
-### Community 118 - "Effects Orbit Effect"
-Cohesion: 0.43
-Nodes (4): Location, Override, Player, OrbitEffect
-
-### Community 119 - "Effects Pulsing Burst Effect"
-Cohesion: 0.43
-Nodes (4): Location, Override, Player, PulsingBurstEffect
-
-### Community 120 - "Effects Rising Cloud Effect"
-Cohesion: 0.43
-Nodes (4): Location, Override, Player, RisingCloudEffect
-
-### Community 121 - "Admin Pozo Admin Rarity"
-Cohesion: 0.52
-Nodes (4): PozoRarity, GuiItem, Player, PozoAdminRarityMenu
-
-### Community 122 - "Docs Effects-reference"
+### Community 128 - "EssentialsConfig"
 Cohesion: 0.33
-Nodes (6): CosmeticItem YAML Field Schema, Effects Reference (effects-reference.txt), Generic Particle Engine Data-Type Limitation (EffectUtils.spawnParticle only auto-fills Float/Color), org.bukkit.Particle Enum Reference, org.bukkit.Sound Enum Reference (1902 sounds), Trail Style Values (value field)
-
-### Community 123 - "Effects World Orbit Elytra"
-Cohesion: 0.47
-Nodes (3): Override, Player, WorldOrbitElytraEffect
-
-### Community 124 - "Resources Paper-plugin"
-Cohesion: 0.33
-Nodes (6): Dependency: floodgate (optional, load BEFORE), Dependency: LuckPerms (optional, load BEFORE), Dependency: packetevents (required, load BEFORE), Dependency: PlaceholderAPI (optional, load BEFORE), Rationale: folia-supported:true required for Folia to load the plugin, ignored by Paper, real support decided by TaskScheduler at runtime, paper-plugin.yml plugin manifest (Mincore)
-
-### Community 125 - "Cosmetics Death Messages"
-Cohesion: 0.60
-Nodes (5): Death Messages: Pack Ecuador, Join Message: Entrada Tricolor, Kill Messages: Pack Ecuador, Prefix Flag: ECUADOR, Wings: Alas Tricolor (Ecuador)
-
-### Community 127 - "Cosmetics Kill Effects"
-Cohesion: 0.67
-Nodes (3): effectType: burst (generic), Kill effect: almas (Robo de Almas), Kill effect: sangre (Explosion Sangrienta)
-
-### Community 128 - "Cosmetics Kill Effects"
-Cohesion: 0.67
-Nodes (3): effectType: orbit (generic), Kill effect: fenix (Fenix de Fuego), Kill effect: wither (Orbita de Wither)
-
-### Community 129 - "Cosmetics Chatcolors"
-Cohesion: 0.67
-Nodes (3): Chat Colors Cosmetic Catalog, Glow Color Cosmetic Catalog, Name Color Cosmetic Catalog
-
-### Community 130 - "Cosmetics Death Effects"
-Cohesion: 1.00
-Nodes (3): Death Effect: Convertirse en Fantasma, Icon: Fantasma, Prefix: FANTASMA
-
-### Community 131 - "Cosmetics Death Messages"
-Cohesion: 1.00
-Nodes (3): Death Messages: Pack Anime, Join Message: Entrada Protagonista, Kill Messages: Pack Anime
-
-### Community 132 - "Cosmetics Death Messages"
-Cohesion: 1.00
-Nodes (3): Death Messages: Pack Cyberpunk, Elytra Effect: Cinta Cyberpunk, Kill Messages: Pack Cyberpunk
-
-### Community 133 - "Cosmetics Icons"
-Cohesion: 1.00
-Nodes (3): Icon: Riesgo Biológico, Kill Messages: Pack Tóxico, Prefix: TÓXICO
+Nodes (4): EssentialsConfig, Permissions, VisualEffect, Visuals
 
 ## Knowledge Gaps
-- **209 isolated node(s):** `Chat Colors Cosmetic Catalog`, `Glow Color Cosmetic Catalog`, `Projectile Trail Effects Cosmetic Catalog`, `Kill effect: sangre (Explosion Sangrienta)`, `Kill effect: rayo (Castigo Divino)` (+204 more)
+- **110 isolated node(s):** `org.dqnylux:CoreEC`, `SQLITE`, `MYSQL`, `MARIADB`, `SUCCESS` (+105 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **195 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
-
-## Suggested Questions
-_Questions this graph is uniquely positioned to answer:_
-
-- **Why does `Mincore` connect `Cosmetics Effect Registry` to `Effects Grave Effect`, `Cosmetics Cosmetic Config Manager`, `Staff Staff Mode Manager`, `Tasks Death Gpstask`, `Model Player Data`, `Commands Misc Command`, `Listeners Staff Listener`, `Cosmetics Trail Manager`, `Admin Pozo Admin Cosmetic`, `Effects Pandas Effect`, `Listeners Player Connection Listener`, `Menus Cosmetics Gui`, `Commands Pozo Command`, `Managers Pozo Catalog Manager`, `Effects Explosion Effect`, `Effects Snow Vortex Elytra`, `Effects Guardian Effect`, `Model Pozo Open Result`, `Animations Animation`, `Cosmetics Wing Manager`, `Listeners Chat Listener`, `Effects Cloud Burst Elytra`, `Hooks Papiexpansion`, `Menus Pozo Crafting Menu`, `Managers Pozo Data Manager`, `Chat Chat Filter Manager`, `Managers Pozo Machine Manager`, `Commands Mincore Command`, `Effects Symphony Effect`, `Chat Chat Format Handler`, `Cosmetics Cosmetic Sync Manager`, `Menus Pozo Gift Amount`, `Commands Dynamic Command`, `Menus Category Menu`, `Menus Main Menu`, `Managers Pozo Reward Dispatcher`, `Managers Database Manager`, `Utils Menu Structure`, `Cosmetics Glow Manager`, `Managers Core Config Manager`, `Utils Console Logger`, `Effects Icewalker Effect`, `Managers Announcement Manager`, `Effects Cloud Trail Elytra`, `Managers Config Sync Manager`, `Managers Pozo Animation Registry`, `Commands Staff Command`, `Admin Pozo Admin Animation`, `Hooks Luck Perms Hook`, `Chat Mention Toast Manager`, `Chat Infraction Toast Manager`, `Effects Shockwave Effect`, `Managers Economy Admin Handler`, `Staff Vanish Manager`, `Menus Staff Menu`, `Effects Skeleton Armor Effect`, `Effects Enchant Column Effect`, `Effects Void Lotus Effect`, `Staff Staff Network Manager`, `Menus Pozo Animation Picker`, `Managers Dynamic Command Manager`, `Effects Dimensional Rift Effect`, `Effects Meteors Effect`, `Effects Prismatic Nova Effect`, `Effects Star Shower Effect`, `Effects Aura Farming Effect`, `Effects Chickens Effect`, `Effects Sniper Effect`, `Effects Stellar Collapse Effect`, `Effects Volcano Effect`, `Cosmetics Tab List Manager`, `Commands Preview Zone Command`, `Listeners Auto Responder Listener`, `Effects Abyss Fangs Effect`, `Effects Comet Tail Elytra`, `Effects Flame Ring Effect`, `Effects Giant Totem Effect`, `Effects Heart Burst Effect`, `Effects Lightning Effect`, `Effects Orbit Effect`, `Effects Pulsing Burst Effect`, `Effects Rising Cloud Effect`, `Admin Pozo Admin Rarity`, `Effects World Orbit Elytra`?**
-  _High betweenness centrality (0.493) - this node is a cross-community bridge._
-- **Why does `Animation` connect `Animations Animation` to `Cosmetics Effect Registry`, `Effects Guardian Effect`, `Styles Anim25gran Final`, `Managers Pozo Animation Registry`, `Styles Anim01chispa Simple`, `Styles Anim14enjambre Dorado`, `Styles Anim06conejo De La`, `Styles Anim16rebano Afortunado`, `Styles Anim04arco De Monedas`, `Styles Anim08campana Del Tesoro`, `Styles Anim18objeto Flotante`, `Styles Anim19espada Legendaria`, `Styles Anim24regalo Misterioso`, `Styles Anim00estallido Dorado`, `Styles Anim03sinfonia Millonaria`, `Styles Anim05esfera De Fortuna`, `Styles Anim09carga De Energia`, `Styles Anim11orbita Planetaria`, `Styles Anim02pozo Clasico`, `Styles Anim07calabaza Mistica`, `Styles Anim10espiral Dorada`, `Styles Anim12vortice De Bloques`, `Styles Anim13guardian Ancestral`, `Styles Anim15serpiente De Fuego`, `Styles Anim17tormenta Helada`, `Styles Anim20muralla De Cajas`, `Styles Anim21remolino Cosmico`, `Styles Anim22islas Flotantes`, `Styles Anim23lluvia De Oro`?**
-  _High betweenness centrality (0.110) - this node is a cross-community bridge._
-- **Why does `CosmeticItem` connect `Cosmetics Trail Manager` to `Cosmetics Effect Registry`, `Effects Grave Effect`, `Cosmetics Cosmetic Config Manager`, `Model Player Data`, `Admin Pozo Admin Cosmetic`, `Effects Pandas Effect`, `Listeners Player Connection Listener`, `Menus Cosmetics Gui`, `Effects Explosion Effect`, `Effects Snow Vortex Elytra`, `Effects Guardian Effect`, `Cosmetics Wing Manager`, `Effects Cloud Burst Elytra`, `Hooks Papiexpansion`, `Effects Symphony Effect`, `Chat Chat Format Handler`, `Cosmetics Cosmetic Sync Manager`, `Menus Category Menu`, `Utils Menu Structure`, `Effects Icewalker Effect`, `Config Chat Format Config`, `Effects Cloud Trail Elytra`, `Hooks Luck Perms Hook`, `Effects Shockwave Effect`, `Effects Skeleton Armor Effect`, `Effects Enchant Column Effect`, `Effects Void Lotus Effect`, `Effects Dimensional Rift Effect`, `Effects Meteors Effect`, `Effects Prismatic Nova Effect`, `Effects Star Shower Effect`, `Effects Aura Farming Effect`, `Effects Chickens Effect`, `Effects Sniper Effect`, `Effects Stellar Collapse Effect`, `Effects Volcano Effect`, `Cosmetics Tab List Manager`, `Effects Abyss Fangs Effect`, `Effects Comet Tail Elytra`, `Effects Flame Ring Effect`, `Effects Giant Totem Effect`, `Effects Heart Burst Effect`, `Effects Lightning Effect`, `Effects Orbit Effect`, `Effects Pulsing Burst Effect`, `Effects Rising Cloud Effect`, `Effects World Orbit Elytra`?**
-  _High betweenness centrality (0.076) - this node is a cross-community bridge._
-- **What connects `Chat Colors Cosmetic Catalog`, `Glow Color Cosmetic Catalog`, `Projectile Trail Effects Cosmetic Catalog` to the rest of the system?**
-  _209 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Cosmetics Effect Registry` be split into smaller, more focused modules?**
-  _Cohesion score 0.05405405405405406 - nodes in this community are weakly interconnected._
-- **Should `Utils Text Utils` be split into smaller, more focused modules?**
-  _Cohesion score 0.028169014084507043 - nodes in this community are weakly interconnected._
-- **Should `Effects Grave Effect` be split into smaller, more focused modules?**
-  _Cohesion score 0.07457627118644068 - nodes in this community are weakly interconnected._
+- **56 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.

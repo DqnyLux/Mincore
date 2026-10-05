@@ -1,7 +1,5 @@
 package org.dqnylux.mincore.managers.cosmetics;
 
-import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
-import org.bukkit.Bukkit;
 import org.dqnylux.mincore.Mincore;
 import org.dqnylux.mincore.config.StandardCosmeticConfig;
 import org.dqnylux.mincore.config.models.CosmeticItem;
@@ -12,9 +10,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Sincroniza el CATÁLOGO (nombre/precio/material) de las categorías estándar
@@ -24,26 +22,35 @@ import java.util.concurrent.TimeUnit;
  * mincore_global_cosmetics ya la crea DatabaseManager - no hay createTable()
  * aparte aquí, a diferencia del prompt original, para no mantener el mismo
  * esquema en dos sitios.
+ *
+ * SIN poll periódico a propósito (igual que ConfigSyncManager) - solo se
+ * mueve con /coreec sync push|pull explícito, o con el pub/sub de Redis como
+ * reacción directa a ESE mismo comando en otro server.
+ *
+ * Categorías filtradas por database.yml -> sync.syncedFiles (BUG REAL
+ * encontrado y corregido: antes empujaba/traía TODAS las
+ * STANDARD_CATEGORIES sin condición, ignorando esa lista por completo - la
+ * lista solo gobernaba a ConfigSyncManager, que sincroniza el TEXTO
+ * completo de esos mismos archivos por un camino aparte. Como las dos
+ * sincronizaciones cubrían la misma data cosmética por mecanismos
+ * distintos, achicar la lista en el YAML no sacaba nada de esta - ahora
+ * ambas respetan la MISMA lista, una sola fuente de verdad).
  */
 public class CosmeticSyncManager {
 
     private final Mincore plugin;
-    private ScheduledTask pullTask;
 
     public CosmeticSyncManager(Mincore plugin) {
         this.plugin = plugin;
     }
 
-    public void startAutoSync() {
-        if (plugin.getDatabaseManager().getStorageType() != DatabaseManager.StorageType.MYSQL
-                && plugin.getDatabaseManager().getStorageType() != DatabaseManager.StorageType.MARIADB) {
-            return; // solo tiene sentido en red compartida
-        }
-        pullTask = Bukkit.getAsyncScheduler().runAtFixedRate(plugin, task -> pullFromDatabase(), 15L, 300L, TimeUnit.SECONDS);
+    public void stop() {
     }
 
-    public void stop() {
-        if (pullTask != null) pullTask.cancel();
+    /** "namecolors" -> ¿está "cosmetics/namecolors.yml" en sync.syncedFiles? Misma lista que usa ConfigSyncManager, solo traducida de nombre de categoría a nombre de archivo (STANDARD_CATEGORIES usa guiones, los archivos guión-bajo). */
+    private boolean isSynced(String category) {
+        List<String> syncedFiles = plugin.getConfigManager().getDatabaseConfig().sync.syncedFiles;
+        return syncedFiles.contains("cosmetics/" + category.replace('-', '_') + ".yml");
     }
 
     private boolean networkModeActive() {
@@ -59,6 +66,7 @@ public class CosmeticSyncManager {
 
             try (Connection connection = dataSource.getConnection()) {
                 for (String category : CosmeticConfigManager.STANDARD_CATEGORIES) {
+                    if (!isSynced(category)) continue;
                     StandardCosmeticConfig config = plugin.getCosmeticConfigManager().getCategory(category);
                     if (config == null) continue;
 
@@ -99,6 +107,7 @@ public class CosmeticSyncManager {
 
                 while (rs.next()) {
                     String category = rs.getString("category");
+                    if (!isSynced(category)) continue;
                     StandardCosmeticConfig config = plugin.getCosmeticConfigManager().getCategory(category);
                     if (config == null) continue;
 

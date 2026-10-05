@@ -88,17 +88,36 @@ public class ActiveCosmeticsTask {
                 && previous.getWorld().equals(current.getWorld())
                 && previous.distanceSquared(current) > 0.0009;
 
+        // Aislados en su propio try/catch a propósito: van en SECUENCIA en el
+        // mismo tick, así que sin esto una excepción en el trail (ej. un
+        // estilo con datos de catálogo raros) aborta el resto del método y
+        // las alas JAMÁS llegan a dibujarse ese ciclo - un jugador con trail
+        // Y alas equipadas a la vez veía "las alas no funcionan" cuando la
+        // causa real era que el trail reventaba antes de llegar a esa línea.
+        // Bug real reportado por el usuario, causa raíz confirmada acá.
         String trailId = data.getActiveCosmetic("trails");
         if (trailId != null) {
             CosmeticItem item = plugin.getCosmeticConfigManager().getItem("trails", trailId);
-            if (item != null) plugin.getTrailManager().drawTrail(player, item, hasLanded, moving);
+            if (item != null) {
+                try {
+                    plugin.getTrailManager().drawTrail(player, item, hasLanded, moving);
+                } catch (Exception e) {
+                    org.dqnylux.mincore.utils.ConsoleLogger.error("Error dibujando trail '" + trailId + "' de " + player.getName() + ": " + e);
+                }
+            }
         }
 
         String wingsId = data.getActiveCosmetic("wings");
         if (wingsId != null) {
             WingsConfig wingsConfig = plugin.getCosmeticConfigManager().getWings();
             WingCosmetic wingItem = wingsConfig.items.get(wingsId);
-            if (wingItem != null) plugin.getWingManager().render(player, wingItem, moving);
+            if (wingItem != null) {
+                try {
+                    plugin.getWingManager().render(player, wingItem, moving);
+                } catch (Exception e) {
+                    org.dqnylux.mincore.utils.ConsoleLogger.error("Error dibujando alas '" + wingsId + "' de " + player.getName() + ": " + e);
+                }
+            }
         }
     }
 }

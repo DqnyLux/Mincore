@@ -55,7 +55,7 @@ public class DatabaseManager {
             createSchema();
             connectRedis();
         }).exceptionally(ex -> {
-            Bukkit.getLogger().severe("[CoreEC] Database error: " + ex.getMessage());
+            Bukkit.getLogger().severe("[Mincore] Database error: " + ex.getMessage());
             return null;
         }).join();
     }
@@ -94,7 +94,7 @@ public class DatabaseManager {
                 hikariConfig.setConnectionTimeout(config.mysql.connectionTimeout);
                 hikariConfig.setIdleTimeout(config.mysql.idleTimeout);
                 hikariConfig.setMaxLifetime(config.mysql.maxLifetime);
-                hikariConfig.setPoolName("CoreEC-" + storageType + "-Pool");
+                hikariConfig.setPoolName("Mincore-" + storageType + "-Pool");
 
                 if (config.mysql.cachePrepStmts) {
                     hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
@@ -117,7 +117,7 @@ public class DatabaseManager {
                 hikariConfig.setJdbcUrl("jdbc:sqlite:" + dbFile.getAbsolutePath());
                 hikariConfig.setDriverClassName("org.sqlite.JDBC"); // mismo motivo que MariaDB/MySQL arriba
                 hikariConfig.setMaximumPoolSize(1); // SQLite solo admite un escritor a la vez
-                hikariConfig.setPoolName("CoreEC-SQLite-Pool");
+                hikariConfig.setPoolName("Mincore-SQLite-Pool");
             }
 
             // connect() corre esto dentro de CompletableFuture.runAsync(), que sin
@@ -142,7 +142,7 @@ public class DatabaseManager {
                 currentThread.setContextClassLoader(previousClassLoader);
             }
         } catch (Exception e) {
-            Bukkit.getLogger().severe("[CoreEC] Error connecting to " + storageType + ": " + e.getMessage());
+            Bukkit.getLogger().severe("[Mincore] Error connecting to " + storageType + ": " + e.getMessage());
         }
     }
 
@@ -156,14 +156,18 @@ public class DatabaseManager {
                     CREATE TABLE IF NOT EXISTS mincore_players (
                       uuid VARCHAR(36) PRIMARY KEY,
                       name VARCHAR(16),
+                      nickname VARCHAR(16),
                       coins DOUBLE DEFAULT 0.0
                     )
                     """);
 
+            addColumnIfMissing(statement, "mincore_players", "sucres", "DOUBLE DEFAULT 0.0");
             addColumnIfMissing(statement, "mincore_players", "global_chat", "BOOLEAN DEFAULT TRUE");
             addColumnIfMissing(statement, "mincore_players", "chat_warnings", "INT DEFAULT 0");
             addColumnIfMissing(statement, "mincore_players", "messages_enabled", "BOOLEAN DEFAULT TRUE");
             addColumnIfMissing(statement, "mincore_players", "mentions_enabled", "BOOLEAN DEFAULT TRUE");
+            addColumnIfMissing(statement, "mincore_players", "titles_enabled", "BOOLEAN DEFAULT TRUE");
+            addColumnIfMissing(statement, "mincore_players", "nickname", "VARCHAR(16)");
 
             statement.execute("""
                     CREATE TABLE IF NOT EXISTS mincore_unlocks (
@@ -277,6 +281,14 @@ public class DatabaseManager {
                     )
                     """);
 
+            statement.execute("""
+                    CREATE TABLE IF NOT EXISTS mincore_skins (
+                      uuid VARCHAR(36) PRIMARY KEY,
+                      skin_value TEXT,
+                      skin_signature TEXT
+                    )
+                    """);
+
             // Modelo de efecto ambiente por máquina (MachineEffect de ACubelets:
             // beacon/heart/helix/pulsar/rings/simple/sphere/spiral/vortex) -
             // tabla aparte y no columna nueva en mincore_pozo_machines porque
@@ -346,6 +358,40 @@ public class DatabaseManager {
                     )
                     """);
 
+            // Fase 2 del roadmap (Homes) - nombre en minúsculas en la PRIMARY
+            // KEY vía código (ver HomesDataManager), no acá, para poder
+            // seguir comparando nombres case-insensitive sin depender de la
+            // collation específica del motor (SQLite vs MySQL/MariaDB
+            // difieren en su collation por defecto).
+            statement.execute("""
+                    CREATE TABLE IF NOT EXISTS mincore_homes (
+                      uuid VARCHAR(36) NOT NULL,
+                      name VARCHAR(32) NOT NULL,
+                      world VARCHAR(64) NOT NULL,
+                      x DOUBLE NOT NULL,
+                      y DOUBLE NOT NULL,
+                      z DOUBLE NOT NULL,
+                      yaw FLOAT NOT NULL DEFAULT 0,
+                      pitch FLOAT NOT NULL DEFAULT 0,
+                      PRIMARY KEY(uuid, name)
+                    )
+                    """);
+
+            // Fase 3 del roadmap (Warps) - warps globales del servidor
+            statement.execute("""
+                    CREATE TABLE IF NOT EXISTS mincore_warps (
+                      name VARCHAR(32) PRIMARY KEY,
+                      world VARCHAR(64) NOT NULL,
+                      x DOUBLE NOT NULL,
+                      y DOUBLE NOT NULL,
+                      z DOUBLE NOT NULL,
+                      yaw FLOAT NOT NULL DEFAULT 0,
+                      pitch FLOAT NOT NULL DEFAULT 0,
+                      permission VARCHAR(128),
+                      icon_material VARCHAR(64)
+                    )
+                    """);
+
             statement.execute("""
                     CREATE TABLE IF NOT EXISTS mincore_report_comments (
                       id VARCHAR(36) PRIMARY KEY,
@@ -356,8 +402,81 @@ public class DatabaseManager {
                       created_at BIGINT NOT NULL
                     )
                     """);
+
+            // Submódulo TheRewards (recompensas por cooldown, rachas y playtime)
+            statement.execute("""
+                    CREATE TABLE IF NOT EXISTS mincore_player_rewards (
+                      uuid VARCHAR(36) PRIMARY KEY,
+                      current_streak INT DEFAULT 0,
+                      last_streak_date VARCHAR(32),
+                      claimed_playtime TEXT,
+                      onetime_claimed TEXT
+                    )
+                    """);
+
+            statement.execute("""
+                    CREATE TABLE IF NOT EXISTS mincore_reward_cooldowns (
+                      uuid VARCHAR(36) NOT NULL,
+                      reward_id VARCHAR(64) NOT NULL,
+                      claimed_at BIGINT NOT NULL,
+                      PRIMARY KEY(uuid, reward_id)
+                    )
+                    """);
+
+            // Submódulo AxVaults (Bóvedas virtuales de jugadores)
+            statement.execute("""
+                    CREATE TABLE IF NOT EXISTS mincore_vaults (
+                      uuid VARCHAR(36) NOT NULL,
+                      vault_id INT NOT NULL,
+                      title VARCHAR(64),
+                      icon_material VARCHAR(64),
+                      icon_name VARCHAR(128),
+                      icon_custom_model_data INT DEFAULT 0,
+                      items TEXT,
+                      PRIMARY KEY(uuid, vault_id)
+                    )
+                    """);
+
+            // Submódulo FlyTime (Vuelo Temporal Acumulable)
+            statement.execute("""
+                    CREATE TABLE IF NOT EXISTS mincore_flytime (
+                      uuid VARCHAR(36) PRIMARY KEY,
+                      seconds BIGINT NOT NULL DEFAULT 0,
+                      enabled BOOLEAN NOT NULL DEFAULT TRUE
+                    )
+                    """);
+
+            // Submódulo BetterProfiles (Perfiles Interactivos de Jugador)
+            statement.execute("""
+                    CREATE TABLE IF NOT EXISTS mincore_profiles (
+                      uuid VARCHAR(36) PRIMARY KEY,
+                      status VARCHAR(128),
+                      discord VARCHAR(64),
+                      youtube VARCHAR(64),
+                      twitch VARCHAR(64),
+                      twitter VARCHAR(64),
+                      instagram VARCHAR(64),
+                      tiktok VARCHAR(64),
+                      likes INT DEFAULT 0,
+                      liked_players TEXT,
+                      privacy_flags INT DEFAULT 0,
+                      created_at BIGINT NOT NULL DEFAULT 0,
+                      last_seen BIGINT NOT NULL DEFAULT 0
+                    )
+                    """);
+
+            // Submódulo PlayerTimeLimit (Límites de tiempo de juego globales y por mundos)
+            statement.execute("""
+                    CREATE TABLE IF NOT EXISTS mincore_timelimit (
+                      uuid VARCHAR(36) NOT NULL,
+                      world VARCHAR(64) NOT NULL,
+                      seconds_spent BIGINT NOT NULL DEFAULT 0,
+                      last_reset BIGINT NOT NULL DEFAULT 0,
+                      PRIMARY KEY(uuid, world)
+                    )
+                    """);
         } catch (SQLException e) {
-            Bukkit.getLogger().severe("[CoreEC] Error creating schema: " + e.getMessage());
+            Bukkit.getLogger().severe("[Mincore] Error creating schema: " + e.getMessage());
         }
     }
 
@@ -380,7 +499,7 @@ public class DatabaseManager {
                 this.jedisPool = new JedisPool(poolConfig, config.redis.host, config.redis.port, config.redis.timeout, config.redis.password);
             }
         } catch (Exception e) {
-            Bukkit.getLogger().severe("[CoreEC] Error connecting to Redis: " + e.getMessage());
+            Bukkit.getLogger().severe("[Mincore] Error connecting to Redis: " + e.getMessage());
         }
     }
 
@@ -390,7 +509,7 @@ public class DatabaseManager {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.publish(channel, message);
         } catch (Exception e) {
-            Bukkit.getLogger().warning("[CoreEC] Error publicando en Redis (" + channel + "): " + e.getMessage());
+            Bukkit.getLogger().warning("[Mincore] Error publicando en Redis (" + channel + "): " + e.getMessage());
         }
     }
 

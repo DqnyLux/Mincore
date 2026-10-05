@@ -9,8 +9,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.dqnylux.mincore.config.models.CosmeticItem;
@@ -32,6 +34,26 @@ import java.util.concurrent.ThreadLocalRandom;
 public final class EffectUtils {
 
     private EffectUtils() {
+    }
+
+    private static final NamespacedKey PROJECTILE_HIT_KEY = new NamespacedKey("coreec", "projectile_hit");
+
+    /**
+     * Marca que este proyectil ya golpeó algo (bloque o entidad) - llamado
+     * desde ProjectileHitEvent (CombatCosmeticsListener). Los efectos de
+     * trail de proyectil lo chequean cada tick para cortar la estela apenas
+     * "llega a destino", en vez de depender solo de isValid()/isDead(): para
+     * la mayoría de proyectiles ambos cambian rápido al aterrizar, pero un
+     * FishHook (caña de pescar) sigue vivo/válido flotando en el agua
+     * potencialmente por mucho tiempo - sin esta marca, la estela seguía
+     * animando indefinidamente después del "impacto" contra el agua.
+     */
+    public static void markProjectileHit(Entity projectile) {
+        projectile.getPersistentDataContainer().set(PROJECTILE_HIT_KEY, PersistentDataType.BYTE, (byte) 1);
+    }
+
+    public static boolean hasProjectileHit(Entity projectile) {
+        return projectile.getPersistentDataContainer().has(PROJECTILE_HIT_KEY, PersistentDataType.BYTE);
     }
 
     /** Resuelve por XParticle primero (soporta alias históricos entre versiones), con Particle.valueOf como respaldo. */

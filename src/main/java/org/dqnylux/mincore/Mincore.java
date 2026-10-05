@@ -64,10 +64,19 @@ public final class Mincore extends JavaPlugin {
     private static Mincore instance;
     private CoreConfigManager configManager;
     private DatabaseManager databaseManager;
+    private org.dqnylux.mincore.homes.managers.HomesDataManager homesDataManager;
+    private org.dqnylux.mincore.warps.managers.WarpsDataManager warpsDataManager;
+    private org.dqnylux.mincore.afk.managers.AfkManager afkManager;
+    private org.dqnylux.mincore.afk.managers.CooldownManager cooldownManager;
+    private org.dqnylux.mincore.afk.tasks.AfkTask afkTask;
+    private org.dqnylux.mincore.rewards.manager.RewardsManager rewardsManager;
+    private org.dqnylux.mincore.vaults.manager.VaultManager vaultManager;
+    private org.dqnylux.mincore.flytime.manager.FlyTimeManager flyTimeManager;
     private CommandManager commandManager;
     private PlayerManager playerManager;
     private EconomyAdminHandler economyAdminHandler;
     private ChatFilterManager chatFilterManager;
+    private org.dqnylux.mincore.managers.chat.DiscordApprovalBot discordApprovalBot;
     private ReplyManager replyManager;
     private AnnouncementManager announcementManager;
     private DynamicCommandManager dynamicCommandManager;
@@ -91,6 +100,7 @@ public final class Mincore extends JavaPlugin {
     private org.dqnylux.mincore.managers.staff.FreezeManager freezeManager;
     private org.dqnylux.mincore.managers.staff.DisguiseManager disguiseManager;
     private org.dqnylux.mincore.managers.nametag.NametagDisplayManager nametagDisplayManager;
+    private org.dqnylux.mincore.listeners.NametagPassengerGuardListener nametagPassengerGuardListener;
     private org.dqnylux.mincore.managers.CommandBlockerManager commandBlockerManager;
     private org.dqnylux.mincore.sanctions.managers.SanctionDataManager sanctionDataManager;
     private org.dqnylux.mincore.sanctions.managers.SanctionManager sanctionManager;
@@ -105,10 +115,22 @@ public final class Mincore extends JavaPlugin {
     private PozoMachineManager pozoMachineManager;
     private PozoAnimationRegistry pozoAnimationRegistry;
     private PozoChatInputManager pozoChatInputManager;
+    private org.dqnylux.mincore.skins.managers.SkinPreviewManager skinPreviewManager;
+    private org.dqnylux.mincore.managers.essentials.EssentialsToastManager essentialsToastManager;
+    private org.dqnylux.mincore.managers.essentials.EssentialsBackManager essentialsBackManager;
+    private org.dqnylux.mincore.managers.chat.deletion.MessageDeletionManager messageDeletionManager;
+    private org.dqnylux.mincore.profiles.manager.ProfileManager profileManager;
+    private org.dqnylux.mincore.timelimit.manager.TimeLimitManager timeLimitManager;
+    private org.dqnylux.mincore.listeners.AntiPacketExploitListener antiPacketExploitListener;
 
     @Override
     public void onLoad() {
         instance = this;
+        // Registrar Vault economy provider ANTES de onEnable() para que
+        // plugins que cargan antes que CoreEC (ej. AuctionHouse) lo
+        // encuentren en el ServicesManager cuando lo busquen en su propio
+        // onEnable(). Ver VaultHook.
+        org.dqnylux.mincore.hooks.VaultHook.register(this);
     }
 
     @Override
@@ -129,6 +151,18 @@ public final class Mincore extends JavaPlugin {
         // cargada. Ver el comentario en MincoreLoader.classloader() para el
         // porqué de no auto-hospedarlo.
         PacketEvents.getAPI().getEventManager().registerListener(new AntiSignatureListener());
+        // Blinda el paquete SET_PASSENGERS del nametag propio contra
+        // CUALQUIER otro plugin que mande su propio SET_PASSENGERS para el
+        // mismo jugador (no es aditivo, reemplaza toda la lista) - ver el
+        // javadoc de NametagPassengerGuardListener. plugin.getNametagDisplayManager()
+        // se resuelve recién cuando llega un paquete, así que no importa que
+        // ese manager todavía no exista en este punto de onEnable().
+        this.nametagPassengerGuardListener = new org.dqnylux.mincore.listeners.NametagPassengerGuardListener(this);
+        PacketEvents.getAPI().getEventManager().registerListener(this.nametagPassengerGuardListener);
+
+        // AntiPacketExploit (LPX style): Intercepción asíncrona de paquetes maliciosos a nivel de red
+        this.antiPacketExploitListener = new org.dqnylux.mincore.listeners.AntiPacketExploitListener(this);
+        PacketEvents.getAPI().getEventManager().registerListener(this.antiPacketExploitListener);
 
         // EntityLib (Tofaa): entidades falsas TextDisplay para el nametag
         // propio (managers/nametag) - librería bundleada (MincoreLoader), no
@@ -149,14 +183,68 @@ public final class Mincore extends JavaPlugin {
         this.configManager = new CoreConfigManager(this);
         this.configManager.loadConfigs();
 
+        if (this.configManager.getModulesConfig().essentials) {
+            this.essentialsToastManager = new org.dqnylux.mincore.managers.essentials.EssentialsToastManager(this);
+            this.essentialsToastManager.init();
+            this.essentialsBackManager = new org.dqnylux.mincore.managers.essentials.EssentialsBackManager(this);
+            Bukkit.getPluginManager().registerEvents(this.essentialsBackManager, this);
+        }
+
         this.commandManager = new CommandManager(this);
 
         this.databaseManager = new DatabaseManager(this, this.configManager.getDatabaseConfig());
         this.databaseManager.connect();
 
+        // Fase 2 del roadmap (Homes) - módulo apagable (modules.yml), igual
+        // que essentials: si está apagado, ni el manager se instancia (ver
+        // el javadoc de ModulesConfig) - HomesCommand tampoco se registra
+        // (CommandManager), así que getHomesDataManager() nunca se llama
+        // con el módulo apagado.
+        if (this.configManager.getModulesConfig().homes) {
+            this.homesDataManager = new org.dqnylux.mincore.homes.managers.HomesDataManager(this);
+        }
+        if (this.configManager.getModulesConfig().warps) {
+            this.warpsDataManager = new org.dqnylux.mincore.warps.managers.WarpsDataManager(this);
+        }
+        if (this.configManager.getModulesConfig().afk) {
+            this.afkManager = new org.dqnylux.mincore.afk.managers.AfkManager(this);
+            this.cooldownManager = new org.dqnylux.mincore.afk.managers.CooldownManager(this);
+            this.afkTask = new org.dqnylux.mincore.afk.tasks.AfkTask(this, this.afkManager);
+            this.afkTask.start();
+            Bukkit.getPluginManager().registerEvents(new org.dqnylux.mincore.afk.listeners.AfkListener(this, this.afkManager), this);
+        }
+        if (this.configManager.getModulesConfig().rewards) {
+            this.rewardsManager = new org.dqnylux.mincore.rewards.manager.RewardsManager(this);
+            this.rewardsManager.init();
+            Bukkit.getPluginManager().registerEvents(new org.dqnylux.mincore.rewards.listener.RewardsListener(this), this);
+        }
+        if (this.configManager.getModulesConfig().vaults) {
+            this.vaultManager = new org.dqnylux.mincore.vaults.manager.VaultManager(this);
+            this.vaultManager.init();
+            Bukkit.getPluginManager().registerEvents(new org.dqnylux.mincore.vaults.listener.VaultListener(this), this);
+        }
+        if (this.configManager.getModulesConfig().flytime) {
+            this.flyTimeManager = new org.dqnylux.mincore.flytime.manager.FlyTimeManager(this);
+            this.flyTimeManager.init();
+            Bukkit.getPluginManager().registerEvents(new org.dqnylux.mincore.flytime.listener.FlyTimeListener(this, this.flyTimeManager), this);
+        }
+        if (this.configManager.getModulesConfig().profiles) {
+            this.profileManager = new org.dqnylux.mincore.profiles.manager.ProfileManager(this);
+            this.profileManager.init();
+            Bukkit.getPluginManager().registerEvents(new org.dqnylux.mincore.profiles.listener.ProfileListener(this), this);
+        }
+        if (this.configManager.getModulesConfig().timelimit) {
+            this.timeLimitManager = new org.dqnylux.mincore.timelimit.manager.TimeLimitManager(this);
+            this.timeLimitManager.init();
+            Bukkit.getPluginManager().registerEvents(new org.dqnylux.mincore.timelimit.listener.TimeLimitListener(this), this);
+        }
+
         this.playerManager = new PlayerManager(this);
         this.economyAdminHandler = new EconomyAdminHandler(this);
+        this.messageDeletionManager = new org.dqnylux.mincore.managers.chat.deletion.MessageDeletionManager(this);
         this.chatFilterManager = new ChatFilterManager(this);
+        this.discordApprovalBot = new org.dqnylux.mincore.managers.chat.DiscordApprovalBot(this);
+        this.discordApprovalBot.start();
         this.motdManager = new MotdManager(this);
         ChatPunishmentHandler chatPunishmentHandler = new ChatPunishmentHandler(this);
         ChatFormatHandler chatFormatHandler = new ChatFormatHandler(this);
@@ -195,6 +283,12 @@ public final class Mincore extends JavaPlugin {
         this.pozoChatInputManager = new PozoChatInputManager(this);
         Bukkit.getPluginManager().registerEvents(new PozoMachineInteractListener(this), this);
         Bukkit.getPluginManager().registerEvents(new PozoChatInputListener(this), this);
+        // Módulo apagable (modules.yml) - el ítem portátil es opcional,
+        // aparte del modo máquina de arriba que siempre está activo.
+        if (this.configManager.getModulesConfig().lootboxItem) {
+            Bukkit.getPluginManager().registerEvents(
+                    new org.dqnylux.mincore.pozomillonario.listeners.PozoLootboxItemListener(this), this);
+        }
 
         this.effectRegistry = new EffectRegistry();
         this.trailManager = new TrailManager();
@@ -205,8 +299,15 @@ public final class Mincore extends JavaPlugin {
         this.tabListManager.startAutoResync();
         this.activeCosmeticsTask = new ActiveCosmeticsTask(this);
         this.elytraCosmeticsTask = new ElytraCosmeticsTask(this);
+        // Sin startAutoSync() a propósito (ni acá ni en configSyncManager más
+        // abajo): la sincronización de red YA NO corre sola por polling
+        // periódico - solo pasa cuando un admin corre /coreec sync push|pull
+        // en algún server. subscribeToReloads() sigue activo porque ES
+        // reacción directa a ESE comando (un push en OTRO server de la red
+        // propaga en tiempo real, en vez de que cada server tenga que correr
+        // su propio pull) - no es un disparador aparte, es el mismo comando
+        // llegando por Redis.
         this.cosmeticSyncManager = new CosmeticSyncManager(this);
-        this.cosmeticSyncManager.startAutoSync();
         this.previewZoneManager = new PreviewZoneManager(this);
         Bukkit.getPluginManager().registerEvents(this.previewZoneManager, this);
 
@@ -214,7 +315,6 @@ public final class Mincore extends JavaPlugin {
         this.deathGPSTask = new DeathGPSTask(this);
 
         this.configSyncManager = new ConfigSyncManager(this);
-        this.configSyncManager.startAutoSync();
         if (this.configManager.getDatabaseConfig().redis.enabled) {
             this.configSyncManager.subscribeToReloads();
         }
@@ -224,6 +324,11 @@ public final class Mincore extends JavaPlugin {
         this.staffNetworkManager = new StaffNetworkManager(this);
         this.freezeManager = new org.dqnylux.mincore.managers.staff.FreezeManager(this);
         this.disguiseManager = new org.dqnylux.mincore.managers.staff.DisguiseManager(this);
+        this.skinPreviewManager = new org.dqnylux.mincore.skins.managers.SkinPreviewManager(this);
+        // El propio manager escucha onMove/onQuit (clamp del jugador sentado y
+        // limpieza del asiento al desconectarse), además del listener de chat.
+        Bukkit.getPluginManager().registerEvents(this.skinPreviewManager, this);
+        Bukkit.getPluginManager().registerEvents(new org.dqnylux.mincore.skins.listeners.SkinSessionListener(this), this);
         // Después de glowManager (necesita GlowManager.hideVanillaNametag/
         // showVanillaNametag para el camino sin TAB) y de disguiseManager
         // (necesita DisguiseManager.displayName/isDisguised).
@@ -239,6 +344,7 @@ public final class Mincore extends JavaPlugin {
         }
 
         Bukkit.getPluginManager().registerEvents(new PlayerConnectionListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new org.dqnylux.mincore.listeners.NametagTrackerListener(this), this);
         Bukkit.getPluginManager().registerEvents(new CombatCosmeticsListener(this), this);
         Bukkit.getPluginManager().registerEvents(new DeathListener(this), this);
         Bukkit.getPluginManager().registerEvents(new AdvancementBlockListener(this), this);
@@ -262,6 +368,10 @@ public final class Mincore extends JavaPlugin {
     @Override
     public void onDisable() {
         ConsoleLogger.logDisable(this);
+
+        if (this.discordApprovalBot != null) {
+            this.discordApprovalBot.stop();
+        }
 
         if (this.announcementManager != null) {
             this.announcementManager.stop();
@@ -299,6 +409,30 @@ public final class Mincore extends JavaPlugin {
             this.deathGPSTask.stopAll();
         }
 
+        if (this.afkTask != null) {
+            this.afkTask.stop();
+        }
+
+        if (this.rewardsManager != null) {
+            this.rewardsManager.shutdown();
+        }
+
+        if (this.vaultManager != null) {
+            this.vaultManager.shutdown();
+        }
+
+        if (this.flyTimeManager != null) {
+            this.flyTimeManager.shutdown();
+        }
+
+        if (this.profileManager != null) {
+            this.profileManager.shutdown();
+        }
+
+        if (this.timeLimitManager != null) {
+            this.timeLimitManager.shutdown();
+        }
+
         if (this.dynamicCommandManager != null) {
             this.dynamicCommandManager.unregisterAll();
         }
@@ -314,6 +448,8 @@ public final class Mincore extends JavaPlugin {
         if (this.pozoMachineManager != null) {
             this.pozoMachineManager.despawnAll();
         }
+
+        org.dqnylux.mincore.hooks.VaultHook.unregister(this);
 
         if (this.databaseManager != null) {
             this.databaseManager.close();
@@ -338,6 +474,14 @@ public final class Mincore extends JavaPlugin {
         return configManager;
     }
 
+    public org.dqnylux.mincore.homes.managers.HomesDataManager getHomesDataManager() {
+        return homesDataManager;
+    }
+
+    public org.dqnylux.mincore.warps.managers.WarpsDataManager getWarpsDataManager() {
+        return warpsDataManager;
+    }
+
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
     }
@@ -356,6 +500,10 @@ public final class Mincore extends JavaPlugin {
 
     public ChatFilterManager getChatFilterManager() {
         return chatFilterManager;
+    }
+
+    public org.dqnylux.mincore.managers.chat.DiscordApprovalBot getDiscordApprovalBot() {
+        return discordApprovalBot;
     }
 
     public ReplyManager getReplyManager() {
@@ -446,6 +594,10 @@ public final class Mincore extends JavaPlugin {
         return disguiseManager;
     }
 
+    public org.dqnylux.mincore.skins.managers.SkinPreviewManager getSkinPreviewManager() {
+        return skinPreviewManager;
+    }
+
     public org.dqnylux.mincore.managers.CommandBlockerManager getCommandBlockerManager() {
         return commandBlockerManager;
     }
@@ -468,6 +620,10 @@ public final class Mincore extends JavaPlugin {
 
     public org.dqnylux.mincore.managers.nametag.NametagDisplayManager getNametagDisplayManager() {
         return nametagDisplayManager;
+    }
+
+    public org.dqnylux.mincore.listeners.NametagPassengerGuardListener getNametagPassengerGuardListener() {
+        return nametagPassengerGuardListener;
     }
 
     public PozoCatalogManager getPozoCatalogManager() {
@@ -504,5 +660,49 @@ public final class Mincore extends JavaPlugin {
 
     public PozoChatInputManager getPozoChatInputManager() {
         return pozoChatInputManager;
+    }
+
+    public org.dqnylux.mincore.afk.managers.AfkManager getAfkManager() {
+        return afkManager;
+    }
+
+    public org.dqnylux.mincore.afk.managers.CooldownManager getCooldownManager() {
+        return cooldownManager;
+    }
+
+    public org.dqnylux.mincore.managers.essentials.EssentialsToastManager getEssentialsToastManager() {
+        return essentialsToastManager;
+    }
+
+    public org.dqnylux.mincore.managers.essentials.EssentialsBackManager getEssentialsBackManager() {
+        return essentialsBackManager;
+    }
+
+    public org.dqnylux.mincore.managers.chat.deletion.MessageDeletionManager getMessageDeletionManager() {
+        return messageDeletionManager;
+    }
+
+    public org.dqnylux.mincore.rewards.manager.RewardsManager getRewardsManager() {
+        return rewardsManager;
+    }
+
+    public org.dqnylux.mincore.vaults.manager.VaultManager getVaultManager() {
+        return vaultManager;
+    }
+
+    public org.dqnylux.mincore.flytime.manager.FlyTimeManager getFlyTimeManager() {
+        return flyTimeManager;
+    }
+
+    public org.dqnylux.mincore.profiles.manager.ProfileManager getProfileManager() {
+        return profileManager;
+    }
+
+    public org.dqnylux.mincore.timelimit.manager.TimeLimitManager getTimeLimitManager() {
+        return timeLimitManager;
+    }
+
+    public org.dqnylux.mincore.listeners.AntiPacketExploitListener getAntiPacketExploitListener() {
+        return antiPacketExploitListener;
     }
 }

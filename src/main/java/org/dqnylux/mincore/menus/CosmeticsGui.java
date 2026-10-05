@@ -22,7 +22,6 @@ import org.dqnylux.mincore.config.MessagesConfig;
 import org.dqnylux.mincore.config.StandardCosmeticConfig;
 import org.dqnylux.mincore.config.models.CosmeticItem;
 import org.dqnylux.mincore.config.models.MenuItem;
-import org.dqnylux.mincore.hooks.LuckPermsHook;
 import org.dqnylux.mincore.managers.cosmetics.EffectUtils;
 import org.dqnylux.mincore.model.PlayerData;
 import org.dqnylux.mincore.utils.MenuStructure;
@@ -331,7 +330,7 @@ public class CosmeticsGui {
         }
 
         PlayerData data = plugin.getPlayerManager().get(viewer.getUniqueId());
-        double coins = data == null ? 0 : data.getCoins();
+        double sucres = data == null ? 0 : data.getSucres();
         long globalUnlocked = globalUnlocked(plugin, viewer);
         long globalTotal = globalTotal(plugin);
 
@@ -339,7 +338,7 @@ public class CosmeticsGui {
         for (String line : item.lore) {
             lore.add(TextUtils.format(viewer, line
                     .replace("%player%", viewer.getName())
-                    .replace("%coins%", String.valueOf(coins))
+                    .replace("%coins%", String.valueOf(sucres))
                     .replace("%global_unlocked%", String.valueOf(globalUnlocked))
                     .replace("%global_total%", String.valueOf(globalTotal))));
         }
@@ -473,18 +472,19 @@ public class CosmeticsGui {
                 });
     }
 
-    /** Descuenta el precio y desbloquea el cosmético si el jugador tiene suficientes monedas; si no, avisa cuántas le faltan. */
+    /** Descuenta el precio y desbloquea el cosmético si el jugador tiene suficientes sucres; si no, avisa cuántas le faltan. */
     private static boolean purchase(Mincore plugin, Player player, PlayerData data, String category, String id, CosmeticItem cosmetic) {
         MessagesConfig messages = plugin.getConfigManager().getMessagesConfig();
-        if (data.getCoins() < cosmetic.price) {
-            double missing = cosmetic.price - data.getCoins();
+        if (data.getSucres() < cosmetic.price) {
+            double missing = cosmetic.price - data.getSucres();
             player.sendMessage(TextUtils.format(messages.prefix
                     + messages.cosmetics.noCoins.replace("%missing%", String.valueOf(missing))));
             return false;
         }
 
-        data.removeCoins(cosmetic.price);
+        data.removeSucres(cosmetic.price);
         data.unlockCosmetic(category, id);
+        plugin.getPlayerManager().persistUnlock(data.getUuid(), category, id);
         return true;
     }
 
@@ -561,7 +561,7 @@ public class CosmeticsGui {
             case "chatcolors" -> previewChatLine(player, messages.cosmetics.previewChatcolorLine, cosmetic);
             case "join-messages" -> previewMessage(player, messages, cosmetic);
             case "kill-messages", "death-messages" ->
-                    previewMessagePack(player, messages, (org.dqnylux.mincore.config.models.MessagePackCosmetic) cosmetic);
+                    previewMessagePack(plugin, player, messages, category, (org.dqnylux.mincore.config.models.MessagePackCosmetic) cosmetic);
             case "trails" -> previewTrail(plugin, player, cosmetic);
             case "wings" -> previewWings(plugin, player, (org.dqnylux.mincore.config.models.WingCosmetic) cosmetic);
             case "projectile-effects" -> {
@@ -586,7 +586,22 @@ public class CosmeticsGui {
                 .replace("%player%", player.getName())));
     }
 
+    /**
+     * "lines" (banner multi-línea, ej. con &lt;center&gt;) tiene prioridad
+     * sobre "value" (una sola línea) cuando el cosmético define ambos - mismo
+     * criterio que PlayerConnectionListener#broadcastJoinMessage al unirse de
+     * verdad. Antes esto solo miraba "value" y si estaba vacío no mostraba
+     * NADA - cualquier cosmético de entrada tipo banner quedaba sin preview.
+     */
     private static void previewMessage(Player player, MessagesConfig messages, CosmeticItem cosmetic) {
+        if (cosmetic.lines != null && !cosmetic.lines.isEmpty()) {
+            player.sendMessage(TextUtils.format(messages.prefix + messages.cosmetics.previewingMessage));
+            for (String line : cosmetic.lines) {
+                player.sendMessage(TextUtils.format(line.replace("%player%", player.getName())));
+            }
+            return;
+        }
+
         if (cosmetic.value == null || cosmetic.value.isBlank()) return;
         player.sendMessage(TextUtils.format(messages.prefix + messages.cosmetics.previewingMessage));
         player.sendMessage(TextUtils.format(cosmetic.value.replace("%player%", player.getName())));
@@ -598,8 +613,14 @@ public class CosmeticsGui {
      * Para la previsualización no hay un asesino/arma real, así que se toma
      * la variante "killer" (o "default" si no existe) de la causa "DEFAULT",
      * la misma resolución de respaldo que usa DeathListener al morir de verdad.
+     * El header ahora es específico por categoría (antes reusaba el de
+     * "mensaje de entrada" incluso para muertes/bajas, quedaba mal etiquetado).
+     * %weapon% se reemplaza por un componente hoverable con el ítem REAL en
+     * la mano del jugador - mismo mecanismo que el token [item] del chat
+     * (ChatFormatHandler#applyItemToken) en vez de un texto fijo ("Espada").
      */
-    private static void previewMessagePack(Player player, MessagesConfig messages, org.dqnylux.mincore.config.models.MessagePackCosmetic cosmetic) {
+    private static void previewMessagePack(Mincore plugin, Player player, MessagesConfig messages, String category,
+                                            org.dqnylux.mincore.config.models.MessagePackCosmetic cosmetic) {
         java.util.Map<String, java.util.List<String>> bucket = cosmetic.messages.get("DEFAULT");
         if (bucket == null || bucket.isEmpty()) return;
 
@@ -607,11 +628,28 @@ public class CosmeticsGui {
         if (lines == null || lines.isEmpty()) return;
 
         String template = lines.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(lines.size()));
-        player.sendMessage(TextUtils.format(messages.prefix + messages.cosmetics.previewingMessage));
-        player.sendMessage(TextUtils.format(template
+        String header = category.equals("death-messages") ? messages.cosmetics.previewingDeathMessage : messages.cosmetics.previewingKillMessage;
+        player.sendMessage(TextUtils.format(messages.prefix + header));
+
+        Component message = TextUtils.format(player, template
                 .replace("%player%", player.getName())
-                .replace("%killer%", player.getName())
-                .replace("%weapon%", "Espada")));
+                .replace("%killer%", player.getName()));
+        message = message.replaceText(builder -> builder.matchLiteral("%weapon%")
+                .replacement((matchResult, componentBuilder) -> weaponPreviewComponent(plugin, player)));
+        player.sendMessage(message);
+    }
+
+    private static Component weaponPreviewComponent(Mincore plugin, Player player) {
+        var interactiveItem = plugin.getConfigManager().getChatFormatConfig().interactiveItem;
+        ItemStack hand = player.getInventory().getItemInMainHand();
+        if (hand.getType() == Material.AIR) {
+            return TextUtils.format(player, interactiveItem.emptyHand);
+        }
+        return Component.text("[")
+                .append(Component.translatable(hand.translationKey()))
+                .append(Component.text("]"))
+                .color(net.kyori.adventure.text.format.NamedTextColor.AQUA)
+                .hoverEvent(hand.asHoverEvent());
     }
 
     /** drawTrail() no tiene estado propio (lo llama ActiveCosmeticsTask cada tick del jugador equipado) - aquí se reutiliza igual, pero por un rato corto y sin tocar PlayerData. */
@@ -766,8 +804,8 @@ public class CosmeticsGui {
             return messages.cosmetics.statusLockedNoPermission;
         }
 
-        double coins = data == null ? 0 : data.getCoins();
-        double missing = cosmetic.price - coins;
+        double sucres = data == null ? 0 : data.getSucres();
+        double missing = cosmetic.price - sucres;
         if (missing > 0) {
             return messages.cosmetics.statusLockedMissingCoins.stream()
                     .map(line -> line.replace("%missing%", String.valueOf(missing)))
@@ -781,25 +819,33 @@ public class CosmeticsGui {
     /**
      * Efectos que persisten fuera del propio render del chat/partículas y
      * deben aplicarse/revertirse al equipar/desequipar: glow (scoreboard),
-     * prefijo e icono (nodos LuckPerms).
+     * prefijo/icono (nametag) y namecolor (tablist).
+     *
+     * prefixes/icons YA NO tocan LuckPerms (antes: LuckPermsHook.
+     * setCustomPrefix/setCustomSuffix, un nodo de prioridad alta que
+     * SUSTITUÍA el %luckperms_prefix%/%luckperms_suffix% real del rango
+     * mientras el cosmético estuviera equipado). Eso rompía cualquier cosa
+     * externa que leyera ese mismo placeholder para algo más que texto -
+     * en particular, la línea de nombre del tablist de TAB Reborn, que en
+     * la práctica también lo usa para el badge/posición del rango: equipar
+     * un "tag" cosmético tapaba el prefijo real del jugador ahí, dando la
+     * sensación de que "cambió de rango". Ahora el valor crudo del
+     * cosmético se expone SOLO vía los placeholders propios de Mincore
+     * (%coreec_prefix%/%coreec_icon%, PAPIExpansion) - nunca pisa el LP
+     * real, así que %luckperms_prefix%/%luckperms_suffix% siempre reflejan
+     * el rango real del jugador sin importar qué tenga equipado. El chat y
+     * el nametag propios ya vienen wireados para mostrar ambos (ver
+     * ChatFormatConfig/NametagConfig) - si además querés que el tag
+     * aparezca en el tablist de TAB, se agrega %coreec_prefix%/%coreec_icon%
+     * al formato de nombre de TAB (fuera de este repo, config del server).
      */
     private static void applySideEffects(Mincore plugin, Player player, String category, CosmeticItem cosmetic) {
-        var luckPermsConfig = plugin.getConfigManager().getMainConfig().luckPerms;
         switch (category) {
             case "glows" -> {
                 plugin.getGlowManager().applyGlow(player, cosmetic.value);
                 plugin.getNametagDisplayManager().refresh(player);
             }
-            case "prefixes" -> {
-                if (LuckPermsHook.isEnabled()) {
-                    LuckPermsHook.setCustomPrefix(player.getUniqueId(), cosmetic.value, luckPermsConfig.prefixPriority);
-                }
-            }
-            case "icons" -> {
-                if (LuckPermsHook.isEnabled()) {
-                    LuckPermsHook.setCustomSuffix(player.getUniqueId(), cosmetic.value, luckPermsConfig.suffixPriority);
-                }
-            }
+            case "prefixes", "icons" -> plugin.getNametagDisplayManager().refresh(player);
             case "namecolors" -> {
                 plugin.getTabListManager().apply(player);
                 plugin.getNametagDisplayManager().refresh(player);
@@ -810,18 +856,12 @@ public class CosmeticsGui {
     }
 
     private static void removeSideEffects(Mincore plugin, Player player, String category) {
-        var luckPermsConfig = plugin.getConfigManager().getMainConfig().luckPerms;
         switch (category) {
             case "glows" -> {
                 plugin.getGlowManager().removeGlow(player);
                 plugin.getNametagDisplayManager().refresh(player);
             }
-            case "prefixes" -> {
-                if (LuckPermsHook.isEnabled()) LuckPermsHook.removeCustomPrefix(player.getUniqueId(), luckPermsConfig.prefixPriority);
-            }
-            case "icons" -> {
-                if (LuckPermsHook.isEnabled()) LuckPermsHook.removeCustomSuffix(player.getUniqueId(), luckPermsConfig.suffixPriority);
-            }
+            case "prefixes", "icons" -> plugin.getNametagDisplayManager().refresh(player);
             case "namecolors" -> {
                 plugin.getTabListManager().apply(player);
                 plugin.getNametagDisplayManager().refresh(player);

@@ -166,7 +166,8 @@ public class EffectRegistry {
         if (!WorldValidator.isAllowed(plugin, player.getWorld())) return;
         if (CosmeticVisibility.isHiddenFromOthers(plugin, player)) return;
         CosmeticEffect effect = cosmeticEffects.get(item.effectType.toLowerCase());
-        if (effect != null) effect.play(plugin, player, location, item);
+        if (effect == null) return;
+        effect.play(plugin, player, location, item);
     }
 
     public void playElytraEffect(Mincore plugin, Player player, CosmeticItem item) {

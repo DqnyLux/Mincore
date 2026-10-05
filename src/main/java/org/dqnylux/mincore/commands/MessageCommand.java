@@ -10,7 +10,10 @@ import org.dqnylux.mincore.config.MessagesConfig;
 import org.dqnylux.mincore.model.PlayerData;
 import org.dqnylux.mincore.utils.TextUtils;
 import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Description;
+import revxrsal.commands.annotation.Named;
 import revxrsal.commands.annotation.SuggestWith;
+import revxrsal.commands.annotation.Usage;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 
 import java.util.UUID;
@@ -24,7 +27,9 @@ public class MessageCommand {
     }
 
     @Command({"msg", "tell", "w", "whisper"})
-    public void message(BukkitCommandActor actor, @SuggestWith(OnlinePlayerSuggestionProvider.class) String player, String messageText) {
+    @Usage("/msg <jugador> <mensaje>")
+    @Description("Envía un mensaje privado a otro jugador")
+    public void message(BukkitCommandActor actor, @Named("jugador") @SuggestWith(OnlinePlayerSuggestionProvider.class) String player, @Named("mensaje") String messageText) {
         CommandSender sender = actor.sender();
         MessagesConfig.PrivateMessages pm = plugin.getConfigManager().getMessagesConfig().privateMessages;
         String prefix = plugin.getConfigManager().getMessagesConfig().prefix;
@@ -56,7 +61,9 @@ public class MessageCommand {
     }
 
     @Command({"reply", "r", "responder"})
-    public void reply(BukkitCommandActor actor, String messageText) {
+    @Usage("/reply <mensaje>")
+    @Description("Responde al último mensaje privado recibido")
+    public void reply(BukkitCommandActor actor, @Named("mensaje") String messageText) {
         MessagesConfig.PrivateMessages pm = plugin.getConfigManager().getMessagesConfig().privateMessages;
         String prefix = plugin.getConfigManager().getMessagesConfig().prefix;
 

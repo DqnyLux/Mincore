@@ -26,7 +26,7 @@ public class ProjectileTrailEffect implements ProjectileEffect {
         projectile.getScheduler().runAtFixedRate(plugin, task -> {
             ticksAlive[0]++;
             boolean expired = item.durationTicks > 0 && ticksAlive[0] > item.durationTicks;
-            if (!projectile.isValid() || projectile.isDead() || expired) {
+            if (!projectile.isValid() || projectile.isDead() || expired || EffectUtils.hasProjectileHit(projectile)) {
                 task.cancel();
                 return;
             }

@@ -4,7 +4,9 @@ import eu.okaeri.configs.ConfigManager;
 import eu.okaeri.configs.yaml.snakeyaml.YamlSnakeYamlConfigurer;
 import org.bukkit.Bukkit;
 import org.dqnylux.mincore.Mincore;
+import org.dqnylux.mincore.config.AfkConfig;
 import org.dqnylux.mincore.config.AnnouncementsConfig;
+import org.dqnylux.mincore.config.AntiPacketExploitConfig;
 import org.dqnylux.mincore.config.BotsConfig;
 import org.dqnylux.mincore.config.CategoriesMenuConfig;
 import org.dqnylux.mincore.config.ChatFormatConfig;
@@ -12,15 +14,33 @@ import org.dqnylux.mincore.config.CommandBlockerConfig;
 import org.dqnylux.mincore.config.CosmeticsMenuConfig;
 import org.dqnylux.mincore.config.DatabaseConfig;
 import org.dqnylux.mincore.config.DeathSystemConfig;
+import org.dqnylux.mincore.config.EssentialsConfig;
 import org.dqnylux.mincore.config.FiltersConfig;
+import org.dqnylux.mincore.config.HomesConfig;
 import org.dqnylux.mincore.config.MainConfig;
 import org.dqnylux.mincore.config.MainMenuConfig;
 import org.dqnylux.mincore.config.MessagesConfig;
 import org.dqnylux.mincore.config.MincoreConfig;
+import org.dqnylux.mincore.config.ModulesConfig;
 import org.dqnylux.mincore.config.NametagConfig;
 import org.dqnylux.mincore.config.ReportsConfig;
 import org.dqnylux.mincore.config.SanctionsConfig;
 import org.dqnylux.mincore.config.StaffConfig;
+import org.dqnylux.mincore.config.WarpsConfig;
+import org.dqnylux.mincore.flytime.config.FlyTimeConfig;
+import org.dqnylux.mincore.flytime.config.FlyTimeMessagesConfig;
+import org.dqnylux.mincore.profiles.config.ProfilesConfig;
+import org.dqnylux.mincore.profiles.config.ProfilesLayoutConfig;
+import org.dqnylux.mincore.profiles.config.ProfilesMessagesConfig;
+import org.dqnylux.mincore.rewards.config.RewardsConfig;
+import org.dqnylux.mincore.rewards.config.RewardsLayoutsConfig;
+import org.dqnylux.mincore.rewards.config.RewardsMessagesConfig;
+import org.dqnylux.mincore.timelimit.config.TimeLimitConfig;
+import org.dqnylux.mincore.timelimit.config.TimeLimitLayoutConfig;
+import org.dqnylux.mincore.timelimit.config.TimeLimitMessagesConfig;
+import org.dqnylux.mincore.vaults.config.VaultsConfig;
+import org.dqnylux.mincore.vaults.config.VaultsLayoutsConfig;
+import org.dqnylux.mincore.vaults.config.VaultsMessagesConfig;
 import org.dqnylux.mincore.utils.TextUtils;
 
 import java.io.File;
@@ -44,6 +64,26 @@ public class CoreConfigManager {
     private CommandBlockerConfig commandBlockerConfig;
     private SanctionsConfig sanctionsConfig;
     private ReportsConfig reportsConfig;
+    private ModulesConfig modulesConfig;
+    private EssentialsConfig essentialsConfig;
+    private HomesConfig homesConfig;
+    private WarpsConfig warpsConfig;
+    private AfkConfig afkConfig;
+    private RewardsConfig rewardsConfig;
+    private RewardsMessagesConfig rewardsMessagesConfig;
+    private RewardsLayoutsConfig rewardsLayoutsConfig;
+    private VaultsConfig vaultsConfig;
+    private VaultsMessagesConfig vaultsMessagesConfig;
+    private VaultsLayoutsConfig vaultsLayoutsConfig;
+    private FlyTimeConfig flyTimeConfig;
+    private FlyTimeMessagesConfig flyTimeMessagesConfig;
+    private ProfilesConfig profilesConfig;
+    private ProfilesMessagesConfig profilesMessagesConfig;
+    private ProfilesLayoutConfig profilesLayoutConfig;
+    private TimeLimitConfig timeLimitConfig;
+    private TimeLimitMessagesConfig timeLimitMessagesConfig;
+    private TimeLimitLayoutConfig timeLimitLayoutConfig;
+    private AntiPacketExploitConfig antiPacketExploitConfig;
 
     public CoreConfigManager(Mincore plugin) {
         this.plugin = plugin;
@@ -72,6 +112,32 @@ public class CoreConfigManager {
         this.commandBlockerConfig = loadConfig(CommandBlockerConfig.class, "commandblocker.yml", 1);
         this.sanctionsConfig = loadConfig(SanctionsConfig.class, "sanctions.yml", 1);
         this.reportsConfig = loadConfig(ReportsConfig.class, "reports.yml", 1);
+        // modules.yml: interruptor de las features "core" nuevas (roadmap del
+        // plan) - se carga primero que nada las necesite en Mincore#onEnable
+        // para poder gatear si esos managers/listeners siquiera se instancian.
+        this.modulesConfig = loadConfig(ModulesConfig.class, "modules.yml", 1);
+        this.essentialsConfig = loadConfig(EssentialsConfig.class, "essentials.yml", 1);
+        // v2: el GUI de casas y warps pasó a layout configurable (structure +
+        // MenuItem) como los cosméticos - un homes.yml/warps.yml v1 existente
+        // conserva guiRows/guiHomeLore* y se regenera con el nuevo formato.
+        this.homesConfig = loadConfig(HomesConfig.class, "homes.yml", 2);
+        this.warpsConfig = loadConfig(WarpsConfig.class, "warps.yml", 2);
+        this.afkConfig = loadConfig(AfkConfig.class, "afk.yml", 7);
+        this.rewardsConfig = loadConfig(RewardsConfig.class, "modules/rewards/rewards.yml", 1);
+        this.rewardsMessagesConfig = loadConfig(RewardsMessagesConfig.class, "modules/rewards/rewards_messages.yml", 1);
+        this.rewardsLayoutsConfig = loadConfig(RewardsLayoutsConfig.class, "modules/rewards/rewards_layouts.yml", 1);
+        this.vaultsConfig = loadConfig(VaultsConfig.class, "modules/vaults/vaults.yml", 1);
+        this.vaultsMessagesConfig = loadConfig(VaultsMessagesConfig.class, "modules/vaults/vaults_messages.yml", 1);
+        this.vaultsLayoutsConfig = loadConfig(VaultsLayoutsConfig.class, "modules/vaults/vaults_layouts.yml", 1);
+        this.flyTimeConfig = loadConfig(FlyTimeConfig.class, "modules/flytime/flytime.yml", 1);
+        this.flyTimeMessagesConfig = loadConfig(FlyTimeMessagesConfig.class, "modules/flytime/flytime_messages.yml", 1);
+        this.profilesConfig = loadConfig(ProfilesConfig.class, "modules/profiles/profiles.yml", 1);
+        this.profilesMessagesConfig = loadConfig(ProfilesMessagesConfig.class, "modules/profiles/profiles_messages.yml", 1);
+        this.profilesLayoutConfig = loadConfig(ProfilesLayoutConfig.class, "modules/profiles/profiles_layout.yml", 2);
+        this.timeLimitConfig = loadConfig(TimeLimitConfig.class, "modules/timelimit/timelimit.yml", 1);
+        this.timeLimitMessagesConfig = loadConfig(TimeLimitMessagesConfig.class, "modules/timelimit/timelimit_messages.yml", 1);
+        this.timeLimitLayoutConfig = loadConfig(TimeLimitLayoutConfig.class, "modules/timelimit/timelimit_layout.yml", 1);
+        this.antiPacketExploitConfig = loadConfig(AntiPacketExploitConfig.class, "antipacketexploit.yml", 1);
     }
 
     private <T extends MincoreConfig> T loadConfig(Class<T> clazz, String fileName, int targetVersion) {
@@ -186,5 +252,122 @@ public class CoreConfigManager {
 
     public ReportsConfig getReportsConfig() {
         return reportsConfig;
+    }
+
+    public ModulesConfig getModulesConfig() {
+        return modulesConfig;
+    }
+
+    public EssentialsConfig getEssentialsConfig() {
+        return essentialsConfig;
+    }
+
+    public HomesConfig getHomesConfig() {
+        return homesConfig;
+    }
+
+    public WarpsConfig getWarpsConfig() {
+        return warpsConfig;
+    }
+
+    public AfkConfig getAfkConfig() {
+        return afkConfig;
+    }
+
+    public void reloadAfkConfig() {
+        this.afkConfig = loadConfig(AfkConfig.class, "afk.yml", 2);
+    }
+
+    public RewardsConfig getRewardsConfig() {
+        return rewardsConfig;
+    }
+
+    public RewardsMessagesConfig getRewardsMessagesConfig() {
+        return rewardsMessagesConfig;
+    }
+
+    public RewardsLayoutsConfig getRewardsLayoutsConfig() {
+        return rewardsLayoutsConfig;
+    }
+
+    public void reloadRewardsConfigs() {
+        this.rewardsConfig = loadConfig(RewardsConfig.class, "modules/rewards/rewards.yml", 1);
+        this.rewardsMessagesConfig = loadConfig(RewardsMessagesConfig.class, "modules/rewards/rewards_messages.yml", 1);
+        this.rewardsLayoutsConfig = loadConfig(RewardsLayoutsConfig.class, "modules/rewards/rewards_layouts.yml", 1);
+    }
+
+    public VaultsConfig getVaultsConfig() {
+        return vaultsConfig;
+    }
+
+    public VaultsMessagesConfig getVaultsMessagesConfig() {
+        return vaultsMessagesConfig;
+    }
+
+    public VaultsLayoutsConfig getVaultsLayoutsConfig() {
+        return vaultsLayoutsConfig;
+    }
+
+    public void reloadVaults() {
+        this.vaultsConfig = loadConfig(VaultsConfig.class, "modules/vaults/vaults.yml", 1);
+        this.vaultsMessagesConfig = loadConfig(VaultsMessagesConfig.class, "modules/vaults/vaults_messages.yml", 1);
+        this.vaultsLayoutsConfig = loadConfig(VaultsLayoutsConfig.class, "modules/vaults/vaults_layouts.yml", 1);
+    }
+
+    public FlyTimeConfig getFlyTimeConfig() {
+        return flyTimeConfig;
+    }
+
+    public FlyTimeMessagesConfig getFlyTimeMessagesConfig() {
+        return flyTimeMessagesConfig;
+    }
+
+    public void reloadFlyTime() {
+        this.flyTimeConfig = loadConfig(FlyTimeConfig.class, "modules/flytime/flytime.yml", 1);
+        this.flyTimeMessagesConfig = loadConfig(FlyTimeMessagesConfig.class, "modules/flytime/flytime_messages.yml", 1);
+    }
+
+    public ProfilesConfig getProfilesConfig() {
+        return profilesConfig;
+    }
+
+    public ProfilesMessagesConfig getProfilesMessagesConfig() {
+        return profilesMessagesConfig;
+    }
+
+    public ProfilesLayoutConfig getProfilesLayoutConfig() {
+        return profilesLayoutConfig;
+    }
+
+    public void loadProfilesConfigs() {
+        this.profilesConfig = loadConfig(ProfilesConfig.class, "modules/profiles/profiles.yml", 1);
+        this.profilesMessagesConfig = loadConfig(ProfilesMessagesConfig.class, "modules/profiles/profiles_messages.yml", 1);
+        this.profilesLayoutConfig = loadConfig(ProfilesLayoutConfig.class, "modules/profiles/profiles_layout.yml", 2);
+    }
+
+    public TimeLimitConfig getTimeLimitConfig() {
+        return timeLimitConfig;
+    }
+
+    public TimeLimitMessagesConfig getTimeLimitMessagesConfig() {
+        return timeLimitMessagesConfig;
+    }
+
+    public TimeLimitLayoutConfig getTimeLimitLayoutConfig() {
+        return timeLimitLayoutConfig;
+    }
+
+    public void loadTimeLimitConfigs() {
+        this.timeLimitConfig = loadConfig(TimeLimitConfig.class, "modules/timelimit/timelimit.yml", 1);
+        this.timeLimitMessagesConfig = loadConfig(TimeLimitMessagesConfig.class, "modules/timelimit/timelimit_messages.yml", 1);
+        this.timeLimitLayoutConfig = loadConfig(TimeLimitLayoutConfig.class, "modules/timelimit/timelimit_layout.yml", 1);
+    }
+
+    public AntiPacketExploitConfig getAntiPacketExploitConfig() {
+        return antiPacketExploitConfig;
+    }
+
+    public void reloadAntiPacketExploitConfig() {
+        this.antiPacketExploitConfig = loadConfig(AntiPacketExploitConfig.class, "antipacketexploit.yml", 1);
     }
 }

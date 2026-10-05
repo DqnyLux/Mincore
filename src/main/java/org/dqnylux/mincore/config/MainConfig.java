@@ -48,13 +48,6 @@ public class MainConfig extends MincoreConfig {
     })
     public Permissions permissions = new Permissions();
 
-    @Comment({
-            "",
-            "=======================================================",
-            " LUCKPERMS",
-            "======================================================="
-    })
-    public LuckPermsIntegration luckPerms = new LuckPermsIntegration();
 
     public static class Modules extends MincoreConfig {
         @Comment("¿Activar el menú de perfil (/perfil)?")
@@ -114,6 +107,42 @@ public class MainConfig extends MincoreConfig {
         }
 
         public Cosmetics cosmetics = new Cosmetics();
+
+        public Skins skins = new Skins();
+
+        public static class Skins extends MincoreConfig {
+            @Comment({
+                    "",
+                    "Zona de previsualización de skins - DOS puntos configurables por",
+                    "separado con /coreec setskinpreviewzone:",
+                    "  /coreec setskinpreviewzone npc       -> punto EXACTO del maniquí",
+                    "                                            (dónde nace, parándote ahí",
+                    "                                            y mirando hacia donde quieres",
+                    "                                            que aparezca).",
+                    "  /coreec setskinpreviewzone spectator -> punto del ESPECTADOR",
+                    "                                            (parado ahí, inmóvil, viendo",
+                    "                                            el maniquí). Si dejas este",
+                    "                                            vacío, el espectador se coloca",
+                    "                                            solo 3 bloques detrás del",
+                    "                                            maniquí.",
+                    "Si el punto del maniquí (npc) queda con world vacío, /skin avisa",
+                    "que no hay zona configurada."
+            })
+            public PreviewZone npcZone = new PreviewZone();
+            public PreviewZone spectatorZone = new PreviewZone();
+
+            @Comment("Cooldown en segundos entre usos de /skin (anti-spam Mojang API).")
+            public int cooldownSeconds = 30;
+
+            public static class PreviewZone extends MincoreConfig {
+                public String world = "";
+                public double x;
+                public double y;
+                public double z;
+                public float yaw;
+                public float pitch;
+            }
+        }
 
         public static class Cosmetics extends MincoreConfig {
             @Comment("¿Activar el sistema de cosméticos por completo?")
@@ -212,6 +241,8 @@ public class MainConfig extends MincoreConfig {
 
         public String cosmetics = "cosmetics";
         public String profile = "perfil";
+        @Comment("Comando del menú de ajustes (toggles de chat, vuelo, menciones).")
+        public String settings = "ajustes";
         public String message = "msg";
         public String reply = "reply";
         public String track = "trackcore";
@@ -221,6 +252,14 @@ public class MainConfig extends MincoreConfig {
         public String report = "report";
         public String invsee = "invsee";
         public String enderchest = "enderchest";
+        public String afk = "afk";
+
+        @Comment("Comandos de la economía dual: coins (Vault) y sucres (moneda del servidor).")
+        public String balance = "balance";
+        public String pay = "pay";
+        public String eco = "eco";
+        public String sucre = "sucre";
+        public String skin = "skin";
 
         @Comment("Cantidad de líneas vacías que envía /mincore clearchat.")
         public int clearchatLines = 100;
@@ -250,19 +289,9 @@ public class MainConfig extends MincoreConfig {
 
         @Comment("Permiso para saltarse el toggle de mensajes privados del destinatario.")
         public String messageBypass = "coreec.admin.bypass";
+
+        @Comment("Permiso del comando /skin.")
+        public String skin = "coreec.command.skin";
     }
 
-    public static class LuckPermsIntegration extends MincoreConfig {
-        @Comment({
-                "Prioridad del nodo de prefijo/sufijo que Mincore añade al equipar",
-                "un cosmético de prefixes/icons. Debe ser mayor que la prioridad de",
-                "cualquier prefijo/sufijo de rango para que siempre gane mientras",
-                "esté equipado - pero NO se borra el nodo del rango, solo se le",
-                "superpone: al desequipar, Mincore únicamente quita el nodo con",
-                "esta prioridad exacta, y el prefijo/sufijo del rango del jugador",
-                "reaparece solo (nunca se tocó)."
-        })
-        public int prefixPriority = 1000;
-        public int suffixPriority = 1000;
-    }
 }

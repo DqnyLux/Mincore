@@ -4,20 +4,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.dqnylux.mincore.Mincore;
+import org.dqnylux.mincore.commands.BukkitCommandWrapper;
 import org.dqnylux.mincore.commands.DynamicCommand;
 import org.dqnylux.mincore.config.BotsConfig;
+import org.dqnylux.mincore.profiles.command.ProfileCommand;
+import org.dqnylux.mincore.timelimit.command.TimeLimitCommand;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Registra los comandos de bots.yml (custom-commands) directamente en el
- * CommandMap de Bukkit vía reflexión (CraftServer#getCommandMap es público
- * en la implementación aunque no forma parte de la interfaz Server) - el
- * mismo mecanismo que usaba el plugin original para TODOS sus comandos
- * (sección 6), aquí acotado solo a los dinámicos porque Lamp no soporta
- * registrar comandos cuyo nombre se define en tiempo de ejecución.
+ * Registra los comandos de bots.yml (custom-commands) y comandos de módulos
+ * independientes directamente en el CommandMap de Bukkit vía reflexión.
  */
 public class DynamicCommandManager {
 
@@ -57,6 +56,24 @@ public class DynamicCommandManager {
             DynamicCommand command = new DynamicCommand(primary, extraAliases, config.response);
             commandMap.register("coreec", command);
             registered.add(command);
+        }
+
+        if (plugin.getConfigManager().getModulesConfig().profiles) {
+            ProfileCommand profileExec = new ProfileCommand(plugin);
+            String primary = plugin.getConfigManager().getMainConfig().commands.profile;
+            if (primary == null || primary.isBlank()) primary = "perfil";
+            List<String> aliases = List.of("profile", "perfiles", "profiles");
+            BukkitCommandWrapper cmd = new BukkitCommandWrapper(primary, "Sistema interactivo de perfiles de jugador", "/" + primary, aliases, profileExec, profileExec);
+            commandMap.register("coreec", cmd);
+            registered.add(cmd);
+        }
+
+        if (plugin.getConfigManager().getModulesConfig().timelimit) {
+            TimeLimitCommand timeLimitExec = new TimeLimitCommand(plugin);
+            List<String> aliases = List.of("ptl", "tiempolimite", "limitetiempo");
+            BukkitCommandWrapper cmd = new BukkitCommandWrapper("timelimit", "Sistema de límite de tiempo de juego", "/timelimit", aliases, timeLimitExec, timeLimitExec);
+            commandMap.register("coreec", cmd);
+            registered.add(cmd);
         }
     }
 

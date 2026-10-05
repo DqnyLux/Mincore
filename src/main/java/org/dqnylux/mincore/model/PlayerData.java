@@ -10,11 +10,15 @@ public class PlayerData {
 
     private final UUID uuid;
     private String name;
+    private String nickname;
+
     private double coins;
+    private double sucres;
     private boolean globalChat;
     private int chatWarnings;
     private boolean messagesEnabled;
     private boolean mentionsEnabled;
+    private boolean titlesEnabled;
 
     /** categoría -> id del cosmético equipado en esa categoría. */
     private final Map<String, String> activeCosmetics = new HashMap<>();
@@ -40,13 +44,25 @@ public class PlayerData {
 
     public PlayerData(UUID uuid, String name, double coins, boolean globalChat, int chatWarnings,
                        boolean messagesEnabled, boolean mentionsEnabled) {
+        this(uuid, name, coins, 0.0, globalChat, chatWarnings, messagesEnabled, mentionsEnabled, true);
+    }
+
+    public PlayerData(UUID uuid, String name, double coins, double sucres, boolean globalChat, int chatWarnings,
+                       boolean messagesEnabled, boolean mentionsEnabled) {
+        this(uuid, name, coins, sucres, globalChat, chatWarnings, messagesEnabled, mentionsEnabled, true);
+    }
+
+    public PlayerData(UUID uuid, String name, double coins, double sucres, boolean globalChat, int chatWarnings,
+                       boolean messagesEnabled, boolean mentionsEnabled, boolean titlesEnabled) {
         this.uuid = uuid;
         this.name = name;
         this.coins = coins;
+        this.sucres = sucres;
         this.globalChat = globalChat;
         this.chatWarnings = chatWarnings;
         this.messagesEnabled = messagesEnabled;
         this.mentionsEnabled = mentionsEnabled;
+        this.titlesEnabled = titlesEnabled;
     }
 
     public UUID getUuid() {
@@ -55,6 +71,22 @@ public class PlayerData {
 
     public String getName() {
         return name;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public boolean hasNickname() {
+        return nickname != null && !nickname.isBlank();
+    }
+
+    public String getNameOrNickname() {
+        return hasNickname() ? nickname : name;
     }
 
     public void setName(String name) {
@@ -85,6 +117,23 @@ public class PlayerData {
 
     public void removeCoins(double amount) {
         setCoins(this.coins - amount);
+    }
+
+    public double getSucres() {
+        return sucres;
+    }
+
+    public void setSucres(double sucres) {
+        if (!Double.isFinite(sucres)) return;
+        this.sucres = Math.max(0, sucres);
+    }
+
+    public void addSucres(double amount) {
+        setSucres(this.sucres + amount);
+    }
+
+    public void removeSucres(double amount) {
+        setSucres(this.sucres - amount);
     }
 
     public boolean isGlobalChat() {
@@ -121,6 +170,14 @@ public class PlayerData {
 
     public void setMentionsEnabled(boolean mentionsEnabled) {
         this.mentionsEnabled = mentionsEnabled;
+    }
+
+    public boolean isTitlesEnabled() {
+        return titlesEnabled;
+    }
+
+    public void setTitlesEnabled(boolean titlesEnabled) {
+        this.titlesEnabled = titlesEnabled;
     }
 
     public String getActiveCosmetic(String category) {

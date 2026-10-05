@@ -18,6 +18,7 @@ import org.dqnylux.mincore.model.PlayerData;
 import org.dqnylux.mincore.utils.TextUtils;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -61,11 +62,38 @@ public class ChatFormatHandler {
         String namecolor = resolveCosmeticValue(data, "namecolors", "<#FFFFFF>");
         String chatcolor = resolveCosmeticValue(data, "chatcolors", "<#FFFFFF>");
 
+        // Emoticones ANTES que cualquier otra conversión - "<3" tiene forma
+        // de tag MiniMessage roto (ver el javadoc de TextUtils#safeDeserialize,
+        // bug real ya arreglado con un fallback), así que resolverlo acá lo
+        // saca de encima antes de que legacyFormatOnlyToMiniMessageTags o
+        // formatSafeChat lo vean siquiera.
+        if (format.emoticonsEnabled) {
+            message = applyEmoticons(message, format.emoticons);
+        }
+
+        // applyPermissions() (ChatListener, antes de llegar acá) ya redujo el
+        // mensaje a solo los códigos &-legacy que el jugador puede usar según
+        // sus permisos (coreec.chat.color/format) - pero formatSafeChat() más
+        // abajo SOLO entiende tags MiniMessage nativos (<red>,
+        // <#RRGGBB>), nunca "&a"/"&#RRGGBB" crudos. Sin esta conversión,
+        // un jugador CON el permiso vería sus propios códigos como texto
+        // literal en el chat en vez de negrita/etc real.
+        //
+        // Ahora usamos legacyToMiniMessageTags: si el jugador NO tiene permisos
+        // de color, applyPermissions() ya borró los códigos, por lo que esto
+        // no hace nada malo. Si SÍ tiene permisos, conservamos sus colores.
+        //
+        // Se convierte ANTES de resaltar menciones para que el regex de
+        // highlightMentions siga encontrando el nombre como texto plano, sin
+        // interferir con los tags recién insertados.
+        String convertedMessage = TextUtils.legacyToMiniMessageTags(message);
+
         // chatcolor se resuelve ANTES de resaltar menciones (no después) para
         // poder re-inyectarlo explícitamente después de CADA mención - ver
         // highlightMentions: no depender de que el cierre de </color> de la
         // mención "recuerde" solo el color exterior.
-        String withMentions = format.mentions.enabled ? highlightMentions(sender, message, format.mentions, chatcolor) : message;
+        String chatColorTag = parts.message.text.replace("%chatcolor%", chatcolor);
+        String withMentions = format.mentions.enabled ? highlightMentions(sender, convertedMessage, format.mentions, chatColorTag) : convertedMessage;
 
         // %player_name%/%namecolor%/%chatcolor% los resolvemos nosotros mismos
         // (garantizado, sin depender de PlaceholderAPI) antes de pasar por
@@ -84,13 +112,21 @@ public class ChatFormatHandler {
         // disfrazado, TODO el chat (nombre, hover, suggest) usa el nick falso.
         String shownName = plugin.getDisguiseManager().displayName(sender);
 
+        // isolatePlaceholders: cada parte (prefix en particular) puede
+        // concatenar VARIOS placeholders externos en un mismo string (ej.
+        // %vault_eco_balance_formatted% %justteams_team_name%
+        // %luckperms_prefix% todos juntos) - wrapReset ya aísla la parte
+        // ENTERA de sus vecinas (prefix no le filtra formato a name), pero
+        // sin esto un placeholder con un código sin cerrar (&l de un prefix
+        // de LuckPerms, típico) SÍ podía filtrarse a los OTROS placeholders
+        // de la MISMA parte, ya que toda la parte se parsea de una sola vez.
         String separator = format.chat.partSeparator == null ? "" : format.chat.partSeparator;
-        String prefixPart = wrapReset(parts.prefix.text.replace("%player_name%", shownName));
-        String namePart = wrapReset(parts.name.text
+        String prefixPart = wrapReset(TextUtils.isolatePlaceholders(parts.prefix.text.replace("%player_name%", shownName)));
+        String namePart = wrapReset(TextUtils.isolatePlaceholders(parts.name.text
                 .replace("%player_name%", shownName)
-                .replace("%namecolor%", namecolor));
-        String iconPart = wrapReset(parts.icon.text.replace("%player_name%", shownName));
-        String arrowPart = wrapReset(parts.arrow.text);
+                .replace("%namecolor%", namecolor)));
+        String iconPart = wrapReset(TextUtils.isolatePlaceholders(parts.icon.text.replace("%player_name%", shownName)));
+        String arrowPart = wrapReset(TextUtils.isolatePlaceholders(parts.arrow.text));
 
         Component nameComponent = TextUtils.format(sender, namePart);
         nameComponent = applyActiveFormats(data, PlayerData.FORMAT_SCOPE_NAME, nameComponent);
@@ -103,22 +139,23 @@ public class ChatFormatHandler {
         }
 
         // El chatcolor se envuelve alrededor de TODO el mensaje (menciones ya
-        // resaltadas incluidas) y se parsea de una sola vez, en vez de parsear
-        // el mensaje aparte y aplicar colorIfAbsent(TextColor) después: un
-        // gradiente/rainbow no es un TextColor único, así que colorIfAbsent
-        // no podía representarlo (un tag de gradiente SIN texto encerrado ni
-        // siquiera produce un color - queda sin aplicar del todo, perdiendo
-        // el color de chat completo para cualquiera con un chatcolor tipo
-        // gradiente). Envolviendo el string entero, MiniMessage reparte el
-        // gradiente carácter por carácter como corresponde - y cada mención
-        // (ver highlightMentions) ya viene con el chatcolor REABIERTO a mano
-        // justo después de su </color>, así que el resto del mensaje sigue
-        // coloreado incluso con un chatcolor tipo gradiente (confirmado: con
-        // gradiente, cerrar un <color> anidado NO retoma la progresión sola,
-        // hay que reabrirla explícita - por eso highlightMentions no confía
-        // en el anidado implícito de MiniMessage para esto).
-        String chatColorTag = parts.message.text.replace("%chatcolor%", chatcolor);
-        Component messageComponent = TextUtils.formatSafeChat(chatColorTag + withMentions);
+        // resaltadas incluidas) y se parsea de una sola vez. Sin embargo, si
+        // el jugador SÍ tiene el permiso "coreec.chat.color" y decide poner
+        // colores manualmente (ej. &a o &#RRGGBB) o por MiniMessage nativo,
+        // no le forzamos el chatcolor cosmético para que su texto introducido
+        // manualmente respete SUS colores.
+        // Para que se apliquen sus colores, ignoramos el chatColorTag exterior,
+        // a menos que haya omitido colores manuales.
+        Component messageComponent;
+        if (sender.hasPermission("coreec.chat.color") && (message.contains("&") || message.contains("<"))) {
+            // El jugador es VIP/Admin y escribió un color a mano. El envoltorio
+            // del cosmético corrompería sus reinicios (<reset>), así que lo
+            // procesamos sin el tag de chatcolor base.
+            messageComponent = TextUtils.formatSafeChat(withMentions);
+        } else {
+            messageComponent = TextUtils.formatSafeChat(chatColorTag + withMentions);
+        }
+
         messageComponent = applyActiveFormats(data, PlayerData.FORMAT_SCOPE_CHAT, messageComponent);
 
         Component sep = separator.isEmpty() ? Component.empty() : TextUtils.format(sender, separator);
@@ -128,7 +165,28 @@ public class ChatFormatHandler {
                 .append(TextUtils.format(sender, arrowPart)).append(sep)
                 .append(messageComponent);
 
+        finalMessage = applyClickableLinks(finalMessage);
         return applyItemToken(sender, format.interactiveItem, finalMessage);
+    }
+
+    /**
+     * Enlaces clickeables en el chat (filters.yml -> clickableLinks): toda URL
+     * que sobreviva al filtro de anuncios (admin con bypass, jugador con un
+     * enlace whitelisteado, etc.) se abre con un clic (ClickEvent.openUrl) en
+     * vez de quedar como texto plano. Quien mande un enlace NO permitido ya
+     * fue cortado/censurado antes de llegar acá (ChatFilterManager.process ->
+     * CancelReason.ADS), así que su texto nunca se vuelve un enlace real.
+     * Reutiliza la misma regex de ChatFilterManager.URL_PATTERN; se aplica
+     * DESPUÉS de formatear (sobre el Component ya parseado) porque MiniMessage
+     * no entiende <click:...> en este parser restringido, y si el jugador
+     * tiene permiso de color, el texto viene sin el chatcolor exterior que
+     * habría que re-inyectar - wrap directo sobre lo que ya está armado.
+     */
+    private Component applyClickableLinks(Component message) {
+        if (!plugin.getConfigManager().getFiltersConfig().clickableLinks.enabled) return message;
+
+        return message.replaceText(builder -> builder.match(ChatFilterManager.URL_PATTERN).replacement((result, componentBuilder) ->
+                Component.text(result.group()).clickEvent(net.kyori.adventure.text.event.ClickEvent.openUrl(result.group()))));
     }
 
     /**
@@ -173,6 +231,19 @@ public class ChatFormatHandler {
                     .color(net.kyori.adventure.text.format.NamedTextColor.AQUA)
                     .hoverEvent(hand.asHoverEvent());
         }));
+    }
+
+    /** Reemplazo simple, ordenado por longitud de clave descendente (":((" no debe quedar a mitad de camino si también existe una entrada más corta ":(" que ya lo tocó primero). */
+    private String applyEmoticons(String message, Map<String, String> emoticons) {
+        if (emoticons.isEmpty()) return message;
+
+        List<Map.Entry<String, String>> sorted = new ArrayList<>(emoticons.entrySet());
+        sorted.sort((a, b) -> b.getKey().length() - a.getKey().length());
+
+        for (Map.Entry<String, String> entry : sorted) {
+            message = message.replace(entry.getKey(), entry.getValue());
+        }
+        return message;
     }
 
     private String wrapReset(String text) {

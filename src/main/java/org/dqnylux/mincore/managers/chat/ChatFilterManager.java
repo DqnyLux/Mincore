@@ -36,18 +36,32 @@ public class ChatFilterManager {
         SPAM, FLOOD, TOO_LONG, REPETITION, BAD_WORD, ADS
     }
 
-    public record FilterResult(String message, boolean cancelled, CancelReason reason, boolean infraction) {
+    /**
+     * message: para un resultado cancelado, es el mensaje ORIGINAL tal cual
+     * lo escribió el jugador (rawMessage, sin censurar) - lo usa el aviso de
+     * staff (messages.chat.staffAlert -> %message%) para mostrar CUÁL
+     * mensaje disparó el filtro, no solo que "algo" se bloqueó.
+     * blockedWord: SOLO se llena para CancelReason.BAD_WORD - la palabra/
+     * frase literal que hizo matchear el blocklist, para el aviso al propio
+     * jugador (messages.chat.filterBadWord -> %word%). Null para el resto.
+     */
+    public record FilterResult(String message, boolean cancelled, CancelReason reason, boolean infraction, String blockedWord) {
 
         static FilterResult allowed(String message, boolean infraction) {
-            return new FilterResult(message, false, null, infraction);
+            return new FilterResult(message, false, null, infraction, null);
         }
 
-        static FilterResult cancelled(CancelReason reason) {
-            return new FilterResult(null, true, reason, false);
+        static FilterResult cancelled(CancelReason reason, String message) {
+            return new FilterResult(message, true, reason, false, null);
+        }
+
+        static FilterResult cancelled(CancelReason reason, String message, String blockedWord) {
+            return new FilterResult(message, true, reason, false, blockedWord);
         }
     }
 
-    private static final Pattern URL_PATTERN = Pattern.compile(
+    /** Detector de URLs del filtro de anuncios, compartido con ChatFormatHandler para que los enlaces clickeables usen EXACTAMENTE la misma definición de "qué es una URL". */
+    static final Pattern URL_PATTERN = Pattern.compile(
             "(?:https?://)?(?:www\\.)?([a-zA-Z0-9-]+\\.[a-zA-Z]{2,})(?:[/:][^\\s]*)?|\\b\\d{1,3}(?:\\.\\d{1,3}){3}\\b",
             Pattern.CASE_INSENSITIVE
     );
@@ -109,7 +123,7 @@ public class ChatFilterManager {
     private java.util.List<Pattern> loadRegexBlocklist(String fileName) {
         java.io.File file = new java.io.File(plugin.getDataFolder(), fileName);
         if (!file.exists()) {
-            Bukkit.getLogger().warning("[CoreEC] " + fileName + " no existe todavía - el blocklist de regex de badWords está vacío hasta que se genere (automático al arrancar con apiKey configurada) o lo crees a mano.");
+            Bukkit.getLogger().warning("[Mincore] " + fileName + " no existe todavía - el blocklist de regex de badWords está vacío hasta que se genere (automático al arrancar con apiKey configurada) o lo crees a mano.");
             return java.util.List.of();
         }
 
@@ -121,20 +135,45 @@ public class ChatFilterManager {
                 String trimmed = line.trim();
                 if (trimmed.isEmpty() || trimmed.startsWith("#")) continue;
                 try {
-                    patterns.add(Pattern.compile(trimmed, Pattern.CASE_INSENSITIVE));
+                    // UNICODE_CHARACTER_CLASS: sin este flag, \w (y por lo
+                    // tanto [^\wñ] usado como "límite de palabra" en TODO el
+                    // blocklist) es ASCII-only en Java - trata á/é/í/ó/ú como
+                    // si fueran un espacio, partiendo palabras normales en
+                    // español en fragmentos y disparando falsos positivos en
+                    // los patrones más laxos. Con el flag, \w reconoce
+                    // cualquier letra Unicode (tildes incluidas) como
+                    // carácter de palabra real.
+                    patterns.add(Pattern.compile(trimmed, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS));
                 } catch (java.util.regex.PatternSyntaxException e) {
                     ignoredLines++;
-                    Bukkit.getLogger().warning("[CoreEC] Regex inválida en " + fileName + ", se ignora esa línea: " + trimmed + " (" + e.getMessage() + ")");
+                    Bukkit.getLogger().warning("[Mincore] Regex inválida en " + fileName + ", se ignora esa línea: " + trimmed + " (" + e.getMessage() + ")");
                 }
             }
+            // CRÍTICO: se ordena por longitud de regex DESCENDENTE antes de
+            // devolver. En process(), cada regex de esta lista se aplica en
+            // orden sobre el MISMO "message" que va mutando (reemplazando lo
+            // que matchea con ***) - si un patrón corto y genérico (ej. una
+            // sola palabra como "puta") corre ANTES que uno largo/específico
+            // (ej. la frase completa "maricon...negro...hijo de puta" que
+            // aprobó un staff), el corto ya destruye el texto literal que el
+            // patrón largo necesita para matchear, y el patrón largo NUNCA
+            // llega a activarse aunque esté cargado y guardado bien en el
+            // archivo - bug real reportado por el usuario ("bloqueé el
+            // patrón pero el mensaje se sigue pudiendo repetir igual"). Las
+            // frases completas que aprende la IA (learnedPhrasePrompt/
+            // regexGenerationPrompt) son consistentemente más largas que los
+            // patrones de una sola palabra, así que ordenar por longitud es
+            // un proxy barato y efectivo de "más específico primero".
+            patterns.sort((a, b) -> Integer.compare(b.pattern().length(), a.pattern().length()));
+
             // Log explícito de cuántas regex quedaron activas - para poder
             // confirmar desde consola que el archivo se leyó COMPLETO (todas
             // las líneas no vacías/no comentario) y no solo una parte.
-            Bukkit.getLogger().info("[CoreEC] " + fileName + " cargado: " + patterns.size() + " regex activas"
+            Bukkit.getLogger().info("[Mincore] " + fileName + " cargado: " + patterns.size() + " regex activas"
                     + (ignoredLines > 0 ? " (" + ignoredLines + " líneas con error de sintaxis, ver warnings arriba)" : "") + ".");
             return patterns;
         } catch (java.io.IOException e) {
-            Bukkit.getLogger().warning("[CoreEC] No se pudo leer " + fileName + ": " + e.getMessage());
+            Bukkit.getLogger().warning("[Mincore] No se pudo leer " + fileName + ": " + e.getMessage());
             return java.util.List.of();
         }
     }
@@ -143,50 +182,102 @@ public class ChatFilterManager {
     private void maybeAutoGenerateReviewWords() {
         FiltersConfig.AiModeration config = plugin.getConfigManager().getFiltersConfig().aiModeration;
         if (!config.enabled || !config.reviewWords.isEmpty()) return;
-        if (config.apiKey == null || config.apiKey.isBlank()) return;
+        // apiKey solo es obligatoria con provider=gemini - mismo motivo que
+        // en reviewAsync (ver ese comentario): con provider=openai muchos
+        // servidores locales (OmniRoute, LM Studio, etc.) no piden ninguna.
+        if ("gemini".equalsIgnoreCase(config.provider) && (config.apiKey == null || config.apiKey.isBlank())) return;
         generateReviewWordsAsync(null);
     }
 
+    /** Resultado de un refresh de reviewWords - separado en nuevas (recién agregadas) y ya existentes (la IA las repitió pero ya estaban en la lista), para poder mostrar el diff tanto en el juego como en Discord. */
+    public record ReviewWordsRefreshResult(java.util.List<String> added, java.util.List<String> alreadyPresent) {}
+
     /**
-     * Genera reviewWords vía Gemini y las guarda en filters.yml - usado tanto
-     * por la generación automática al arrancar como por /mincore ai refreshwords.
-     * requester puede ser null (disparo automático, sin nadie a quien avisar).
+     * Le pide a la IA una lista de reviewWords y la FUSIONA con la que ya
+     * había (nunca reemplaza, mismo "agregar sin borrar" que ya usa
+     * appendRegexLines para badWords) - antes esto SÍ reemplazaba la lista
+     * entera en cada corrida, perdiendo cualquier palabra agregada a mano
+     * que la IA no volviera a sugerir. @return null si la IA no devolvió
+     * nada usable, o el diff (agregadas/ya existentes) si funcionó.
+     */
+    private ReviewWordsRefreshResult refreshReviewWordsSync() {
+        java.util.List<String> generated = aiModerationClient.generateReviewWords();
+        if (generated.isEmpty()) return null;
+
+        FiltersConfig filters = plugin.getConfigManager().getFiltersConfig();
+        java.util.LinkedHashSet<String> merged = new java.util.LinkedHashSet<>();
+        for (String w : filters.aiModeration.reviewWords) {
+            String lw = w.toLowerCase(java.util.Locale.ROOT).trim();
+            if (!lw.isEmpty()) merged.add(lw);
+        }
+
+        java.util.List<String> added = new java.util.ArrayList<>();
+        java.util.List<String> alreadyPresent = new java.util.ArrayList<>();
+        for (String w : generated) {
+            String lw = w.toLowerCase(java.util.Locale.ROOT).trim();
+            if (lw.isEmpty()) continue;
+            if (merged.add(lw)) added.add(lw); else alreadyPresent.add(lw);
+        }
+
+        filters.aiModeration.reviewWords = new java.util.ArrayList<>(merged);
+        filters.save();
+        reload();
+
+        return new ReviewWordsRefreshResult(added, alreadyPresent);
+    }
+
+    /**
+     * Genera reviewWords vía IA y las agrega a filters.yml - usado tanto por
+     * la generación automática al arrancar como por /coreec ai refreshwords
+     * y el comando equivalente de Discord. requester puede ser null (disparo
+     * automático, sin nadie a quien avisar).
      */
     public void generateReviewWordsAsync(org.bukkit.command.CommandSender requester) {
+        generateReviewWordsAsync(requester, result -> {});
+    }
+
+    /** Variante con callback (result=null si falló) - la usa el bot de Discord para armar su propio embed con el diff en vez del mensaje de chat de Bukkit. El callback SIEMPRE corre en la región global (Bukkit-safe). */
+    public void generateReviewWordsAsync(org.bukkit.command.CommandSender requester, java.util.function.Consumer<ReviewWordsRefreshResult> callback) {
         if (!generatingReviewWords.compareAndSet(false, true)) {
             if (requester != null) {
-                requester.sendMessage(TextUtils.format("<red>Ya hay una generación de reviewWords en curso, esperá a que termine."));
+                var messages = plugin.getConfigManager().getMessagesConfig();
+                requester.sendMessage(TextUtils.format(messages.prefix + messages.commands.aiReviewWordsGenerating));
             }
             return;
         }
 
         Bukkit.getAsyncScheduler().runNow(plugin, task -> {
-            java.util.List<String> words;
+            ReviewWordsRefreshResult result;
             try {
-                words = aiModerationClient.generateReviewWords();
+                result = refreshReviewWordsSync();
             } finally {
                 generatingReviewWords.set(false);
             }
 
-            java.util.List<String> finalWords = words;
+            ReviewWordsRefreshResult finalResult = result;
             Bukkit.getGlobalRegionScheduler().run(plugin, t -> {
-                if (finalWords.isEmpty()) {
-                    Bukkit.getLogger().warning("[CoreEC] [IA] No se pudo generar reviewWords (ver warnings de Gemini arriba).");
+                var messages = plugin.getConfigManager().getMessagesConfig();
+                if (finalResult == null) {
+                    Bukkit.getLogger().warning("[Mincore] [IA] No se pudo generar reviewWords (ver warnings de Gemini arriba).");
                     if (requester != null) {
-                        requester.sendMessage(TextUtils.format("<red>No se pudo generar la lista - revisá la consola."));
+                        requester.sendMessage(TextUtils.format(messages.prefix + messages.commands.aiReviewWordsFailed));
                     }
+                    callback.accept(null);
                     return;
                 }
 
-                FiltersConfig filters = plugin.getConfigManager().getFiltersConfig();
-                filters.aiModeration.reviewWords = new java.util.ArrayList<>(finalWords);
-                filters.save();
-                reload();
-
-                Bukkit.getLogger().info("[CoreEC] [IA] reviewWords generadas automáticamente (" + finalWords.size() + " palabras) y guardadas en filters.yml.");
+                Bukkit.getLogger().info("[Mincore] [IA] reviewWords: " + finalResult.added().size() + " nuevas, "
+                        + finalResult.alreadyPresent().size() + " ya estaban - guardadas en filters.yml.");
                 if (requester != null) {
-                    requester.sendMessage(TextUtils.format("<green>Se generaron " + finalWords.size() + " palabras de revisión y se guardaron en filters.yml."));
+                    String summary = finalResult.added().isEmpty()
+                            ? messages.commands.aiReviewWordsNone.replace("%count%", String.valueOf(finalResult.alreadyPresent().size()))
+                            : messages.commands.aiReviewWordsAdded
+                                    .replace("%added%", String.valueOf(finalResult.added().size()))
+                                    .replace("%words%", String.join(", ", finalResult.added()))
+                                    .replace("%already%", String.valueOf(finalResult.alreadyPresent().size()));
+                    requester.sendMessage(TextUtils.format(messages.prefix + summary));
                 }
+                callback.accept(finalResult);
             });
         });
     }
@@ -213,7 +304,8 @@ public class ChatFilterManager {
     public void generateBadWordsAsync(org.bukkit.command.CommandSender requester) {
         if (!generatingBadWords.compareAndSet(false, true)) {
             if (requester != null) {
-                requester.sendMessage(TextUtils.format("<red>Ya hay una generación de badWords en curso, esperá a que termine."));
+                var messages = plugin.getConfigManager().getMessagesConfig();
+                requester.sendMessage(TextUtils.format(messages.prefix + messages.commands.aiBadWordsGenerating));
             }
             return;
         }
@@ -228,10 +320,11 @@ public class ChatFilterManager {
 
             java.util.List<String> finalNew = newPatterns;
             Bukkit.getGlobalRegionScheduler().run(plugin, t -> {
+                var messages = plugin.getConfigManager().getMessagesConfig();
                 if (finalNew.isEmpty()) {
-                    Bukkit.getLogger().warning("[CoreEC] [IA] No se pudo generar el blocklist de regex (ver warnings de Gemini arriba).");
+                    Bukkit.getLogger().warning("[Mincore] [IA] No se pudo generar el blocklist de regex (ver warnings de Gemini arriba).");
                     if (requester != null) {
-                        requester.sendMessage(TextUtils.format("<red>No se pudo generar el blocklist - revisá la consola."));
+                        requester.sendMessage(TextUtils.format(messages.prefix + messages.commands.aiBadWordsFailed));
                     }
                     return;
                 }
@@ -241,12 +334,74 @@ public class ChatFilterManager {
                 int added = appendRegexLines(file, finalNew);
                 reload();
 
-                String summary = "Gemini devolvió " + finalNew.size() + " regex, " + added + " eran nuevas (el resto ya estaban) - "
-                        + badWordsRegexList.size() + " en total en " + filters.badWords.regexFile + ".";
-                Bukkit.getLogger().info("[CoreEC] [IA] " + summary);
+                String summary = messages.commands.aiBadWordsSummary
+                        .replace("%total%", String.valueOf(finalNew.size()))
+                        .replace("%added%", String.valueOf(added))
+                        .replace("%file_total%", String.valueOf(badWordsRegexList.size()))
+                        .replace("%file%", filters.badWords.regexFile);
+                Bukkit.getLogger().info("[Mincore] [IA] " + summary);
                 if (requester != null) {
-                    requester.sendMessage(TextUtils.format("<green>" + summary));
+                    requester.sendMessage(TextUtils.format(messages.prefix + summary));
                 }
+            });
+        });
+    }
+
+    /**
+     * /coreec ai addbadword <palabra> - a diferencia de generateBadWordsAsync
+     * (que regenera una TANDA entera de regex desde cero), esto le pide a
+     * Gemini UNA sola regex nueva para UNA palabra puntual que un admin
+     * quiere agregar en caliente (ej. un insulto local/regional que el
+     * blocklist todavía no cubre) y la AGREGA sin tocar el resto del archivo
+     * - mismo mecanismo de "nunca reemplazar" que ya usa appendRegexLines.
+     * Reusa el mismo AtomicBoolean que refreshbadwords porque ambos escriben
+     * el mismo archivo - dos generaciones simultáneas podrían pisarse la
+     * lectura-modificación-escritura entre sí.
+     */
+    public void addBadWordAsync(org.bukkit.command.CommandSender requester, String word) {
+        var messages = plugin.getConfigManager().getMessagesConfig();
+        if (word == null || word.isBlank()) {
+            requester.sendMessage(TextUtils.format(messages.prefix + messages.commands.aiAddBadWordPrompt));
+            return;
+        }
+
+        if (!generatingBadWords.compareAndSet(false, true)) {
+            requester.sendMessage(TextUtils.format(messages.prefix + messages.commands.aiAddBadWordGenerating));
+            return;
+        }
+
+        Bukkit.getAsyncScheduler().runNow(plugin, task -> {
+            String pattern;
+            try {
+                pattern = aiModerationClient.generateRegexForWord(word);
+            } finally {
+                generatingBadWords.set(false);
+            }
+
+            String finalPattern = pattern;
+            Bukkit.getGlobalRegionScheduler().run(plugin, t -> {
+                if (finalPattern == null) {
+                    Bukkit.getLogger().warning("[Mincore] [IA] No se pudo generar una regex para \"" + word + "\" (ver warnings de Gemini arriba).");
+                    requester.sendMessage(TextUtils.format(messages.prefix + messages.commands.aiAddBadWordFailed.replace("%word%", word)));
+                    return;
+                }
+
+                FiltersConfig filters = plugin.getConfigManager().getFiltersConfig();
+                java.io.File file = new java.io.File(plugin.getDataFolder(), filters.badWords.regexFile);
+                int added = appendRegexLines(file, java.util.List.of(finalPattern));
+                reload();
+
+                if (added == 0) {
+                    requester.sendMessage(TextUtils.format(messages.prefix + messages.commands.aiAddBadWordAlreadyExists
+                            .replace("%word%", word)
+                            .replace("%file%", filters.badWords.regexFile)));
+                    return;
+                }
+
+                Bukkit.getLogger().info("[Mincore] [IA] Se agregó una regex nueva para \"" + word + "\" a " + filters.badWords.regexFile + ": " + finalPattern);
+                requester.sendMessage(TextUtils.format(messages.prefix + messages.commands.aiAddBadWordSuccess
+                        .replace("%word%", word)
+                        .replace("%count%", String.valueOf(badWordsRegexList.size()))));
             });
         });
     }
@@ -282,7 +437,7 @@ public class ChatFilterManager {
             java.nio.file.Files.writeString(file.toPath(), sb.toString(), java.nio.charset.StandardCharsets.UTF_8);
             return added;
         } catch (java.io.IOException e) {
-            Bukkit.getLogger().warning("[CoreEC] No se pudo escribir " + file.getName() + ": " + e.getMessage());
+            Bukkit.getLogger().warning("[Mincore] No se pudo escribir " + file.getName() + ": " + e.getMessage());
             return 0;
         }
     }
@@ -319,7 +474,11 @@ public class ChatFilterManager {
                 .reduce((a, b) -> a + "|" + b)
                 .orElse(null);
 
-        return combined == null ? null : Pattern.compile("\\b(?:" + combined + ")\\b", Pattern.CASE_INSENSITIVE);
+        // Mismo motivo que en loadRegexBlocklist: \b es ASCII-only sin este
+        // flag, así que sin él una palabra con tilde (café, así, etc.)
+        // quedaría "cortada" en el límite y el fuzzy regex podría no
+        // reconocerla como palabra completa (o matchear un fragmento).
+        return combined == null ? null : Pattern.compile("\\b(?:" + combined + ")\\b", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS);
     }
 
     private static final String FUZZY_SEPARATOR = "[\\s\\-_.]*";
@@ -341,15 +500,15 @@ public class ChatFilterManager {
         java.util.UUID uuid = player.getUniqueId();
 
         if (filters.messageLength.enabled && rawMessage.length() > filters.messageLength.maxCharacters) {
-            return FilterResult.cancelled(CancelReason.TOO_LONG);
+            return FilterResult.cancelled(CancelReason.TOO_LONG, rawMessage);
         }
 
         if (filters.floodProtection.enabled && isFlooding(uuid, filters.floodProtection)) {
-            return FilterResult.cancelled(CancelReason.FLOOD);
+            return FilterResult.cancelled(CancelReason.FLOOD, rawMessage);
         }
 
         if (filters.antiSpam.enabled && isSpamming(uuid, filters.antiSpam)) {
-            return FilterResult.cancelled(CancelReason.SPAM);
+            return FilterResult.cancelled(CancelReason.SPAM, rawMessage);
         }
 
         String message = rawMessage;
@@ -360,7 +519,7 @@ public class ChatFilterManager {
 
         if (filters.repetition.enabled) {
             if (isRepetition(uuid, message, filters.repetition)) {
-                return FilterResult.cancelled(CancelReason.REPETITION);
+                return FilterResult.cancelled(CancelReason.REPETITION, rawMessage);
             }
             message = collapseRepeatedChars(message, filters.repetition.repeatedCharThreshold, customCharLimits);
         }
@@ -371,7 +530,7 @@ public class ChatFilterManager {
             Matcher matcher = pattern.matcher(message);
             if (matcher.find()) {
                 if (!filters.badWords.replaceWords) {
-                    return FilterResult.cancelled(CancelReason.BAD_WORD);
+                    return FilterResult.cancelled(CancelReason.BAD_WORD, rawMessage, matcher.group());
                 }
                 message = matcher.replaceAll(result -> "*".repeat(result.group().length()));
                 infraction = true;
@@ -388,15 +547,17 @@ public class ChatFilterManager {
                 // con badWords.words antes de compilarla) - un match que cae
                 // justo en una palabra de la whitelist se deja tal cual.
                 boolean[] hit = {false};
+                String[] hitWord = {null};
                 String replaced = regex.matcher(message).replaceAll(result -> {
                     if (whitelistWordsLower.contains(result.group().toLowerCase())) return result.group();
                     hit[0] = true;
+                    hitWord[0] = result.group();
                     return "*".repeat(result.group().length());
                 });
                 if (!hit[0]) continue;
 
                 if (!filters.badWords.replaceWords) {
-                    return FilterResult.cancelled(CancelReason.BAD_WORD);
+                    return FilterResult.cancelled(CancelReason.BAD_WORD, rawMessage, hitWord[0]);
                 }
                 message = replaced;
                 infraction = true;
@@ -404,7 +565,7 @@ public class ChatFilterManager {
         }
 
         if (filters.ads.enabled && containsDisallowedLink(message, filters.ads)) {
-            return FilterResult.cancelled(CancelReason.ADS);
+            return FilterResult.cancelled(CancelReason.ADS, rawMessage);
         }
 
         rememberMessage(uuid, message, filters.repetition);
@@ -419,14 +580,26 @@ public class ChatFilterManager {
      * o "négro!!!" matchean igual que "negro" sin tener que listar cada variante a mano.
      */
     public boolean matchesReviewWord(String message) {
+        return findMatchedReviewWord(message) != null;
+    }
+
+    /**
+     * Igual que matchesReviewWord() pero devuelve la palabra puntual que
+     * matcheó (normalizada, ej. "negro") en vez de solo true/false - se la
+     * pasamos a la IA al pedirle la regex aprendida (generateRegexForMessage)
+     * para que sepa EXACTAMENTE qué palabra revisar en vez de tener que
+     * adivinar cuál, de toda la oración, es la parte ambigua. @return null
+     * si ninguna coincide.
+     */
+    public String findMatchedReviewWord(String message) {
         java.util.Set<String> words = reviewWordsNormalized;
-        if (words.isEmpty()) return false;
+        if (words.isEmpty()) return null;
 
         String normalized = normalizeChatSentinelStyle(message);
         for (String token : normalized.split(" ")) {
-            if (words.contains(token)) return true;
+            if (words.contains(token)) return token;
         }
-        return false;
+        return null;
     }
 
     /** Colores/formato, acentos, caracteres especiales y letras repetidas colapsadas a una sola - mismo formato que usa ChatSentinel para evadir bypasses por espaciado/leetspeak visual, reusado acá para reviewWords en vez del regex fuzzy que usa badWords. */
@@ -441,44 +614,164 @@ public class ChatFilterManager {
 
     /**
      * Dispara la revisión por IA en un hilo aparte - NO bloquea al llamador.
-     * El mensaje ya se mostró (o está por mostrarse) normalmente; si Gemini
+     * El mensaje ya se mostró (o está por mostrarse) normalmente; si la IA
      * confirma que es tóxico, se borra de la pantalla de todos, se avisa al
      * infractor y se alerta al staff. signedMessage puede ser null (cliente
      * sin firma de chat) - en ese caso no hay forma de borrar el mensaje, así
      * que se omite la revisión entera.
+     *
+     * censoredMessage es el texto YA pasado por el blocklist duro (con ***
+     * donde matcheó badWords) - el gate de abajo revisa si la palabra de
+     * revisión SIGUE VISIBLE ahí, no en rawMessage. Si el blocklist duro ya
+     * censuró justo esa palabra, no hace falta gastar otra consulta a la IA
+     * sobre algo que ya quedó oculto/resuelto; pero si el mensaje tiene OTRA
+     * palabra ambigua sin relación (ej. "hijo de puta" censurado por el
+     * blocklist Y "negro" sin tocar en el mismo mensaje), esa sigue visible
+     * en censoredMessage y la revisión de IA sigue disparando igual - a
+     * diferencia de un gate más tosco basado en "¿hubo CUALQUIER censura?",
+     * que apagaba la revisión entera aunque la palabra ambigua nunca se
+     * hubiera tocado.
      */
-    public void reviewAsync(Player player, String message, SignedMessage signedMessage) {
-        FiltersConfig.AiModeration config = plugin.getConfigManager().getFiltersConfig().aiModeration;
-        if (!config.enabled || !matchesReviewWord(message)) return;
+    public void reviewAsync(Player player, String rawMessage, String censoredMessage, SignedMessage signedMessage) {
+        reviewAsync(player, rawMessage, censoredMessage, signedMessage, null);
+    }
 
-        // Caso silencioso que costaba diagnosticar: si el cliente no manda
-        // chat firmado (proxy sin forward de firma, cliente modificado,
-        // etc.) no hay forma de borrar el mensaje después - antes esto
-        // simplemente no hacía nada sin ningún rastro en consola.
-        if (signedMessage == null) {
-            Bukkit.getLogger().warning("[CoreEC] " + player.getName() + " escribió una palabra de revisión pero su cliente no mandó chat firmado - no se puede revisar/borrar ese mensaje.");
-            return;
-        }
+    public void reviewAsync(Player player, String rawMessage, String censoredMessage, SignedMessage signedMessage, String messageId) {
+        FiltersConfig.AiModeration config = plugin.getConfigManager().getFiltersConfig().aiModeration;
+        String matchedWord = findMatchedReviewWord(censoredMessage);
+        if (!config.enabled || matchedWord == null) return;
 
         java.util.UUID uuid = player.getUniqueId();
         if (aiModerationClient.isOnCooldown(uuid)) return;
 
         java.util.List<String> context = recentContext(uuid, config.contextMessages);
-        if (config.apiKey == null || config.apiKey.isBlank()) {
-            Bukkit.getLogger().warning("[CoreEC] filters.yml -> aiModeration.enabled está en true pero apiKey está vacía - no se puede consultar a Gemini.");
+        // apiKey solo es obligatoria con provider=gemini - muchos servidores
+        // openai-compatible locales (OmniRoute, LM Studio, etc.) no piden
+        // ninguna, así que exigirla siempre bloqueaba la revisión entera
+        // aunque el servidor local funcionara perfecto sin key.
+        if ("gemini".equalsIgnoreCase(config.provider) && (config.apiKey == null || config.apiKey.isBlank())) {
+            Bukkit.getLogger().warning("[Mincore] filters.yml -> aiModeration.enabled está en true pero apiKey está vacía - no se puede consultar a Gemini.");
             return;
         }
 
         Bukkit.getAsyncScheduler().runNow(plugin, task -> {
-            boolean toxic = aiModerationClient.isToxic(player, message, context);
+            boolean toxic = aiModerationClient.isToxic(player, rawMessage, context);
             if (!toxic) return;
 
-            Bukkit.getGlobalRegionScheduler().run(plugin, t -> handleToxicMessage(player, message, signedMessage));
+            // Antes de gastar OTRA llamada a la IA pidiendo una regex nueva,
+            // reviso si algún patrón YA PENDIENTE (todavía sin aprobar/
+            // rechazar) matchea este mismo mensaje - sin esto, repetir el
+            // mismo insulto un par de veces (ej. copy-paste) generaba un
+            // patrón pendiente DISTINTO cada vez para el mismo texto,
+            // ensuciando la cola de aprobación con duplicados.
+            Integer duplicateOf = findPendingPatternMatch(rawMessage);
+            if (duplicateOf != null) {
+                if (plugin.getConfigManager().getFiltersConfig().aiModeration.debugLogging) {
+                    Bukkit.getLogger().info("[Mincore] [IA] Mensaje ya cubierto por el patrón pendiente #" + duplicateOf + " - no se genera otro.");
+                }
+                Bukkit.getGlobalRegionScheduler().run(plugin, t -> handleToxicMessage(player, rawMessage, signedMessage, messageId));
+                return;
+            }
+
+            // Se pide la regex de la frase ACÁ, todavía en el hilo async -
+            // es otra llamada HTTP bloqueante, no puede correr en el hilo
+            // principal (ver handleToxicMessage/queuePendingPattern abajo).
+            // Se le pasa matchedWord (la palabra puntual de reviewWords que
+            // disparó todo esto) además del mensaje completo, para que la IA
+            // no tenga que ADIVINAR cuál de todas las palabras de la oración
+            // es la parte ambigua a revisar - se lo decimos directo.
+            String learnedRegex = aiModerationClient.generateRegexForMessage(rawMessage, matchedWord);
+
+            Bukkit.getGlobalRegionScheduler().run(plugin, t -> {
+                handleToxicMessage(player, rawMessage, signedMessage, messageId);
+                if (learnedRegex != null) queuePendingPattern(player, rawMessage, learnedRegex);
+            });
         });
     }
 
-    private void handleToxicMessage(Player player, String message, SignedMessage signedMessage) {
-        Bukkit.getServer().deleteMessage(signedMessage);
+    /**
+     * Patrón aprendido de un mensaje YA confirmado tóxico por la IA, a la
+     * espera de que un staff lo bloquee con /coreec ai block <id> (o lo
+     * permita con /coreec ai allow <id>) antes de agregarse al blocklist
+     * real - nunca se agrega solo. Esto evita que un
+     * jugador fuerce a la IA a marcar una frase inocente como tóxica para
+     * "envenenar" el blocklist con una entrada que después bloquee esa frase
+     * para todo el mundo sin que nadie lo revise.
+     */
+    public record PendingPattern(int id, String regex, String playerName, String message, long timestamp) {}
+
+    /** @return el ID del primer patrón pendiente cuya regex ya matchea rawMessage, o null si ninguno lo cubre todavía - evita generarle a la IA un patrón nuevo para un mensaje que ya está esperando aprobación. Ignora silenciosamente una regex que no compile (no debería pasar, ya se validó al generarla, pero no vale la pena tirar la revisión entera por eso). */
+    private Integer findPendingPatternMatch(String rawMessage) {
+        for (PendingPattern pending : pendingPatterns.values()) {
+            try {
+                if (Pattern.compile(pending.regex(), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS).matcher(rawMessage).find()) {
+                    return pending.id();
+                }
+            } catch (java.util.regex.PatternSyntaxException ignored) {
+            }
+        }
+        return null;
+    }
+
+    private final Map<Integer, PendingPattern> pendingPatterns = new ConcurrentHashMap<>();
+    private final java.util.concurrent.atomic.AtomicInteger pendingPatternIdSeq = new java.util.concurrent.atomic.AtomicInteger(1);
+
+    private void queuePendingPattern(Player player, String message, String regex) {
+        int id = pendingPatternIdSeq.getAndIncrement();
+        PendingPattern pending = new PendingPattern(id, regex, player.getName(), message, System.currentTimeMillis());
+        pendingPatterns.put(id, pending);
+
+        String staffAlertPermission = plugin.getConfigManager().getFiltersConfig().punishment.staffAlertPermission;
+        var alert = TextUtils.format("<yellow>[IA] Patrón nuevo pendiente de revisión <gray>(#" + id + ") <yellow>de "
+                + player.getName() + ": <white>" + regex
+                + " <gray>- /coreec ai block " + id + " o /coreec ai allow " + id);
+        for (Player staff : Bukkit.getOnlinePlayers()) {
+            if (staff.hasPermission(staffAlertPermission)) {
+                staff.sendMessage(alert);
+            }
+        }
+        Bukkit.getLogger().info("[Mincore] [IA] Patrón pendiente #" + id + " de " + player.getName() + " (\"" + message + "\"): " + regex);
+
+        // No-op silencioso si discordApproval.enabled=false o el bot no
+        // llegó a conectar - el bloqueo en el juego (/coreec ai block)
+        // sigue funcionando igual sin importar esto.
+        plugin.getDiscordApprovalBot().postPendingPattern(pending);
+    }
+
+    /** @return la regex aprobada y ya agregada al blocklist, o null si no existía ese ID (ya se aprobó/rechazó/nunca existió). */
+    public String approvePendingPattern(int id) {
+        PendingPattern pending = pendingPatterns.remove(id);
+        if (pending == null) return null;
+
+        FiltersConfig filters = plugin.getConfigManager().getFiltersConfig();
+        java.io.File file = new java.io.File(plugin.getDataFolder(), filters.badWords.regexFile);
+        appendRegexLines(file, java.util.List.of(pending.regex()));
+        reload();
+
+        Bukkit.getLogger().info("[Mincore] [IA] Patrón #" + id + " aprobado y agregado a " + filters.badWords.regexFile + ": " + pending.regex());
+        return pending.regex();
+    }
+
+    /** @return true si había un patrón pendiente con ese ID (y se descartó), false si no existía. */
+    public boolean rejectPendingPattern(int id) {
+        return pendingPatterns.remove(id) != null;
+    }
+
+    public java.util.List<PendingPattern> listPendingPatterns() {
+        return pendingPatterns.values().stream()
+                .sorted(java.util.Comparator.comparingInt(PendingPattern::id))
+                .toList();
+    }
+
+    private void handleToxicMessage(Player player, String message, SignedMessage signedMessage, String messageId) {
+        if (messageId != null) {
+            plugin.getMessageDeletionManager().deleteMessage(messageId, null);
+        } else if (signedMessage != null) {
+            try {
+                Bukkit.getServer().deleteMessage(signedMessage);
+            } catch (Throwable ignored) {
+            }
+        }
 
         MessagesConfig messages = plugin.getConfigManager().getMessagesConfig();
         if (player.isOnline()) {
